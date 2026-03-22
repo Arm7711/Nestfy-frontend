@@ -44,19 +44,19 @@ html {
         font-size: 16px;
         font-family: 'Nunito', Arial, Helvetica, sans-serif;
         overflow-x: hidden;
-        clip-path: circle(0% at 50% 50%);
-        animation: reveal 1.5s 0.7s ease-out forwards;
+        // clip-path: circle(0% at 50% 50%);
+        // animation: reveal 1.5s 0.7s ease-out forwards;
 
 
-        @keyframes reveal {
-            0% {
-                clip-path: circle(0% at 50% 50%);
-            }
+        // @keyframes reveal {
+        //     0% {
+        //         clip-path: circle(0% at 50% 50%);
+        //     }
 
-            100% {
-                clip-path: circle(150% at 50% 50%);
-            }
-        }
+        //     100% {
+        //         clip-path: circle(150% at 50% 50%);
+        //     }
+        // }
 
         &::selection {
             background-color: rgba(48, 48, 48, 0.664) !important;
