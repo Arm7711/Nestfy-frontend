@@ -1,13 +1,86 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>nestfy</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Nestfy - Find a Place to Call Home</title>
+  <meta name="description"
+    content="Discover and explore real estate listings with Nestfy. Find your perfect home, apartment, or property tailored to your lifestyle." />
+  <meta name="keywords" content="real estate, property, homes, apartments, rent, buy, Nestfy, недвижимость, жилье" />
+  <meta name="author" content="Nestfy" />
+
+  <link rel="icon" type="image/svg+xml" href="/nestfy-site-icon.svg" />
+  <link rel="canonical" href="https://nestfy.com/" />
+
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Nestfy - Find a Place to Call Home" />
+  <meta property="og:description"
+    content="Explore curated real estate listings and find your ideal home with Nestfy." />
+  <meta property="og:url" content="https://nestfy.com/" />
+  <meta property="og:image" content="https://nestfy.com/og-image.jpg" />
+  <meta property="og:site_name" content="Nestfy" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nestfy - Find a Place to Call Home" />
+  <meta name="twitter:description" content="Discover your next home with Nestfy." />
+  <meta name="twitter:image" content="https://nestfy.com/og-image.jpg" />
+
+  <!-- Robots -->
+  <meta name="robots" content="index, follow" />
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Nestfy",
+    "url": "https://nestfy.com/",
+    "description": "Real estate platform for finding homes and properties.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://nestfy.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <svg style="display:none;">
+    <filter id="distortion">
+      <feTurbulence type="turbulence" baseFrequency="0.01 0.05" numOctaves="1" result="turbulence" />
+      <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
+  <svg style="display:none;">
+    <filter id="distortion2">
+      <feTurbulence type="turbulence" baseFrequency="0.03 0.07" numOctaves="5" result="turbulence" />
+      <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="12" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </svg>
+
+  <svg style="display: none">
+    <filter id="glass" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.058 0.058" numOctaves="10" seed="92" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R" yChannelSelector="B" />
+    </filter>
+  </svg>
+</body>
+
 </html>
