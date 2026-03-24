@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react'
 import HomeIcon from '../../HeaderVideoIcons/HomeIcon/HomeIcon';
 import ServicesIcon from '../../HeaderVideoIcons/ServicesIcon/ServicesIcon';
+import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
 const tabFields = [
@@ -19,6 +20,23 @@ const tabFields = [
     },
 ];
 
+const searchTabFields = [
+    {
+        tabName: 'where',
+        title: 'Where',
+        content: 'Search destinations'
+    },
+    {
+        tabName: 'when',
+        title: 'When',
+        content: 'Add dates'
+    }, {
+        tabName: 'who',
+        title: 'Who',
+        content: 'Add guests'
+    }
+];
+
 export default function Header() {
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
@@ -30,16 +48,53 @@ export default function Header() {
     const [tabWidth, setTabWidth] = useState(0);
     const [translateX, setTranslateX] = useState(0);
 
+    const searchTabRef = useRef(new Map());
+    const [searchActiveTab, setSearchAtiveTab] = useState(
+        {
+            tabName: "where",
+            tabIndex: 0
+        }
+    );
+    const [searchTabWidth, setSearchTabWidth] = useState(0);
+    const [searchSliceTX, setSearchSliceTX] = useState(0);
+
+    const [activeSearchBar, setActiveSearchBar] = useState(false);
+    const searchBarRef = useRef(null);
+
+    useEffect(() => {
+        function handleClick(event) {
+            if (!searchBarRef.current) return;
+            if (!searchBarRef.current.contains(event.target)) {
+                setActiveSearchBar(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClick);
+        };
+    }, []);
+
     useLayoutEffect(() => {
         const el = tabRef.current.get(headerActiveTab.tabName);
-        if (!el) return;
+        const elS = searchTabRef.current.get(searchActiveTab.tabName);
+        if (!el || !elS) return;
 
         const rect = el.getBoundingClientRect();
         const parentRect = el.parentElement.getBoundingClientRect();
 
+        const rectS = elS.getBoundingClientRect();
+        const sParentReact = elS.parentElement.getBoundingClientRect();
+
+        setSearchTabWidth(rectS.width);
+        setSearchSliceTX(rectS.left - sParentReact.left);
+
         setTabWidth(rect.width);
         setTranslateX(rect.left - parentRect.left);
-    }, [headerActiveTab]);
+    }, [headerActiveTab, searchActiveTab]);
+
+    console.log(activeSearchBar);
 
     return (
         <header className='header'>
@@ -104,6 +159,46 @@ export default function Header() {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div
+                className={classNames('header__search__form__container', { active__bar: activeSearchBar })}
+                ref={searchBarRef}
+                onClick={() => setActiveSearchBar(true)}
+            >
+                <div
+                    className={classNames('selected__slice', { active: activeSearchBar })}
+                    style={
+                        {
+                            width: searchTabWidth,
+                            transform: `translateX(${searchSliceTX}px)`
+                        }
+                    }
+                />
+
+                {searchTabFields?.map((item, index) => (
+                    <div
+                        className='tab__item'
+                        key={index}
+                        onClick={() => setSearchAtiveTab({ tabName: item?.tabName, tabIndex: index })}
+                        ref={el => {
+                            if (el) {
+                                searchTabRef.current.set(item.tabName, el);
+                            } else {
+                                searchTabRef.current.delete(item.tabName);
+                            }
+                        }}
+                    >
+                        <h2 className='title'>{item?.title}</h2>
+                        <p className='desc'>{item?.content}</p>
+                    </div>
+                ))}
+
+                <button className={classNames('search__button', { active__button: activeSearchBar })}>
+                    <SearchSvg />
+
+                    <p className='search__text'>Search</p> 
+                </button>
             </div>
         </header>
     )
