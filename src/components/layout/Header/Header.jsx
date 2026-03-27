@@ -8,6 +8,7 @@ import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
 import { tabFields, searchTabFields, headerMenuData } from '../../../data/headerData';
+import AuthModal from '../../_common/Modals/AuthModal';
 
 export default function Header() {
     const tabRef = useRef(new Map());
@@ -33,13 +34,19 @@ export default function Header() {
     const [activeSearchBar, setActiveSearchBar] = useState(false);
     const searchBarRef = useRef(null);
 
+    const headerMenuRef = useRef(null);
     const [openHeaderMenu, setOpenHeaderMenu] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     useEffect(() => {
         function handleClick(event) {
-            if (!searchBarRef.current) return;
-            if (!searchBarRef.current.contains(event.target)) {
-                setActiveSearchBar(false)
+            if (openHeaderMenu && headerMenuRef.current) {
+                if (!headerMenuRef.current.contains(event.target)) {
+                    setOpenHeaderMenu(false);
+                }
+            }
+            if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
+                setActiveSearchBar(false);
             }
         }
 
@@ -48,7 +55,7 @@ export default function Header() {
         return () => {
             document.removeEventListener("mousedown", handleClick);
         };
-    }, []);
+    }, [openHeaderMenu]);
 
     useLayoutEffect(() => {
         const el = tabRef.current.get(headerActiveTab.tabName);
@@ -68,7 +75,12 @@ export default function Header() {
         setTranslateX(rect.left - parentRect.left);
     }, [headerActiveTab, searchActiveTab]);
 
-    console.log(activeSearchBar);
+    const authModalOpen = (itemName) => {
+        if (itemName === 'auth'){
+            setIsAuthModalOpen(true);
+            setOpenHeaderMenu(false);
+        }
+    }
 
     return (
         <header className='header'>
@@ -124,16 +136,18 @@ export default function Header() {
                             <LangSvg />
                         </div>
 
-                        <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })}>
+                        <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })} ref={headerMenuRef}>
                             <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
                                 <span className='line line--1' />
                                 <span className='line line--2' />
                                 <span className='line line--3' />
                             </button>
 
+                            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+
                             <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
                                 {headerMenuData.map((item, index) => (
-                                    <button className='menu__item' key={index}>
+                                    <button className='menu__item' key={index} onClick={() => authModalOpen(item?.filedName)}>
                                         <p className='content'>{item?.content}</p>
                                     </button>
                                 ))}
