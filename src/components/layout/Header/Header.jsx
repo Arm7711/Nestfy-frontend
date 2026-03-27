@@ -7,35 +7,7 @@ import ServicesIcon from '../../HeaderVideoIcons/ServicesIcon/ServicesIcon';
 import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
-const tabFields = [
-    {
-        tabName: 'homeTab',
-        tab: 'home',
-        title: 'Housing',
-    },
-    {
-        tabName: 'servicesTab',
-        tab: 'services',
-        title: 'Services',
-    },
-];
-
-const searchTabFields = [
-    {
-        tabName: 'where',
-        title: 'Where',
-        content: 'Search destinations'
-    },
-    {
-        tabName: 'when',
-        title: 'When',
-        content: 'Add dates'
-    }, {
-        tabName: 'who',
-        title: 'Who',
-        content: 'Add guests'
-    }
-];
+import { tabFields, searchTabFields, headerMenuData } from '../../../data/headerData';
 
 export default function Header() {
     const tabRef = useRef(new Map());
@@ -60,6 +32,8 @@ export default function Header() {
 
     const [activeSearchBar, setActiveSearchBar] = useState(false);
     const searchBarRef = useRef(null);
+
+    const [openHeaderMenu, setOpenHeaderMenu] = useState(false);
 
     useEffect(() => {
         function handleClick(event) {
@@ -150,12 +124,20 @@ export default function Header() {
                             <LangSvg />
                         </div>
 
-                        <div className='header__section__tab__bar__tools__item menu'>
-                            <button className='toggle'>
+                        <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })}>
+                            <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
                                 <span className='line line--1' />
                                 <span className='line line--2' />
                                 <span className='line line--3' />
                             </button>
+
+                            <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
+                                {headerMenuData.map((item, index) => (
+                                    <button className='menu__item' key={index}>
+                                        <p className='content'>{item?.content}</p>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -178,7 +160,7 @@ export default function Header() {
 
                 {searchTabFields?.map((item, index) => (
                     <div
-                        className='tab__item'
+                        className={classNames('tab__item', { active__tab__search: searchActiveTab?.tabName === item?.tabName })}
                         key={index}
                         onClick={() => setSearchAtiveTab({ tabName: item?.tabName, tabIndex: index })}
                         ref={el => {
@@ -197,7 +179,7 @@ export default function Header() {
                 <button className={classNames('search__button', { active__button: activeSearchBar })}>
                     <SearchSvg />
 
-                    <p className='search__text'>Search</p> 
+                    <p className='search__text'>Search</p>
                 </button>
             </div>
         </header>
