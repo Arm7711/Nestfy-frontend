@@ -1,6 +1,245 @@
-.auth__modal{
+@use '../../variables/variables' as *;
+@use '../../mixins//mixins' as *;
+
+.auth__modal {
     width: 100%;
     height: 100%;
     position: fixed;
     z-index: 1000;
+    top: -100%;
+    left: 0;
+    @include allCenter();
+    transition: all 0.6s 0.4s;
+
+    .backdrop {
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        backdrop-filter: blur(0);
+        transition: all 0.6s 0s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        opacity: 0.4;
+    }
+
+    .modal__main {
+        width: 480px;
+        height: 488px;
+        background-color: white;
+        @include boxShadow(35px);
+        z-index: 2;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 50px;
+
+        .modal__close__bar {
+            width: 100%;
+            height: 50px;
+            border-radius: 35px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            @include allCenter(flex-end, flex-end, row);
+            padding-right: 16px;
+
+            .modal__close__bar__button {
+                width: 33px;
+                height: 33px;
+                @include allCenter();
+                border-radius: 50%;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.4s;
+
+                .icon {
+                    width: 18px;
+                    height: 18px;
+                    fill: black;
+                }
+
+                &:hover {
+                    background-color: $modal-close-button-background-color;
+                }
+            }
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+            @include allCenter(flex-start, center, column);
+            gap: 12px;
+            border-radius: 35px;
+            padding: 0 24px;
+
+            .content__logo__block {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+
+                .site__logo {
+                    width: 75px;
+                    height: 75px;
+                }
+            }
+
+            .content__title {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                padding-bottom: 12px;
+
+                .title {
+                    font-size: 30px;
+                    font-weight: 600;
+                    letter-spacing: -0.6px;
+                }
+            }
+
+            .content__auth__block {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                position: relative;
+                transition: all 0.4s;
+
+                &.active__error__container {
+                    margin-bottom: 15px;
+                }
+
+                .error__message {
+                    position: absolute;
+                    bottom: -18px;
+                    left: 3px;
+                    font-size: 12px;
+                    color: $error-color;
+                    transition: all 0.4s;
+                    opacity: 0;
+                    visibility: hidden;
+                    z-index: 0;
+                    @include allCenter(flex-start);
+                    gap: 5px;
+
+                    .icon {
+                        width: 12px;
+                        height: 12px;
+                        fill: $error-color;
+                    }
+
+                    &.active__error {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                }
+            }
+
+            .content__information {
+                width: 100%;
+                height: fit-content;
+                padding-left: 3px;
+                margin-bottom: 8px;
+                z-index: 1;
+
+                .text {
+                    font-size: 12px;
+                    color: #6C6C6C;
+
+                    .link {
+                        color: black;
+                        text-decoration: underline;
+                        text-underline-offset: 4px;
+                        margin-left: 3px;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .button__container {
+                width: 100%;
+                height: 50px;
+                @include allCenter();
+
+                .submit__button {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 12px;
+                    border: 1px solid transparent;
+                    background-color: black;
+                    color: white;
+                    font-size: 18px;
+                    cursor: pointer;
+                    transition: all 0.4s;
+
+                    &:hover {
+                        border: 1px solid black;
+                        background-color: white;
+                        color: black;
+                    }
+                }
+            }
+
+            .container__info {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                gap: 12px;
+
+                .line {
+                    width: 50%;
+                    height: 1px;
+                    background-color: $line-color;
+                }
+
+                .or {
+                    transform: translateY(-2px);
+                }
+            }
+
+            .other__options__container {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                gap: 12px;
+
+                .option__button {
+                    width: 48px;
+                    height: 48px;
+                    background-color: transparent;
+                    border-radius: 12px;
+                    border: 1px solid $line-color;
+                    @include allCenter();
+                    cursor: pointer;
+                    transition: all 0.4s;
+
+                    .icon {
+                        width: 20px;
+                        height: 20px;
+                        transition: all 0.4s;
+                    }
+
+                    &:hover {
+                        border: 1px solid black;
+
+                        .icon {
+                            transform: scale(1.1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.modal__active {
+        top: 0;
+        transition-delay: 0s;
+
+        .backdrop {
+            transition-delay: 0.4s;
+            background-color: $modal-backdrop-background-color;
+        }
+    }
 }

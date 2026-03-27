@@ -32,14 +32,12 @@
         justify-content: flex-start;
         align-items: flex-start;
 
-
         .header__section__first__content {
             width: 100%;
             height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-
 
             .header__section__first__logo__block {
                 width: 33%;
@@ -61,6 +59,7 @@
                 @include allCenter(center, center, row);
                 gap: 35px;
                 position: relative;
+                overflow: hidden;
 
                 .active__tab {
                     width: 100px;
@@ -235,7 +234,7 @@
                             justify-content: flex-start;
                             align-items: center;
                             border: none;
-                            border-bottom: 1px solid #EBEBEB;
+                            border-bottom: 1px solid $header-bottom-line-color;
                             background-color: transparent;
                             font-size: 15px;
                             cursor: pointer;
@@ -459,7 +458,7 @@
             border: 1px solid rgba(255, 255, 255, 0);
 
             &:hover {
-                background-color: #EBEBEB;
+                background-color: $header-bottom-line-color;
             }
 
             &:nth-child(2) {
