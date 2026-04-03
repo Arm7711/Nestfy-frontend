@@ -4,3 +4,7 @@
 @use './layout/layout';
 @use './pages/pages';
 @use './components/components';
+
+*:disabled {
+    cursor: not-allowed !important;
+}

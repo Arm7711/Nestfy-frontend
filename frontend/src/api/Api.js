@@ -37,17 +37,14 @@ class Api {
     }
 
     // ==== AUTH ====
-    static async login(identifier, password) {
-        return (await Api.instance.post('/auth/login', { identifier, password })).data;
+    static async authUser(email, code, flow) {
+        return (await Api.instance.post(`/auth/${flow}`, { email, code })).data;
     }
-    static async register(email, password, username) {
-        const payload = { email, password };
-        if (username && username.trim()) payload.username = username;
-        return (await Api.instance.post('/auth/register', payload)).data;
+    static async userVerfiyAuth(email, code) {
+        return await Api.instance.post('/auth/verify-code', { email, code });
     }
-    
     static async checkUserAuthStatus(email) {
-            return await Api.instance.post('/auth/check-email', {email});
+        return await Api.instance.post('/auth/check-email', { email });
     }
 
 }
