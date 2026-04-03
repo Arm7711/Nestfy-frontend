@@ -10,15 +10,25 @@
     position: relative;
     overflow: hidden;
 
+    &.active__error {
+        border-color: $error-color;
+        background-color: $input-error-backgorund-color;
+    }
+
+    &.loading__active {
+        background-color: rgba(221, 221, 221, 0.116);
+    }
+
     .auth__input {
         width: 100%;
         height: 40px;
         font-family: 'Nunito', Arial, Helvetica, sans-serif;
         font-size: 18px;
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: 18px;
+        padding-right: 18px;
         border: none;
         background-color: transparent;
+        transition: all 0.4s;
 
         &:focus~.auth__input__label,
         &:not(:placeholder-shown)~.auth__input__label {
@@ -27,16 +37,28 @@
             cursor: default;
         }
 
+        &.loading__active {
+            color: gray;
+        }
     }
 
     .auth__input__label {
         position: absolute;
-        left: 12px;
+        left: 18px;
         top: 31px;
         transition: all 0.4s;
         font-size: 18px;
         color: #6C6C6C;
         transform: translateY(-10px);
         cursor: text;
+        user-select: none;
+
+        &.active__error {
+            color: $error-color;
+        }
+
+        &.loading__active {
+            color: gray;
+        }
     }
 }
