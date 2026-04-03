@@ -1,0 +1,14 @@
+@use '../mixins/mixins' as *;
+
+.home__video__icon__container {
+    width: fit-content;
+    height: fit-content;
+    @include allCenter();
+
+    .home__video__icon {
+        width: 36px;
+        height: 36px;
+        transform: scale(2);
+    }
+
+}

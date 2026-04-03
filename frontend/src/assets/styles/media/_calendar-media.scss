@@ -1,0 +1,39 @@
+ @media (max-width: 999px) {
+     .calendar-scroll-container {
+         max-height: 60vh;
+         overflow-y: auto;
+         overflow-x: hidden;
+         -webkit-overflow-scrolling: touch;
+     }
+
+     .calendar-scroll-container .rdp-months {
+         flex-direction: column !important;
+         gap: 0 !important;
+     }
+
+     .calendar-scroll-container .rdp-month {
+         width: 100% !important;
+     }
+
+     .calendar-scroll-container .rdp-table {
+         width: 100% !important;
+         max-width: 100% !important;
+     }
+
+     .calendar-scroll-container .rdp-month+.rdp-month {
+         border-top: 1px solid #e5e7eb;
+         padding-top: 1rem;
+         margin-top: 1rem;
+     }
+ }
+
+ @media (min-width: 1000px) {
+     .calendar-scroll-container {
+         overflow: visible;
+         max-height: none;
+     }
+
+     .calendar-scroll-container .rdp-months {
+         flex-direction: row !important;
+     }
+ }
