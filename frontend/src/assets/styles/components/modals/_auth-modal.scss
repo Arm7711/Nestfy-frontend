@@ -39,8 +39,15 @@
         transition-timing-function: cubic-bezier(0.19, 0.575, 0.465, 1);
 
         &.active__verify__child {
-            height: calc(250px + 50px);
+            transition-delay: 0.1s;
+            height: calc(230px + 50px);
         }
+
+        &.max__height {
+            transition: all 0.4s;
+            height: calc(280px + 50px);
+        }
+
 
         .modal__close__bar {
             width: 100%;
@@ -89,26 +96,80 @@
             left: 100%;
             opacity: 0;
             transition: all 0.6s, opacity 0.4s;
+            @include allCenter(flex-start, center, column);
+            gap: 12px;
+            padding-top: 12px;
 
             &.active__verify__content {
                 left: 0;
                 opacity: 1;
             }
 
+            .send__result__button__container{
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                position: absolute;
+                bottom: -100%;
+                transition: all 0.6s;
+                padding: 0 24px;
+
+                &.active{
+                    bottom: 25px;
+                }
+
+                .send__result__button{
+                    width: 100%;
+                    height: 45px;
+                    border-radius: 12px;
+                    border:none;
+                    background-color: $background-color-disabled;
+                    font-size: 16px;
+                    cursor: pointer;
+                }
+            }
+
             .info__container {
                 width: 100%;
                 height: fit-content;
                 @include allCenter(center, center, column);
-                gap:12px;
+                gap: 12px;
 
-                .title{
+                .title {
                     font-size: 30px;
                     font-weight: 600;
                 }
 
-                .info{
+                .info {
                     color: $palette-text-primary;
                     font-size: 17px;
+                }
+            }
+
+            .code__input__container {
+                width: 100%;
+                height: fit-content;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding-top: 12px;
+            }
+
+            .send__new__code__container {
+                width: 100%;
+                height: fit-content;
+                @include allCenter();
+                gap: 5px;
+                padding-top: 12px;
+
+                .send__code {
+                    background-color: transparent;
+                    border: none;
+                    font-size: 16px;
+                    text-decoration: underline;
+                    text-underline-offset: 4px;
+                    font-weight: 600;
+                    cursor: pointer;
                 }
             }
         }
