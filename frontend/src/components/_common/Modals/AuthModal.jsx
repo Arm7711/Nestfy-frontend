@@ -12,6 +12,7 @@ import siteLogo from '../../../assets/images/logo/site-logo.webp'
 import GoogleSvg from '../../svg/GoogleSvg';
 import AppleSvg from '../../svg/AppleSvg';
 import ErrorSvg from '../../svg/ErrorSvg';
+import BackArrowSvg from '../../svg/BackArrowSvg';
 
 import CodeInput from '../CodeInput/CodeInput';
 import AuthModalInput from '../Inputs/AuthModalInput';
@@ -24,7 +25,8 @@ export default function AuthModal({ isOpen, onClose, children }) {
     const [code, setCode] = useState('');
 
     const [userAuthStatus, setUserAuthStatus] = useState({ success: false, flow: null });
-    const [activeVerifyCode, setActiveVerifyCode] = useState(false)
+    const [activeVerifyCode, setActiveVerifyCode] = useState(false);
+    const [showErrorToasty, setShowErrorToasty] = useState(true);
 
     const [loadings, setLoadings] = useState({ loadingAuth: false });
     const { loadingAuth } = loadings;
@@ -67,7 +69,14 @@ export default function AuthModal({ isOpen, onClose, children }) {
     const clearStates = () => {
         setActiveVerifyCode(false);
         dispatch(setSendCodeInputValue(''));
+        setShowErrorToasty(false)
         onClose();
+    }
+
+    const backClickClear = () => {
+        setActiveVerifyCode(false);
+        dispatch(setSendCodeInputValue(''));
+        setShowErrorToasty(false)
     }
 
     const handleCodeChange = (val) => {
@@ -87,16 +96,25 @@ export default function AuthModal({ isOpen, onClose, children }) {
         }
     }
     const sendNewCode = async () => {
-        const resultReq = await Api.authUser(authInputValue, sendCodeInputValue, userAuthStatus?.flow);
-        console.log(resultReq); 
+        try {
+            const resultReq = await Api.authUser(authInputValue, sendCodeInputValue, userAuthStatus?.flow);
+        } catch (e) {
+            setShowErrorToasty(true);
+            console.log(showErrorToasty);
+        }
     }
+
 
     return createPortal(
         <div className={classNames('auth__modal', { modal__active: isOpen })}>
             <div className='backdrop' role='button' onClick={clearStates} />
 
-            <div className={classNames('modal__main', { active__verify__child: activeVerifyCode, max__height: sendCodeInputValue })}>
+            <div className={classNames('modal__main', { active__verify__child: activeVerifyCode, max__height: sendCodeInputValue, active__error: showErrorToasty })}>
                 <div className='modal__close__bar'>
+                    <button className={classNames('back', { active: activeVerifyCode })} onClick={backClickClear}>
+                        <BackArrowSvg />
+                    </button>
+
                     <button className='modal__close__bar__button' onClick={clearStates}>
                         <span className='container'>
                             <CloseSvg />
@@ -156,6 +174,15 @@ export default function AuthModal({ isOpen, onClose, children }) {
                 </div>
 
                 <div className={classNames('verify__content', { active__verify__content: activeVerifyCode })}>
+                    <div className={classNames('error__toasty', { show: showErrorToasty })}>
+                        <ErrorSvg />
+                        <p className='error__text'>Wait 1 minute before requesting a code.</p>
+
+                        <button className='close__toasty' onClick={() => setShowErrorToasty(false)}>
+                            <CloseSvg className='close__svg' />
+                        </button>
+                    </div>
+
                     <div className='info__container'>
                         <h1 className='title'>Confirm it’s you</h1>
                         <p className='info'>We sent a code to {authInputValue}</p>
