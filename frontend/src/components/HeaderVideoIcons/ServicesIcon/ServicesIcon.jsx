@@ -1,4 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
+import {motion } from "framer-motion";
+
+const transition = {
+    duration: 1.1,
+    delay: 0.4,
+    ease: [0, 0.71, 0.2, 1.01],
+};
 
 export default function ServicesIcon({ selected = false }) {
     const videoRef = useRef(null);
@@ -11,11 +18,17 @@ export default function ServicesIcon({ selected = false }) {
     }, [selected]);
 
     return (
-        <span className='services__video__icon__container'>
+        <motion.span
+            className="services__video__icon__container"
+            initial={{scale: 0 }}
+            animate={{scale: 1 }}
+            transition={transition}
+        >
             <video
-                key={selected ? 'selected' : 'default'}
+                key={selected ? "selected" : "default"}
                 ref={videoRef}
-                className={`services__video__icon ${selected ? 'header__services__video__icon__selected' : ''}`}
+                className={`services__video__icon ${selected ? "header__services__video__icon__selected" : ""
+                    }`}
                 autoPlay
                 muted
                 playsInline
@@ -24,12 +37,14 @@ export default function ServicesIcon({ selected = false }) {
                 data-testid="tab-bar-entry-video"
             >
                 <source
-                    src={selected
-                        ? "https://a0.muscache.com/videos/search-bar-icons/webm/consierge-selected.webm"
-                        : "https://a0.muscache.com/videos/search-bar-icons/webm/consierge-twirl.webm"}
+                    src={
+                        selected
+                            ? "https://a0.muscache.com/videos/search-bar-icons/webm/consierge-selected.webm"
+                            : "https://a0.muscache.com/videos/search-bar-icons/webm/consierge-twirl.webm"
+                    }
                     type="video/webm"
                 />
             </video>
-        </span>
+        </motion.span>
     );
 }

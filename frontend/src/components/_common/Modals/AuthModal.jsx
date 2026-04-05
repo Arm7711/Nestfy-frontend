@@ -24,9 +24,11 @@ export default function AuthModal({ isOpen, onClose, children }) {
     const { authInputValue, sendCodeInputValue } = useSelector(reducers => reducers.inputsValueReducer);
     const [code, setCode] = useState('');
 
+    const [showInfoBlock, setShowInfoBlock] = useState(false);
+
     const [userAuthStatus, setUserAuthStatus] = useState({ success: false, flow: null });
     const [activeVerifyCode, setActiveVerifyCode] = useState(false);
-    const [showErrorToasty, setShowErrorToasty] = useState(true);
+    const [showErrorToasty, setShowErrorToasty] = useState(false);
 
     const [loadings, setLoadings] = useState({ loadingAuth: false });
     const { loadingAuth } = loadings;
@@ -69,7 +71,8 @@ export default function AuthModal({ isOpen, onClose, children }) {
     const clearStates = () => {
         setActiveVerifyCode(false);
         dispatch(setSendCodeInputValue(''));
-        setShowErrorToasty(false)
+        setShowErrorToasty(false);
+        setShowInfoBlock(false);
         onClose();
     }
 
@@ -131,21 +134,21 @@ export default function AuthModal({ isOpen, onClose, children }) {
                     </div>
 
                     <div className={classNames('content__auth__block', { active__error__container: !is })}>
-                        <AuthModalInput onSubmit={submitForm} activeError={is} loaderAuth={loadingAuth} />
+                        <AuthModalInput onSubmit={submitForm} onClick={() => setShowInfoBlock(true)} activeError={is} loaderAuth={loadingAuth} />
                         <p className={classNames('error__message', { active__error: !is })}>
                             <ErrorSvg />
                             {message === 'empty' ? 'Please enter a phone number or email.' : 'Please enter a valid email address or phone number.'}
                         </p>
                     </div>
 
-                    <div className='content__information'>
+                    <div className={classNames('content__information', {show: showInfoBlock})}>
                         <p className='text'>
                             We’ll send a confirmation code by text or email. Message and data rates apply.
                             <NavLink to='/privacy-policy' className='link'>Privacy Policy</NavLink>
                         </p>
                     </div>
 
-                    <div className='button__container'>
+                    <div className={classNames('button__container', {show__info__block: showInfoBlock})}>
                         <button
                             className={classNames('submit__button', { loading__button: loadingAuth })}
                             type='submit'
@@ -156,13 +159,13 @@ export default function AuthModal({ isOpen, onClose, children }) {
                         </button>
                     </div>
 
-                    <div className='container__info'>
+                    <div className={classNames('container__info', {show__info__block: showInfoBlock})}>
                         <span className='line' />
                         <p className='or'>or</p>
                         <span className='line' />
                     </div>
 
-                    <div className='other__options__container'>
+                    <div className={classNames('other__options__container', {show__info__block: showInfoBlock})}>
                         <button className='option__button' disabled={loadingAuth}>
                             <GoogleSvg />
                         </button>
