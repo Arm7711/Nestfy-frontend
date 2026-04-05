@@ -4,7 +4,7 @@ import { setAuthInputValue } from '../../../redux/reducers/inputsValueReducer';
 import classNames from 'classnames';
 
 
-export default function AuthModalInput({ onSubmit, activeError, loaderAuth }) {
+export default function AuthModalInput({ onSubmit, activeError, loaderAuth, onClick }) {
     const dispatch = useDispatch();
     const [inpuValue, sethInputValue] = useState('');
 
@@ -14,7 +14,7 @@ export default function AuthModalInput({ onSubmit, activeError, loaderAuth }) {
     }
 
     return (
-        <form className={classNames('auth__input__form', { active__error: !activeError, loading__active: loaderAuth })} id='auth__form' onSubmit={onSubmit}>
+        <form onClick={onClick} className={classNames('auth__input__form', { active__error: !activeError, loading__active: loaderAuth })} id='auth__form' onSubmit={onSubmit}>
             <input
                 type="text"
                 id="a__input"

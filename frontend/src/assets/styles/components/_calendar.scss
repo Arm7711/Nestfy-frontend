@@ -7,6 +7,10 @@
     padding: 12px;
 
     .rdp-root {
+        .rdp-months {
+            flex-wrap: nowrap;
+        }
+
         .rdp-nav {
             width: 100%;
             @include allCenter(space-between, center, row);
@@ -83,7 +87,7 @@
                             }
 
                             &.rdp-outside {
-                               visibility: hidden;
+                                visibility: hidden;
                             }
 
                             &.rdp-selected {

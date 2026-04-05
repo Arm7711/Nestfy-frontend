@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import classNames from 'classnames';
+import AuthModal from '../../_common/Modals/AuthModal';
+import Calendar from '../../_common/Calendar/Calendar';
 
 import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react'
 import HomeIcon from '../../HeaderVideoIcons/HomeIcon/HomeIcon';
@@ -8,7 +10,8 @@ import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
 import { tabFields, searchTabFields, headerMenuData } from '../../../data/headerData';
-import AuthModal from '../../_common/Modals/AuthModal';
+import { locations } from '../../../data/loacationsData';
+import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 
 export default function Header() {
     const tabRef = useRef(new Map());
@@ -191,14 +194,33 @@ export default function Header() {
                 ))}
 
                 <div
-                    className={classNames('option__container', { active: activeSearchBar })}
+                    className={
+                        classNames(
+                            'option__container',
+                            {
+                                active: activeSearchBar,
+                                first__active__tab: searchActiveTab.tabIndex === 0,
+                                middle__active__tab: searchActiveTab.tabIndex === 1,
+                                last__active__tab: searchActiveTab.tabIndex === 2,
+                            })}
                     style={{
                         width: searchActiveTab.tabIndex === 1 ? '100%' : '50%',
                         left: searchActiveTab.tabIndex === 2 ? '50%' : '0%',
                     }
                     }
                 >
+                    {searchActiveTab.tabIndex === 0 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 0 })}>
+                        <div className='locations__container'>
+                            <h1 className='title'>Suggested destinations</h1>
+                            {locations.map((item, index) => (
+                                <LocationsBlock item={item} key={index} />
+                            ))}
+                        </div>
+                    </div>}
 
+                    {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 1 })}>
+                        <Calendar />
+                    </div>}
                 </div>
 
 
