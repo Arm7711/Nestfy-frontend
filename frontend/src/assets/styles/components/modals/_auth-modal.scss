@@ -46,6 +46,22 @@
         &.max__height {
             transition: all 0.4s;
             height: calc(280px + 50px);
+
+            &.active__error {
+                height: calc(280px + 50px + 75px);
+
+                .active__verify__content {
+                    .error__toasty {
+                        &.show {
+                            bottom: 90px;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.active__error {
+            height: calc(230px + 50px + 55px);
         }
 
 
@@ -58,6 +74,32 @@
             left: 0;
             @include allCenter(flex-end, flex-end, row);
             padding-right: 16px;
+
+            .back {
+                width: 33px;
+                height: 33px;
+                @include allCenter();
+                border-radius: 50%;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.6s;
+                position: absolute;
+                left: -100%;
+
+                .icon {
+                    width: 22px;
+                    height: 22px;
+                }
+
+                &:hover {
+                    background-color: $modal-close-button-background-color;
+                }
+
+                &.active {
+                    left: 16px;
+                }
+            }
 
             .modal__close__bar__button {
                 width: 33px;
@@ -100,12 +142,63 @@
             gap: 12px;
             padding-top: 12px;
 
+            .error__toasty {
+                position: absolute;
+                bottom: -100%;
+                width: calc(94% - 48px);
+                height: 55px;
+                @include boxShadow(12px);
+                @include allCenter(flex-start);
+                padding-left: 20px;
+                z-index: 10;
+                transition: all 0.6s;
+                gap: 5px;
+
+                &.show {
+                    bottom: 30px;
+                }
+
+                .icon {
+                    width: 22px;
+                    height: 22px;
+                    fill: $error-color;
+                }
+
+                .error__text {
+                    font-size: 15px;
+                    font-weight: 500;
+                    padding-top: 4px;
+                }
+
+                .close__toasty {
+                    width: 32px;
+                    height: 32px;
+                    @include allCenter();
+                    position: absolute;
+                    right: 12px;
+                    border-radius: 50%;
+                    background-color: transparent;
+                    transition: all 0.6s;
+                    border: none;
+                    cursor: pointer;
+
+                    .close__svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+
+                    &:hover {
+                        background-color: $modal-close-button-background-color;
+                    }
+                }
+            }
+
             &.active__verify__content {
                 left: 0;
                 opacity: 1;
             }
 
-            .send__result__button__container{
+            .send__result__button__container {
                 width: 100%;
                 height: fit-content;
                 @include allCenter();
@@ -114,15 +207,15 @@
                 transition: all 0.6s;
                 padding: 0 24px;
 
-                &.active{
+                &.active {
                     bottom: 25px;
                 }
 
-                .send__result__button{
+                .send__result__button {
                     width: 100%;
                     height: 45px;
                     border-radius: 12px;
-                    border:none;
+                    border: none;
                     background-color: $background-color-disabled;
                     font-size: 16px;
                     cursor: pointer;

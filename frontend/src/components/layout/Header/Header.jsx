@@ -76,7 +76,7 @@ export default function Header() {
     }, [headerActiveTab, searchActiveTab]);
 
     const authModalOpen = (itemName) => {
-        if (itemName === 'auth'){
+        if (itemName === 'auth') {
             setIsAuthModalOpen(true);
             setOpenHeaderMenu(false);
         }
@@ -189,6 +189,18 @@ export default function Header() {
                         <p className='desc'>{item?.content}</p>
                     </div>
                 ))}
+
+                <div
+                    className={classNames('option__container', { active: activeSearchBar })}
+                    style={{
+                        width: searchActiveTab.tabIndex === 1 ? '100%' : '50%',
+                        left: searchActiveTab.tabIndex === 2 ? '50%' : '0%',
+                    }
+                    }
+                >
+
+                </div>
+
 
                 <button className={classNames('search__button', { active__button: activeSearchBar })}>
                     <SearchSvg />
