@@ -1,4 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
+const transition = {
+    duration: 1.1,
+    delay:0.2,
+    ease: [0, 0.71, 0.2, 1.01],
+};
 
 export default function HomeIcon({ selected = false }) {
     const videoRef = useRef(null);
@@ -11,24 +18,31 @@ export default function HomeIcon({ selected = false }) {
     }, [selected]);
 
     return (
-        <span className='home__video__icon__container'>
+        <motion.span
+            className="home__video__icon__container"
+            initial={{scale: 0 }}
+            animate={{scale: 1 }}
+            transition={transition}
+        >
             <video
-                key={selected ? 'selected' : 'default'}
+                key={selected ? "selected" : "default"}
                 ref={videoRef}
-                className={`home__video__icon ${selected ? 'header__home__video__icon__selected' : ''}`}
+                className={`home__video__icon ${selected ? "header__home__video__icon__selected" : ""
+                    }`}
                 autoPlay
                 muted
                 playsInline
                 preload="auto"
-                poster="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-search-bar-icons/original/a32adab1-f9df-47e1-a411-bdff91b579c3.png?im_w=240"
             >
                 <source
-                    src={selected
-                        ? "https://a0.muscache.com/videos/search-bar-icons/webm/house-selected.webm"
-                        : "https://a0.muscache.com/videos/search-bar-icons/webm/house-twirl.webm"}
+                    src={
+                        selected
+                            ? "https://a0.muscache.com/videos/search-bar-icons/webm/house-selected.webm"
+                            : "https://a0.muscache.com/videos/search-bar-icons/webm/house-twirl.webm"
+                    }
                     type="video/webm"
                 />
             </video>
-        </span>
+        </motion.span>
     );
 }

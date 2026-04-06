@@ -1,17 +1,212 @@
 $line-color: #EBEBEB;
 $error-color: #C13515;
+$input-error-backgorund-color: #FFF5F3;
+$background-color-disabled: #F2F2F2;
 
-// Header varibales --------------------------------------------------------------------------------------
+
+// Header varibales -------------------------------------------
 
 $header-backgoround-color: #FAFAFA;
 $header-bottom-line-color: #EBEBEB;
 
-// Header varibales --------------------------------------------------------------------------------------
+// Header varibales -------------------------------------------
 
-// Modals varibales --------------------------------------------------------------------------------------
+
+
+// Modals varibales -------------------------------------------
 
 $modal-backdrop-background-color: #222222;
 $modal-close-button-background-color: #F7F7F7;
 $line-color: #afafaf;
 
-// Modals varibales --------------------------------------------------------------------------------------
+// Modals varibales -------------------------------------------
+
+
+
+// Color varibales -------------------------------------------
+$palette-bg-primary: #FFFFFF;
+$palette-bg-primary-disabled: #F7F7F7;
+$palette-bg-primary-hover: #F7F7F7;
+$palette-bg-primary-selected: #F7F7F7;
+$palette-bg-primary-error: #FFF8F6;
+$palette-bg-primary-core: #FF385C;
+$palette-bg-primary-luxe: #460479;
+$palette-bg-primary-plus: #92174D;
+$palette-bg-primary-inverse: #222222;
+$palette-bg-primary-inverse-hover: #000000;
+$palette-bg-primary-inverse-disabled: #DDDDDD;
+$palette-bg-primary-inverse-error: #C13515;
+$palette-bg-primary-inverse-error-hover: #B32505;
+$palette-bg-secondary: #F7F7F7;
+$palette-bg-secondary-core: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+$palette-bg-secondary-core-rtl: linear-gradient(to left, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+$palette-bg-secondary-plus: linear-gradient(to right, #BD1E59 0%, #92174D 50%, #861453 100%);
+$palette-bg-secondary-plus-rtl: linear-gradient(to left, #BD1E59 0%, #92174D 50%, #861453 100%);
+$palette-bg-secondary-luxe: linear-gradient(to right, #59086E 0%, #460479 50%, #440589 100%);
+$palette-bg-secondary-luxe-rtl: linear-gradient(to left, #59086E 0%, #460479 50%, #440589 100%);
+$palette-bg-secondary-core-hover: radial-gradient(circle at center, #FF385C 0%, #E61E4D 27.5%, #E31C5F 40%, #D70466 57.5%, #BD1E59 75%, #BD1E59 100%);
+$palette-bg-secondary-plus-hover: radial-gradient(circle at center, #D70466 0%, #BD1E59 30%, #92174D 55%, #861453 72.5%, #6C0D63 90%, #6C0D63 100%);
+$palette-bg-secondary-luxe-hover: radial-gradient(circle at center, #6C0D63 0%, #59086E 30%, #460479 55%, #440589 72.5%, #3B07BB 90%, #3B07BB 100%);
+$palette-bg-tertiary: #B0B0B0;
+$palette-bg-tertiary-hover: #6A6A6A;
+$palette-bg-tertiary-disabled: #EBEBEB;
+$palette-bg-tertiary-core: #E00B41;
+$palette-bg-quaternary: #F2F2F2;
+$palette-bg-quaternary-hover: #EBEBEB;
+$palette-text-primary: #222222;
+$palette-text-primary-disabled: #DDDDDD;
+$palette-text-primary-hover: #000000;
+$palette-text-primary-error: #C13515;
+$palette-text-primary-error-hover: #B32505;
+$palette-text-primary-inverse: #FFFFFF;
+$palette-text-primary-core: linear-gradient(to right, #E61E4D 0%, #E31C5F 50%, #D70466 100%);
+$palette-text-secondary: #6A6A6A;
+$palette-text-secondary-disabled: #DDDDDD;
+$palette-text-secondary-error: #C13515;
+$palette-text-secondary-error-hover: #B32505;
+$palette-text-legal: #428BFF;
+$palette-text-link-disabled: #929292;
+$palette-text-focused: #3F3F3F;
+$palette-text-material-disabled: rgba(0, 0, 0, 0.24);
+$palette-icon-primary: #222222;
+$palette-icon-primary-disabled: #DDDDDD;
+$palette-icon-primary-hover: #000000;
+$palette-icon-primary-error: #C13515;
+$palette-icon-primary-error-hover: #B32505;
+$palette-icon-primary-inverse: #FFFFFF;
+$palette-icon-secondary: #6A6A6A;
+$palette-icon-secondary-hover: #222222;
+$palette-icon-secondary-selected: #222222;
+$palette-icon-secondary-disabled: #F7F7F7;
+$palette-icon-tertiary: #8C8C8C;
+$palette-icon-error: #C13515;
+$palette-icon-warning: #E07912;
+$palette-icon-info: #428BFF;
+$palette-icon-success: #008A05;
+$palette-border-primary: #222222;
+$palette-border-primary-hover: #000000;
+$palette-border-primary-disabled: #DDDDDD;
+$palette-border-primary-inverse: #FFFFFF;
+$palette-border-secondary: #B0B0B0;
+$palette-border-secondary-hover: #222222;
+$palette-border-secondary-selected: #222222;
+$palette-border-secondary-disabled: #EBEBEB;
+$palette-border-secondary-error: #C13515;
+$palette-border-tertiary: #DDDDDD;
+$palette-border-tertiary-hover: #000000;
+$palette-border-tertiary-selected: #222222;
+$palette-border-tertiary-error: #C13515;
+$palette-border-tertiary-error-hover: #B32505;
+$palette-border-quarternary: #8C8C8C;
+$palette-shadow50: rgba(0, 0, 0, 0.04);
+$palette-shadow100: rgba(0, 0, 0, 0.08);
+$palette-shadow150: rgba(0, 0, 0, 0.12);
+$palette-shadow200: rgba(0, 0, 0, 0.135);
+$palette-shadow250: rgba(0, 0, 0, 0.18);
+$palette-shadow300: rgba(0, 0, 0, 0.20);
+$palette-shadow350: rgba(0, 0, 0, 0.28);
+$palette-shadow600: rgba(0, 0, 0, 0.60);
+$palette-grey0: #FFFFFF;
+$palette-grey100: #F7F7F7;
+$palette-grey200: #F2F2F2;
+$palette-grey300: #EBEBEB;
+$palette-grey400: #DDDDDD;
+$palette-grey500: #C1C1C1;
+$palette-grey600: #8C8C8C;
+$palette-grey700: #6C6C6C;
+$palette-grey800: #515151;
+$palette-grey900: #3F3F3F;
+$palette-grey1000: #222222;
+$palette-grey1100: #000000;
+$palette-red100: #FFF5F3;
+$palette-red200: #FFEFEC;
+$palette-red300: #FFE6E2;
+$palette-red400: #FFD3CD;
+$palette-red500: #FFACA5;
+$palette-red600: #F84A43;
+$palette-red700: #D7251C;
+$palette-red800: #A3150F;
+$palette-red900: #772320;
+$palette-red1000: #381918;
+$palette-green100: #F1FAF2;
+$palette-green200: #E6F6E9;
+$palette-green300: #DCF1E1;
+$palette-green400: #C3E6CC;
+$palette-green500: #8DD19E;
+$palette-green600: #12A139;
+$palette-green700: #038026;
+$palette-green800: #015F1A;
+$palette-green900: #104B20;
+$palette-green1000: #112716;
+$palette-blue100: #F0F8FF;
+$palette-blue200: #E8F3FE;
+$palette-blue300: #DDEDFE;
+$palette-blue400: #C6E0FE;
+$palette-blue500: #94C5FD;
+$palette-blue600: #318CF7;
+$palette-blue700: #166BD8;
+$palette-blue800: #0D4DAA;
+$palette-blue900: #173F7F;
+$palette-blue1000: #162339;
+$palette-orange100: #FEF6EC;
+$palette-orange200: #FDF0E1;
+$palette-orange300: #FDE8D4;
+$palette-orange400: #FBD8BB;
+$palette-orange500: #F7B383;
+$palette-orange600: #EB6100;
+$palette-orange700: #BE4900;
+$palette-orange800: #8F3400;
+$palette-orange900: #712A05;
+$palette-orange1000: #371C10;
+$palette-purple100: #F7F6FF;
+$palette-purple200: #F3F1FF;
+$palette-purple300: #ECE9FE;
+$palette-purple400: #DED9FE;
+$palette-purple500: #C2B9FE;
+$palette-purple600: #8C78FF;
+$palette-purple700: #6E57E4;
+$palette-purple800: #503EB2;
+$palette-purple900: #413582;
+$palette-purple1000: #221F38;
+$palette-magenta100: #FDF5FB;
+$palette-magenta200: #FBEFF8;
+$palette-magenta300: #FAE6F5;
+$palette-magenta400: #F5D3EC;
+$palette-magenta500: #EFADDE;
+$palette-magenta600: #E54EC1;
+$palette-magenta700: #BD31A1;
+$palette-magenta800: #901E7C;
+$palette-magenta900: #6A255E;
+$palette-magenta1000: #311B2D;
+$palette-rausch100: #FFF5F6;
+$palette-rausch200: #FFEEF0;
+$palette-rausch300: #FEE5E7;
+$palette-rausch400: #FFD2D7;
+$palette-rausch500: #FFABB6;
+$palette-rausch600: #FF385C;
+$palette-rausch700: #DA1249;
+$palette-rausch800: #A21039;
+$palette-rausch900: #732139;
+$palette-rausch1000: #361A21;
+$palette-beige100: #F7F6F2;
+$palette-beige200: #F4F2EC;
+$palette-beige300: #EEEBE5;
+$palette-beige400: #DFDCD6;
+$palette-beige500: #C5C1BB;
+$palette-beige600: #8F8B87;
+$palette-beige700: #6E6A66;
+$palette-beige800: #53514E;
+$palette-beige900: #413F3D;
+$palette-beige1000: #232221;
+$material-backgrounds-extra-thin-background-color: rgba(218, 218, 218, 0.40);
+$material-backgrounds-extra-thin-backdrop-filter: blur(8px) saturate(1);
+$material-backgrounds-thin-background-color: rgba(240, 240, 240, 0.50);
+$material-backgrounds-thin-backdrop-filter: blur(36px) saturate(1.6);
+$material-backgrounds-regular-background-color: rgba(250, 250, 250, 0.72);
+$material-backgrounds-regular-backdrop-filter: blur(24px) saturate(1.6);
+$material-backgrounds-thick-background-color: rgba(240, 240, 240, 0.86);
+$material-backgrounds-thick-backdrop-filter: blur(12px) saturate(3.00);
+$material-backgrounds-extra-thick-background-color: rgba(255, 255, 255, 0.925);
+$material-backgrounds-extra-thick-backdrop-filter: blur(16px) saturate(1.6);
+
+// Color varibales -------------------------------------------
