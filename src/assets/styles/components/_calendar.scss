@@ -68,11 +68,11 @@ $ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
     position: absolute;
     z-index: 10;
 
-    &:first-child{
+    &:first-child {
         left: 20px;
     }
 
-    &:last-child{
+    &:last-child {
         right: 20px;
     }
 
@@ -378,6 +378,14 @@ $ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
 
     &:active {
         transform: scale(0.93);
+    }
+
+    &.v1cal__chip--on {
+        &:hover {
+            color: black;
+            background-color: transparent;
+            border-color: black;
+        }
     }
 
     &--on {
