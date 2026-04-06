@@ -37,6 +37,6 @@ export const headerMenuData = [
     {
         filedName: 'auth',
         content: 'Log in or sign up',
-        navigationTo: '/help-center'
+        navigationTo: ''
     }
 ]

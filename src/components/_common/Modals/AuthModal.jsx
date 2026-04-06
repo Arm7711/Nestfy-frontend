@@ -37,7 +37,8 @@ export default function AuthModal({ isOpen, onClose, children }) {
         message: '',
     })
     const { is, message } = submitResult;
-    useScroll();
+    
+    useScroll(isOpen);
 
     useEffect(() => {
         setSubmitResult({ is: true, message: '' })

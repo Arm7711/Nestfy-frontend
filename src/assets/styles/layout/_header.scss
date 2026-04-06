@@ -7,12 +7,47 @@
     max-height: 200px;
     background-color: $header-backgoround-color;
     position: fixed;
+    z-index: 999;
     top: 0;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     padding: 4px 32px 12px 32px;
+    transition: all 0.4s;
+
+    &.help__header {
+        height: 80px;
+        background-color: white;
+        position: relative;
+        margin-bottom: -180px;
+
+        &::after {
+            width: 0;
+            left: 0;
+            transition: all 0.4s;
+        }
+
+        .header__section__first {
+            height: 100%;
+
+            .header__section__first__logo__block {
+                gap: 4px;
+
+                .header__section__first__logo {
+                    width: 80px !important;
+                }
+
+                .help__title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: black;
+                    transform: translateX(-20px);
+                }
+            }
+        }
+
+    }
 
     &::after {
         content: "";
@@ -166,6 +201,7 @@
                         transition: all 0.6s;
                         cursor: pointer;
                         position: absolute;
+                        padding-top: 5px;
                         top: 0;
                         right: 0;
 

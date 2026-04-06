@@ -1,8 +1,10 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { NavLink, useParams } from 'react-router';
 import classNames from 'classnames';
 import AuthModal from '../../_common/Modals/AuthModal';
 import V1Calendar from '../../_common/V1Calendar/V1Calendar';
+import MenuIcon from '../../_common/MenuIcon/MenuIcon';
 
 import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react'
 import HomeIcon from '../../HeaderVideoIcons/HomeIcon/HomeIcon';
@@ -15,6 +17,7 @@ import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 
 export default function Header() {
+    const { lang } = useParams();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
@@ -84,7 +87,7 @@ export default function Header() {
 
     const changeTab = (item) => {
         setWhereOptionValue(item?.title);
-        setSearchAtiveTab({tabName: 'when', tabIndex: 1})
+        setSearchAtiveTab({ tabName: 'when', tabIndex: 1 })
     }
 
     const authModalOpen = (itemName) => {
@@ -145,16 +148,17 @@ export default function Header() {
                     </div>
 
                     <div className='header__section__tab__bar__tools'>
-                        
+
                         <div className='header__section__tab__bar__tools__item lang'>
                             <LangSvg />
                         </div>
 
                         <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })} ref={headerMenuRef}>
                             <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
-                                <span className='line line--1' />
-                                <span className='line line--2' />
-                                <span className='line line--3' />
+                                <MenuIcon
+                                    checked={openHeaderMenu}
+                                    onChange={() => setOpenHeaderMenu(prev => !prev)}
+                                />
                             </button>
 
                             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
@@ -162,14 +166,17 @@ export default function Header() {
                             <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
                                 {headerMenuData.map((item, index) => (
                                     <button className='menu__item' key={index} onClick={() => authModalOpen(item?.filedName)}>
-                                        <p className='content'>{item?.content}</p>
+                                        {item?.navigationTo
+                                            ? (<NavLink to={`/${lang}${item?.navigationTo}`} onClick={() => setOpenHeaderMenu(false)} className='content'>{item?.content}</NavLink>)
+                                            : (<p className='content' > {item?.content}</p>)
+                                        }
                                     </button>
                                 ))}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div
                 className={classNames('header__search__form__container', { active__bar: activeSearchBar })}
@@ -245,6 +252,6 @@ export default function Header() {
                     <p className='search__text'>Search</p>
                 </button>
             </div>
-        </header>
+        </header >
     )
 }
