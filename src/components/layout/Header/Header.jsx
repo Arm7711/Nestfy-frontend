@@ -93,7 +93,8 @@ export default function Header() {
                         <SiteLogo className='header__section__first__logo' />
                     </div>
 
-                    <div className='header__section__first__tab__list'>
+                    <div className='header__section__first__tab__list'
+                    >
                         <span
                             className='active__tab'
                             style={{
@@ -135,6 +136,7 @@ export default function Header() {
                     </div>
 
                     <div className='header__section__tab__bar__tools'>
+                        
                         <div className='header__section__tab__bar__tools__item lang'>
                             <LangSvg />
                         </div>

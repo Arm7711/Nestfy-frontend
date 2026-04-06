@@ -32,7 +32,7 @@ export const headerMenuData = [
     {
         filedName: 'helpCenter',
         content: 'Help Center',
-        navigationTo: '/help-center'
+        navigationTo: '/help'
     },
     {
         filedName: 'auth',
