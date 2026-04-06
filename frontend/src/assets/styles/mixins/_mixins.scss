@@ -1,0 +1,13 @@
+@mixin allCenter($justify: center, $align: center, $flex-direction: row) {
+    display: flex;
+    justify-content: $justify;
+    align-items: $align;
+    flex-direction: $flex-direction;
+}
+
+@mixin boxShadow($border-radius: 15px) {
+    background-color: white !important;
+    box-shadow: 0 2px 20px 1px rgba(0, 0, 0, .08);
+    border: none;
+    border-radius: $border-radius;
+}
