@@ -1,0 +1,18 @@
+@media only screen and (max-height: 800px) {
+    .header {
+        .header__search__form__container {
+            .option__container {
+                height: calc(100vh - 200px) !important;
+                max-height: none;
+
+                &.middle__active__tab {
+                    padding-bottom: 30px;
+                }
+
+                .option__tab__content__calendar {
+                    overflow-y: auto;
+                }
+            }
+        }
+    }
+}

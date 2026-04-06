@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 import AuthModal from '../../_common/Modals/AuthModal';
 import V1Calendar from '../../_common/V1Calendar/V1Calendar';
@@ -14,6 +15,7 @@ import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 
 export default function Header() {
+    const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
         {
@@ -40,6 +42,8 @@ export default function Header() {
     const headerMenuRef = useRef(null);
     const [openHeaderMenu, setOpenHeaderMenu] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+    const [whereOptionValue, setWhereOptionValue] = useState('')
 
     useEffect(() => {
         function handleClick(event) {
@@ -77,6 +81,11 @@ export default function Header() {
         setTabWidth(rect.width);
         setTranslateX(rect.left - parentRect.left);
     }, [headerActiveTab, searchActiveTab]);
+
+    const changeTab = (item) => {
+        setWhereOptionValue(item?.title);
+        setSearchAtiveTab({tabName: 'when', tabIndex: 1})
+    }
 
     const authModalOpen = (itemName) => {
         if (itemName === 'auth') {
@@ -191,7 +200,11 @@ export default function Header() {
                         }}
                     >
                         <h2 className='title'>{item?.title}</h2>
-                        <p className='desc'>{item?.content}</p>
+                        <p className='desc'>{
+                            index === 0 ? (whereOptionValue || item?.content)
+                                : index === 1 ? (selectedDays || item?.content)
+                                    : item?.content
+                        }</p>
                     </div>
                 ))}
 
@@ -215,12 +228,12 @@ export default function Header() {
                         <div className='locations__container'>
                             <h1 className='title'>Suggested destinations</h1>
                             {locations.map((item, index) => (
-                                <LocationsBlock item={item} key={index} />
+                                <LocationsBlock item={item} key={index} onClick={() => changeTab(item)} />
                             ))}
                         </div>
                     </div>}
 
-                    {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 1 })}>
+                    {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content option__tab__content__calendar', { active: searchActiveTab.tabIndex === 1 })}>
                         <V1Calendar />
                     </div>}
                 </div>

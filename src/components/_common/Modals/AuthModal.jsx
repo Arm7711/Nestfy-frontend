@@ -68,6 +68,17 @@ export default function AuthModal({ isOpen, onClose, children }) {
         }
     }
 
+    useEffect(() => {
+        if (!activeVerifyCode || sendCodeInputValue.length !== 6) return;
+
+        const handleKeyDown = (e) => {
+            if (e.key === 'Enter') sendCode();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeVerifyCode, sendCodeInputValue]);
+
     const clearStates = () => {
         setActiveVerifyCode(false);
         dispatch(setSendCodeInputValue(''));
@@ -141,14 +152,14 @@ export default function AuthModal({ isOpen, onClose, children }) {
                         </p>
                     </div>
 
-                    <div className={classNames('content__information', {show: showInfoBlock})}>
+                    <div className={classNames('content__information', { show: showInfoBlock })}>
                         <p className='text'>
                             We’ll send a confirmation code by text or email. Message and data rates apply.
                             <NavLink to='/privacy-policy' className='link'>Privacy Policy</NavLink>
                         </p>
                     </div>
 
-                    <div className={classNames('button__container', {show__info__block: showInfoBlock})}>
+                    <div className={classNames('button__container', { show__info__block: showInfoBlock })}>
                         <button
                             className={classNames('submit__button', { loading__button: loadingAuth })}
                             type='submit'
@@ -159,13 +170,13 @@ export default function AuthModal({ isOpen, onClose, children }) {
                         </button>
                     </div>
 
-                    <div className={classNames('container__info', {show__info__block: showInfoBlock})}>
+                    <div className={classNames('container__info', { show__info__block: showInfoBlock })}>
                         <span className='line' />
                         <p className='or'>or</p>
                         <span className='line' />
                     </div>
 
-                    <div className={classNames('other__options__container', {show__info__block: showInfoBlock})}>
+                    <div className={classNames('other__options__container', { show__info__block: showInfoBlock })}>
                         <button className='option__button' disabled={loadingAuth}>
                             <GoogleSvg />
                         </button>

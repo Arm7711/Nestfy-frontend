@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedDays } from '../../../redux/reducers/calendarChDays.js';
+
 import { MonthColumn } from './components/index.jsx';
 import { useChipWidths } from './hooks/index.jsx';
 import { FLEX_OPTS } from './constants.jsx';
 import { toKey, fromKey, fmtKey } from './utils/index.jsx';
-
 import CurretV1CalendarSvg from '../../svg/CurretV1CalendarSvg.jsx';
 
 function nightsWordEnglish(n) {
@@ -11,6 +13,9 @@ function nightsWordEnglish(n) {
 }
 
 export default function V1Calendar({ onChange, minDate, className = '' }) {
+    const dispatch = useDispatch();
+    const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
+
     const todayRef = useRef((() => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; })());
     const todayKey = toKey(todayRef.current);
 
@@ -49,14 +54,11 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
         if (newMonth > 11) { newYear++; newMonth = 0; }
         if (newMonth < 0) { newYear--; newMonth = 11; }
 
-        // Запрещаем навигацию назад более чем на 2 года
         const twoYearsAgoDate = new Date(todayRef.current);
         twoYearsAgoDate.setFullYear(todayRef.current.getFullYear() - 2);
         const newDate = new Date(newYear, newMonth, 1);
 
-        if (dir < 0 && newDate < twoYearsAgoDate) {
-            return;
-        }
+        if (dir < 0 && newDate < twoYearsAgoDate) return;
 
         setPrevYear(baseYear);
         setPrevMonth(baseMonth);
@@ -78,19 +80,10 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
 
     const handleDayClick = useCallback((k) => {
         if (k < minKey) return;
-
         if (k > maxKey) return;
 
-        if (k === startKey && !endKey) {
-            handleReset();
-            return;
-        }
-
-        if (k === endKey) {
-            setEndKey(null);
-            setHovKey(null);
-            return;
-        }
+        if (k === startKey && !endKey) { handleReset(); return; }
+        if (k === endKey) { setEndKey(null); setHovKey(null); return; }
 
         if (!startKey || endKey) {
             setStartKey(k); setEndKey(null); setHovKey(null);
@@ -118,12 +111,45 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
         setFlex(prev => prev === value ? 0 : value);
     }, []);
 
-    useEffect(() => { onChange?.({ startKey, endKey, flex }); }, [startKey, endKey, flex, onChange]);
+    const buildPayload = () => {
+        if (!startKey) return null;
+        const checkIn = fromKey(startKey);
+        const checkOut = endKey ? fromKey(endKey) : null;
+        const nights = checkOut
+            ? Math.round((checkOut - checkIn) / 86400000)
+            : null;
+        return {
+            checkIn: checkIn.toISOString().slice(0, 10),
+            checkOut: checkOut ? checkOut.toISOString().slice(0, 10) : null,
+            nights,
+            flex,
+            flexRange: flex && checkIn ? {
+                from: new Date(checkIn - flex * 86400000).toISOString().slice(0, 10),
+                to: new Date(checkIn + flex * 86400000).toISOString().slice(0, 10),
+            } : null,
+        };
+    };
 
-    const status = (() => {
+    useEffect(() => {
+        const payload = buildPayload();
+        onChange?.(payload);
+
+        const onlyDays = (() => {
+            if (!startKey) return null;
+            if (!endKey) return fmtKey(startKey);
+            return `${fmtKey(startKey)} - ${fmtKey(endKey)}`;
+        })();
+
+        dispatch(setSelectedDays(onlyDays));
+    }, [startKey, endKey, flex]);
+
+    const status = ((onlyDays = false) => {
         if (!startKey) return 'Select check-in date';
         if (!endKey) return `Check-in: ${fmtKey(startKey)}${flex ? ` (±${flex} day${flex > 1 ? 's' : ''})` : ''}\u00a0—\u00a0select check-out`;
         const n = Math.round((fromKey(endKey) - fromKey(startKey)) / 86400000);
+        if (onlyDays) {
+            return `${fmtKey(startKey)} - ${fmtKey(endKey)}`;
+        }
         return `${fmtKey(startKey)} - ${fmtKey(endKey)} · ${n}\u00a0${nightsWordEnglish(n)}${flex ? ` · ±${flex}\u00a0day${flex > 1 ? 's' : ''}` : ''}`;
     })();
 
@@ -148,7 +174,7 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
                     <MonthColumn colOffset={1} {...colProps} />
                 </div>
                 <button className="v1cal__nav" onClick={() => navigate(1)} aria-label="Next">
-                    <CurretV1CalendarSvg className='icon next'/>
+                    <CurretV1CalendarSvg className='icon next' />
                 </button>
             </div>
 

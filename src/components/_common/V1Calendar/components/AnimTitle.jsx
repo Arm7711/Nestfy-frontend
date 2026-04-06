@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { flushSync } from 'react-dom';
 import { MONTHS } from '../constants.jsx';
 
 function AnimTitle({ year, month, dir, animKey }) {
@@ -11,13 +12,18 @@ function AnimTitle({ year, month, dir, animKey }) {
         if (isFirst.current) { isFirst.current = false; return; }
 
         const id = nextId.current++;
-        setSlots(prev =>
-            [...prev.map(s => ({ ...s, phase: dir > 0 ? 'exit-left' : 'exit-right' })),
-            { label, id, phase: dir > 0 ? 'enter-right' : 'enter-left' }]
-        );
-        requestAnimationFrame(() => requestAnimationFrame(() => {
+
+        flushSync(() => {
+            setSlots(prev => [
+                ...prev.map(s => ({ ...s, phase: dir > 0 ? 'exit-left' : 'exit-right' })),
+                { label, id, phase: dir > 0 ? 'enter-right' : 'enter-left' }
+            ]);
+        });
+
+        requestAnimationFrame(() => {
             setSlots(prev => prev.map(s => s.id === id ? { ...s, phase: 'visible' } : s));
-        }));
+        });
+
         const t = setTimeout(() => setSlots(prev => prev.filter(s => s.id === id)), 380);
         return () => clearTimeout(t);
     }, [animKey]);
