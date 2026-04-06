@@ -1,8 +1,11 @@
 .nestfy__page {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.antiplace__main {
+  flex: 1;
+  width: 100%;
 }
