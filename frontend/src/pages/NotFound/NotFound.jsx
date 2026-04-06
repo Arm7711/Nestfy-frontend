@@ -1,8 +1,9 @@
 import React from 'react';
-import Calendar from '../../components/_common/Calendar/Calendar';
+import V1Calendar from '../../components/_common/V1Calendar/V1Calendar';
+import CommonSwitch from '../../components/_common/Switchs/CommonSwitch';
 
 export default function NotFound() {
   return (
-    <Calendar />
+    <V1Calendar/>
   )
 }

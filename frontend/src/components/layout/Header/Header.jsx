@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import classNames from 'classnames';
 import AuthModal from '../../_common/Modals/AuthModal';
-import Calendar from '../../_common/Calendar/Calendar';
+import V1Calendar from '../../_common/V1Calendar/V1Calendar';
 
 import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react'
 import HomeIcon from '../../HeaderVideoIcons/HomeIcon/HomeIcon';
@@ -219,7 +219,7 @@ export default function Header() {
                     </div>}
 
                     {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 1 })}>
-                        <Calendar />
+                        <V1Calendar />
                     </div>}
                 </div>
 
