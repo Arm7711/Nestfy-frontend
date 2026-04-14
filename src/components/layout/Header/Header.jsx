@@ -6,17 +6,20 @@ import AuthModal from '../../_common/Modals/AuthModal';
 import V1Calendar from '../../_common/V1Calendar/V1Calendar';
 import MenuIcon from '../../_common/MenuIcon/MenuIcon';
 
-import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react'
+import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react';
+import SiteLogoSvg from '../../../assets/images/logo/site-logo-n.svg?react'
+
 import HomeIcon from '../../HeaderVideoIcons/HomeIcon/HomeIcon';
 import ServicesIcon from '../../HeaderVideoIcons/ServicesIcon/ServicesIcon';
 import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
-import { tabFields, searchTabFields, headerMenuData } from '../../../data/headerData';
+import { tabFields, searchTabFields, headerMenuData, authHeaderMenuData } from '../../../data/headerData';
 import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
+import Api from '../../../api/Api';
 
-export default function Header({ isProfilePage, isAuth }) {
+export default function Header({ isProfilePage, isHelpPage, isAuth }) {
     const { lang } = useParams();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
 
@@ -47,7 +50,8 @@ export default function Header({ isProfilePage, isAuth }) {
     const [openHeaderMenu, setOpenHeaderMenu] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-    const [whereOptionValue, setWhereOptionValue] = useState('')
+    const [whereOptionValue, setWhereOptionValue] = useState('');
+    const userData = JSON.parse(localStorage.getItem("userData") || null);
 
     useEffect(() => {
         function handleClick(event) {
@@ -97,16 +101,33 @@ export default function Header({ isProfilePage, isAuth }) {
             setOpenHeaderMenu(false);
         }
     }
+    const logOut = async () => {
+        try {
+            await Api.logout();
+            setOpenHeaderMenu(false);
+            localStorage.removeItem("userData")
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
-        <header className={classNames('header', { profile__page: isProfilePage })}>
-            <div className={classNames('header__section__first', { profile__page: isProfilePage })}>
-                <div className='header__section__first__content'>
-                    <div className='header__section__first__logo__block'>
-                        <SiteLogo className={classNames('header__section__first__logo', { profile__page: isProfilePage })} />
-                    </div>
+        <header className={classNames('header', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
+            <div className={classNames('header__section__first', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
+                <div className={classNames('header__section__first__content', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
+                    <NavLink to={`/${lang}`} className='header__section__first__logo__block'>
+                        {isHelpPage
+                            ?
+                            <>
+                                <SiteLogoSvg className='header__section__first__logo' />
+                                <h1 className='help__title'>Help center</h1>
+                            </>
+                            :
+                            <SiteLogo className={classNames('header__section__first__logo', { profile__page__header: isProfilePage })} />
+                        }
+                    </NavLink>
 
-                    <div className={classNames('header__section__first__tab__list', { profile__page: isProfilePage })}
+                    <div className={classNames('header__section__first__tab__list', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}
                     >
                         <span
                             className='active__tab'
@@ -117,7 +138,7 @@ export default function Header({ isProfilePage, isAuth }) {
                         />
 
                         {tabFields?.map(({ tabName, tab, title }, index) => (
-                            <div className='tab__list__item' key={index} ref={
+                            <NavLink className='tab__list__item' key={index} ref={
                                 el => {
                                     if (el) {
                                         tabRef.current.set(tabName, el);
@@ -125,6 +146,7 @@ export default function Header({ isProfilePage, isAuth }) {
                                         tabRef.current.delete(tabName);
                                     }
                                 }}
+                                to={`/${lang}/${tab}`}
                                 role='button'
                                 onClick={() => setHeaderActiveTab({ tabName, tabIndex: index })}
                             >
@@ -144,7 +166,7 @@ export default function Header({ isProfilePage, isAuth }) {
                                 <div className={classNames('list__item__title', { active__tab__title: headerActiveTab.tabName === tabName })}>
                                     <p className='title'>{title}</p>
                                 </div>
-                            </div>
+                            </NavLink>
                         ))}
                     </div>
 
@@ -153,16 +175,25 @@ export default function Header({ isProfilePage, isAuth }) {
                         {
                             isAuth
                                 ?
-                                <div className='header__section__tab__bar__tools__item profile'>
-                                    
-                                </div>
+                                <NavLink to={`/${lang}/profile`} className='header__section__tab__bar__tools__item profile'>
+                                    <p className='user__letter'>{userData ? userData?.name[0] : 'U'}</p>
+                                </NavLink>
                                 :
                                 <div className='header__section__tab__bar__tools__item lang'>
                                     <LangSvg />
                                 </div>
                         }
 
-                        <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })} ref={headerMenuRef}>
+                        <div
+                            className={classNames('header__section__tab__bar__tools__item menu',
+                                {
+                                    active__menu: openHeaderMenu,
+                                    is__auth: isAuth,
+                                    profile__page__header: isProfilePage
+                                }
+                            )}
+                            ref={headerMenuRef}
+                        >
                             <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
                                 <MenuIcon
                                     checked={openHeaderMenu}
@@ -173,12 +204,25 @@ export default function Header({ isProfilePage, isAuth }) {
                             <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
                             <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
-                                {headerMenuData.map((item, index) => (
+                                {(isAuth ? authHeaderMenuData : headerMenuData).map((item, index) => (
                                     <button className='menu__item' key={index} onClick={() => authModalOpen(item?.filedName)}>
-                                        {item?.navigationTo
-                                            ? (<NavLink to={`/${lang}${item?.navigationTo}`} onClick={() => setOpenHeaderMenu(false)} className='content'>{item?.content}</NavLink>)
-                                            : (<p className='content' > {item?.content}</p>)
-                                        }
+                                        {item?.navigationTo ? (
+                                            <NavLink
+                                                to={`/${lang}${item.navigationTo}`}
+                                                onClick={() => setOpenHeaderMenu(false)}
+                                                className='content'
+                                            >
+                                                {item.content}
+                                            </NavLink>
+                                        ) : (
+                                            <p
+                                                role='button'
+                                                className='content'
+                                                onClick={() => item?.action === 'logout' && logOut()}
+                                            >
+                                                {item.content}
+                                            </p>
+                                        )}
                                     </button>
                                 ))}
                             </div>
@@ -188,7 +232,7 @@ export default function Header({ isProfilePage, isAuth }) {
             </div >
 
             <div
-                className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page: isProfilePage })}
+                className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page__header: isProfilePage, help__page__header: isHelpPage })}
                 ref={searchBarRef}
                 onClick={() => setActiveSearchBar(true)}
             >

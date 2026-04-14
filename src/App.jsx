@@ -8,6 +8,8 @@ import Help from './pages/Help/Help';
 import NotFound from './pages/NotFound/NotFound';
 import HelpDetails from "./pages/Help/HelpDetailes.jsx";
 import Profile from './pages/Profile/Profile.jsx';
+import MainPage from "./pages/MainPage/MainPage.jsx";
+import Services from './pages/Services/Services.jsx'
 
 import RedirectNoAuth from './components/redirect/RedirectNoAuth.jsx';
 import { bootstrapAuth } from './auth/bootstrapAuth';
@@ -23,8 +25,11 @@ const App = () => {
       <Route path="/" element={<Navigate to="/en" replace />} />
 
       <Route path='/:lang' element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path='help' element={<Help />} />
+        <Route index element={<MainPage />} />
+        <Route path='home' element={<Home />} />
+        <Route path='services' element={<Services />} />
+        <Route path='help-center' element={<Help />} />
+        <Route path="help-center/:tabSlug/:section/:itemSlug" element={<HelpDetails />} />
 
         <Route
           path='profile'
@@ -36,7 +41,6 @@ const App = () => {
         />
       </Route>
 
-      <Route path="/help/:tabSlug/:section/:itemSlug" element={<HelpDetails />} />
 
       <Route path='/404' element={<NotFound />} />
       <Route path="/*" element={<Navigate to='/404' replace />} />

@@ -4,30 +4,29 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import Header from '../../components/layout/Header/Header';
-import HelpHeaderPage from '../../components/layout/Header/HelpHeaderPage.jsx';
 import Footer from "../../components/layout/Footer/Footer.jsx"
+import classNames from 'classnames';
 
 export default function Layout() {
-    const {lang} = useParams();
+    const { lang } = useParams();
     const { pathname } = useLocation();
-    const isHelpPage = pathname === `/${lang}/help`;
+    const isMainPage = pathname === `/${lang}` || pathname === `/${lang}/home` || pathname === `/${lang}/services`;
+    const isHelpPage = pathname === `/${lang}/help-center`;
     const isProfilePage = pathname === `/${lang}/profile`;
 
     const status = useSelector(state => state.authReducer.status);
 
     console.log(status);
-    
+
 
     return (
         <div className='nestfy__page'>
-            {isHelpPage
-                ? <HelpHeaderPage isHelpPage={isHelpPage} />
-                : <Header isProfilePage={isProfilePage} isAuth={status === 'auth'} />
-            }
+            <Header isProfilePage={isProfilePage} isHelpPage={isHelpPage} isAuth={status === 'auth'} />
 
-            <main className='antiplace__main'>
+            <main className={classNames('nestfy__main', { profile__page: isProfilePage, main__page: isMainPage })}>
                 {<Outlet />}
             </main>
+
             <Footer />
         </div>
     )

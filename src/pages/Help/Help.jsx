@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import '../../assets/styles/pages/_help.scss';
 import { helpTabs, helpContent } from '../../data/helpData.js';
 import AuthModal from '../../components/_common/Modals/AuthModal';
 
 const Help = () => {
+  const { lang } = useParams();
   const [activeTab, setActiveTab] = useState('Guest');
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
@@ -51,22 +52,22 @@ const Help = () => {
             <p>Log in to get help with your reservations, account, and more.</p>
           </div>
           <button
-  className="primary-btn"
-  onClick={() => setIsAuthModalOpen(true)}
->
-  Log in or sign up
-</button>
+            className="primary-btn"
+            onClick={() => setIsAuthModalOpen(true)}
+          >
+            Log in or sign up
+          </button>
         </section>
 
         <section className="section">
           <div className="section-head">
             <h3>Guides for getting started</h3>
-            <Link to="/help/topics">Browse all topics</Link>
+            <NavLink to={`/${lang}/help-center/topics`}>Browse all topics</NavLink>
           </div>
 
           <div className="guides-grid">
             {currentContent.guides.map((guide, index) => (
-              <Link to={guide.link} className="guide-card" key={index}>
+              <NavLink to={`/${lang}/${guide.link}`} className="guide-card" style={{ animationDelay: 0.1 * index }} key={index}>
                 <div
                   className={`guide-card__image ${guide.dark ? 'dark' : ''}`}
                   style={{ backgroundImage: `url(${guide.image})` }}
@@ -76,7 +77,7 @@ const Help = () => {
                   )}
                 </div>
                 <p>{guide.title}</p>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </section>
@@ -85,10 +86,10 @@ const Help = () => {
           <h3>Top articles</h3>
           <div className="articles-grid">
             {currentContent.articles.map((article, index) => (
-              <Link to={article.link} className="article-card" key={index}>
+              <NavLink to={`/${lang}/${article.link}`} className="article-card" style={{ animationDelay: 0.1 * index }} key={index}>
                 <h4>{article.title}</h4>
                 <p>{article.desc}</p>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </section>
@@ -98,7 +99,7 @@ const Help = () => {
           <div className="explore-grid">
             <div className="explore-cards">
               {currentContent.exploreCards.map((card, index) => (
-                <Link to={card.link} className="explore-card" key={index}>
+                <NavLink to={`/${lang}/${card.link}`} className="explore-card" key={index}>
                   <div
                     className="explore-card__image"
                     style={{ backgroundImage: `url(${card.image})` }}
@@ -109,7 +110,7 @@ const Help = () => {
                     <h4>{card.title}</h4>
                     <p>{card.subtitle}</p>
                   </div>
-                </Link>
+                </NavLink>
               ))}
             </div>
 
@@ -120,13 +121,13 @@ const Help = () => {
               </p>
               <button className="outline-btn">Contact us</button>
               <span>
-                You can also <Link to="/feedback">give us feedback.</Link>
+                You can also <NavLink to="/feedback">give us feedback.</NavLink>
               </span>
             </div>
           </div>
         </section>
       </div>
-            <AuthModal
+      <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
