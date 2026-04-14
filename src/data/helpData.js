@@ -352,15 +352,15 @@ const addLinks = (content) => {
     result[tab] = {
       guides: sections.guides.map((item) => ({
         ...item,
-        link: `/help/${tabSlug}/guides/${slugify(item.title)}`,
+        link: `/help-center/${tabSlug}/guides/${slugify(item.title)}`,
       })),
       articles: sections.articles.map((item) => ({
         ...item,
-        link: `/help/${tabSlug}/articles/${slugify(item.title)}`,
+        link: `/help-center/${tabSlug}/articles/${slugify(item.title)}`,
       })),
       exploreCards: sections.exploreCards.map((item) => ({
         ...item,
-        link: `/help/${tabSlug}/explore/${slugify(item.title)}`,
+        link: `/help-center/${tabSlug}/explore/${slugify(item.title)}`,
       })),
     };
   });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { helpContent } from '../../data/helpData';
 import '../../assets/styles/pages/_help.scss';
 import BackArrowSvg from '../../components/svg/BackArrowSvg';
@@ -13,7 +13,7 @@ const slugify = (value) =>
     .replace(/\s+/g, '-');
 
 const HelpDetails = () => {
-  const { tabSlug, section, itemSlug } = useParams();
+  const { tabSlug, section, itemSlug, lang } = useParams();
 
   const matchedTab = Object.keys(helpContent).find(
     (tab) => slugify(tab) === tabSlug
@@ -42,10 +42,10 @@ const HelpDetails = () => {
     <div className="help-details">
       <div className="help-details__container">
         <div className="help-details__main">
-          <Link to="/en/help" className="help-details__back">
+          <NavLink to={`/${lang}/help-center`} className="help-details__back">
             <BackArrowSvg />
             Back to Help
-          </Link>
+          </NavLink>
 
           <article className="help-details__card">
             {item.image && (

@@ -1,0 +1,24 @@
+@use '../../variables/variables' as *;
+@use '../../mixins/mixins' as *;
+
+.full__screen__loader__container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    background-color: white;
+    @include allCenter();
+    animation: animLoaderScreen 0.2s;
+
+    @keyframes animLoaderScreen {
+        from {
+            transform: scale(0);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+}

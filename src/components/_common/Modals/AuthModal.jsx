@@ -37,7 +37,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
         message: '',
     })
     const { is, message } = submitResult;
-    
+
     useScroll(isOpen);
 
     useEffect(() => {
@@ -104,6 +104,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
         if (sendCodeInputValue.length === 6) {
             try {
                 const { data } = await Api.userVerfiyAuth(authInputValue, sendCodeInputValue);
+                localStorage.setItem('userData', JSON.stringify(data.user));
                 clearStates();
             } catch (e) {
                 console.log(e);

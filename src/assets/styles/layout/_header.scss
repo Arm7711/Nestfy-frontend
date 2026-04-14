@@ -16,11 +16,11 @@
     padding: 4px 32px 12px 32px;
     transition: all 0.4s;
 
-    &.help__header {
+    &.help__page__header {
         height: 80px;
         background-color: white;
         position: relative;
-        margin-bottom: -180px;
+        margin-bottom: -240px;
 
         &::after {
             width: 0;
@@ -46,7 +46,17 @@
                 }
             }
         }
+    }
 
+    &.profile__page__header {
+        height: 96px;
+        background-color: white;
+        padding-top: 0;
+
+        &::after {
+            background-color: #F1F1F1;
+            height: 2px;
+        }
     }
 
     &::after {
@@ -67,12 +77,25 @@
         justify-content: flex-start;
         align-items: flex-start;
 
+        &.profile__page__header {
+            height: 96px;
+        }
+
+        &.help__page__header {
+            height: 80px;
+        }
+
         .header__section__first__content {
             width: 100%;
             height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.5s;
+
+            &.profile__page__header {
+                height: 96px;
+            }
 
             .header__section__first__logo__block {
                 width: 33%;
@@ -83,6 +106,11 @@
                 .header__section__first__logo {
                     width: 125px;
                     height: 100%;
+                    transition: all 0.4s;
+
+                    &.profile__page__header {
+                        width: 100px;
+                    }
                 }
             }
 
@@ -95,6 +123,12 @@
                 gap: 35px;
                 position: relative;
                 overflow: hidden;
+                transition: all 0.4s;
+
+                &.profile__page__header,
+                &.help__page__header {
+                    transform: translateY(-150%);
+                }
 
                 .active__tab {
                     width: 100px;
@@ -161,9 +195,9 @@
                 height: 100%;
                 position: relative;
                 padding-right: calc(36px + 18px);
-
                 @include allCenter(flex-end, center, row);
                 gap: 12px;
+
 
                 .header__section__tab__bar__tools__item {
                     width: 40px;
@@ -172,6 +206,17 @@
                     @include allCenter();
                     @include boxShadow(35px);
                     transition: all 0.4s;
+                    cursor: pointer;
+
+                    &:active {
+                        transform: scale(0.95);
+                    }
+
+                    .user__letter {
+                        color: white;
+                        font-weight: 700;
+                        user-select: none;
+                    }
 
                     &:nth-child(2) {
                         position: absolute;
@@ -180,6 +225,16 @@
                         z-index: 20;
                         transition: transform 0.6s 0.1s, width 0.5s 0s, height 0.5s 0s;
                         transition-timing-function: cubic-bezier(0.39, 0.175, 0.265, 1.1);
+
+
+                        &.profile__page__header {
+                            top: 28px;
+                        }
+                    }
+
+                    &.profile {
+                        background-color: #232323 !important;
+                        box-shadow: none;
                     }
 
                     .icon {
@@ -294,6 +349,21 @@
                         transition: transform 0.6s 0s, width 0.5s 0.1s, height 0.5s 0.1s;
                         padding-bottom: 20px;
 
+                        &.is__auth {
+                            height: 340px;
+
+                            .header__section__menu__content {
+                                .menu__item {
+                                    border-bottom: none;
+
+                                    &:nth-child(3n) {
+                                        border-bottom: 1px solid $header-bottom-line-color;
+                                    }
+                                }
+                            }
+                        }
+
+
                         .header__section__menu__content {
                             opacity: 1;
                             visibility: visible;
@@ -322,13 +392,20 @@
         width: 100%;
         max-width: 850px;
         height: 66px;
+        min-height: 66px;
         @include boxShadow(35px);
         border: 1px solid rgba(203, 203, 203, 0.704);
         display: flex;
         justify-content: center;
         align-items: center;
         position: relative;
-        transition: all 0.4s;
+        transition: all 0.4s 0.03s;
+
+        &.profile__page__header,
+        &.help__page__header {
+            transform: translateY(-300%);
+            visibility: hidden;
+        }
 
         &.active__bar {
             background-color: #E8E8E8 !important;
@@ -425,6 +502,10 @@
             z-index: 3;
             gap: 12px;
             overflow: hidden;
+
+            &:active {
+                transform: scale(0.95);
+            }
 
             .icon {
                 width: 20px;
