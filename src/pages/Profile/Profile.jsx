@@ -2,13 +2,19 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { userProfileOptions } from '../../data/userProfileData';
+import { useQueryParams } from '../../hooks/useQueryParams';
+
+import EditUserProfile from '../../components/EditUserProfile/EditUserProfile';
+import Button from '../../components/_common/Button/Button';
 
 export default function Profile() {
     const status = useSelector(state => state.authReducer.status);
     const userData = JSON.parse(localStorage.getItem("userData") || null);
+    const { get, set } = useQueryParams()
 
     return (
         <div className='user__profile__page'>
+            <EditUserProfile />
             <div className='user__profile__page__container'>
                 <aside className='user__profile__page__container__profile__section'>
                     <h2 className='title'>
@@ -35,7 +41,7 @@ export default function Profile() {
                         <h2 className='title'>
                             About me
                         </h2>
-                        <button className='edit__button'>
+                        <button className='edit__button' onClick={() => set("editMode", true)}>
                             Edit
                         </button>
                     </div>
@@ -59,9 +65,9 @@ export default function Profile() {
                                 Your Airbnb profile is an important part of every reservation. Complete yours to help other hosts and guests get to know you.
                             </p>
 
-                            <button className='get__started'>
+                            <Button className='get__started' middle={true} onClick={() => set("editMode", true)}>
                                 Get started
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

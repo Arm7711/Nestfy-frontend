@@ -1,0 +1,42 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
+
+.common__button {
+    width: 120px;
+    height: 52px;
+    background-color: black;
+    border: 1px solid transparent;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: all 0.5s;
+    @include allCenter();
+    cursor: pointer;
+
+    &:hover {
+        background-color: transparent;
+        border: 1px solid black;
+        color: black;
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.min {
+        width: 88px;
+        height: 48px;
+    }
+
+    &.middle {
+        width: 135px;
+        height: 50px;
+    }
+
+    &.max {
+        width: 155px;
+        height: 52px;
+    }
+}
