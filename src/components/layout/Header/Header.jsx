@@ -16,9 +16,10 @@ import { tabFields, searchTabFields, headerMenuData } from '../../../data/header
 import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 
-export default function Header() {
+export default function Header({ isProfilePage, isAuth }) {
     const { lang } = useParams();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
+
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
         {
@@ -98,14 +99,14 @@ export default function Header() {
     }
 
     return (
-        <header className='header'>
-            <div className='header__section__first'>
+        <header className={classNames('header', { profile__page: isProfilePage })}>
+            <div className={classNames('header__section__first', { profile__page: isProfilePage })}>
                 <div className='header__section__first__content'>
                     <div className='header__section__first__logo__block'>
-                        <SiteLogo className='header__section__first__logo' />
+                        <SiteLogo className={classNames('header__section__first__logo', { profile__page: isProfilePage })} />
                     </div>
 
-                    <div className='header__section__first__tab__list'
+                    <div className={classNames('header__section__first__tab__list', { profile__page: isProfilePage })}
                     >
                         <span
                             className='active__tab'
@@ -149,9 +150,17 @@ export default function Header() {
 
                     <div className='header__section__tab__bar__tools'>
 
-                        <div className='header__section__tab__bar__tools__item lang'>
-                            <LangSvg />
-                        </div>
+                        {
+                            isAuth
+                                ?
+                                <div className='header__section__tab__bar__tools__item profile'>
+                                    
+                                </div>
+                                :
+                                <div className='header__section__tab__bar__tools__item lang'>
+                                    <LangSvg />
+                                </div>
+                        }
 
                         <div className={classNames('header__section__tab__bar__tools__item menu', { active__menu: openHeaderMenu })} ref={headerMenuRef}>
                             <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
@@ -179,7 +188,7 @@ export default function Header() {
             </div >
 
             <div
-                className={classNames('header__search__form__container', { active__bar: activeSearchBar })}
+                className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page: isProfilePage })}
                 ref={searchBarRef}
                 onClick={() => setActiveSearchBar(true)}
             >

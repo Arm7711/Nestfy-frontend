@@ -1,8 +1,13 @@
 import axios from 'axios';
+import store from '../redux/store';
+import { setAuth, setToken, setGuest } from "../redux/reducers/authReducer";
 
 let accessToken = null;
 
-export const setAccessToken = (token) => { accessToken = token; };
+export const setAccessToken = (token) => {
+    accessToken = token;
+};
+
 export const getAccessToken = () => accessToken;
 
 class Api {
@@ -30,6 +35,11 @@ class Api {
                 if (error.response?.status !== 401) return Promise.reject(error);
                 if (originalRequest._retry) return Promise.reject(error);
 
+                if (originalRequest.url?.includes('/auth/refresh')) {
+                    store.dispatch(setGuest());
+                    return Promise.reject(error);
+                }
+
                 originalRequest._retry = true;
 
                 if (Api.isRefreshing) {
@@ -46,13 +56,8 @@ class Api {
                 try {
                     const { data } = await Api.instance.post('/auth/refresh');
 
-                    if (data.guest) {
-                        Api.isRefreshing = false;
-                        return Promise.reject(error);
-                    }
-
                     setAccessToken(data.accessToken);
-                    Api.instance.defaults.headers['Authorization'] = `Bearer ${data.accessToken}`;
+                    store.dispatch(setToken(data.accessToken));
 
                     Api.subscribers.forEach(cb => cb(data.accessToken));
                     Api.subscribers = [];
@@ -60,46 +65,57 @@ class Api {
 
                     originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
                     return Api.instance(originalRequest);
+
                 } catch (err) {
                     Api.isRefreshing = false;
                     setAccessToken(null);
+                    store.dispatch(setGuest());
                     return Promise.reject(err);
                 }
             }
         );
     }
 
-    // ==== INIT ====
     static async initAuth() {
         try {
             const { data } = await Api.instance.post('/auth/refresh');
             setAccessToken(data.accessToken);
+
+            const { data: meData } = await Api.instance.get('/auth/me');
+            store.dispatch(setAuth({ user: meData.user, accessToken: data.accessToken }));
+
             return true;
         } catch {
             setAccessToken(null);
+            store.dispatch(setGuest());
             return false;
         }
     }
 
-    // ==== AUTH ====
-    static async authUser(email, code, flow) {
-        return (await Api.instance.post(`/auth/${flow}`, { email, code })).data;
-    }
-    static async userVerfiyAuth(email, code) {
-        return await Api.instance.post('/auth/verify-code', { email, code });
-    }
-    static async checkUserAuthStatus(email) {
-        return await Api.instance.post('/auth/check-email', { email });
-    }
-    static async loginWithGoogle(credential) {
-        return Api.instance.post('/auth/google', { credential });
-    }
-    static async loginWithApple(identityToken, user) {
-        return Api.instance.post('/auth/apple', { identityToken, user });
-    }
     static async logout() {
         await Api.instance.post('/auth/logout');
         setAccessToken(null);
+        store.dispatch(setGuest());
+    }
+
+    static async authUser(email, code, flow) {
+        return (await Api.instance.post(`/auth/${flow}`, { email, code })).data;
+    }
+
+    static async userVerfiyAuth(email, code) {
+        return Api.instance.post('/auth/verify-code', { email, code });
+    }
+
+    static async checkUserAuthStatus(email) {
+        return Api.instance.post('/auth/check-email', { email });
+    }
+
+    static async loginWithGoogle(credential) {
+        return Api.instance.post('/auth/google', { credential });
+    }
+
+    static async loginWithApple(identityToken, user) {
+        return Api.instance.post('/auth/apple', { identityToken, user });
     }
 }
 
