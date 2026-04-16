@@ -1,12 +1,18 @@
-import {useEffect, useRef, useCallback } from "react";
-import { KEYFRAMES } from "./data/keyframes";
+import { useEffect, useRef, useCallback, forwardRef } from "react";
+import { KEYFRAMES } from "../data/keyframes";
 
-export default function Letter({ char, isActive, color, baseColor, lift, speed, mode, onClickLetter }) {
-  const ref = useRef(null);
+const Letter = forwardRef(function Letter({ char, isActive, color, baseColor, lift, speed, mode, onClickLetter }, forwardedRef) {
+  const innerRef = useRef(null);
   const animRef = useRef(null);
 
+  const setRef = useCallback((el) => {
+    innerRef.current = el;
+    if (typeof forwardedRef === 'function') forwardedRef(el);
+    else if (forwardedRef) forwardedRef.current = el;
+  }, [forwardedRef]);
+
   const animate = useCallback(() => {
-    const el = ref.current;
+    const el = innerRef.current;
     if (!el || char === " ") return;
     animRef.current?.cancel();
     const frames = KEYFRAMES[mode] ?? KEYFRAMES.wave;
@@ -18,6 +24,7 @@ export default function Letter({ char, isActive, color, baseColor, lift, speed, 
         .replace(/calc\(var\(--lift\) \* ([\d.]+)\)/g, (_, m) => `${-lift * parseFloat(m)}px`)
         .replace(/calc\(var\(--lift\) \* -([\d.]+)\)/g, (_, m) => `${lift * parseFloat(m)}px`),
     }));
+
     animRef.current = el.animate(resolved, {
       duration: speed,
       easing: "cubic-bezier(0.36, 0.07, 0.19, 0.97)",
@@ -27,14 +34,14 @@ export default function Letter({ char, isActive, color, baseColor, lift, speed, 
   }, [char, lift, speed, mode]);
 
   useEffect(() => {
-    if (ref.current) ref.current._bounceAnimate = animate;
+    if (innerRef.current) innerRef.current._bounceAnimate = animate;
   }, [animate]);
 
   if (char === " ") return <span style={{ display: "inline-block", width: "0.35em" }} />;
 
   return (
     <span
-      ref={ref}
+      ref={setRef}
       onClick={() => {
         animate();
         onClickLetter?.();
@@ -52,4 +59,6 @@ export default function Letter({ char, isActive, color, baseColor, lift, speed, 
       {char}
     </span>
   );
-}
+});
+
+export default Letter;

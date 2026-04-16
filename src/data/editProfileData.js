@@ -20,3 +20,26 @@ export const userInfoEdit = [
         labelName: 'live',
     },
 ];
+
+export const userInfoEditSocial = [
+    {
+        title: 'Telegram',
+        social: 'telegram'
+    },
+    {
+        title: 'Facebook',
+        social: 'facebook'
+    },
+    {
+        title: 'Instagram',
+        social: 'instagram'
+    },
+    {
+        title: 'Linkedin',
+        social: 'linkedin'
+    },
+    {
+        title: 'Website',
+        social: 'website'
+    },
+]
