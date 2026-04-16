@@ -105,6 +105,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
         try {
             await Api.logout();
             setOpenHeaderMenu(false);
+            window.location.reload();
             localStorage.removeItem("userData")
         } catch (e) {
             console.log(e);

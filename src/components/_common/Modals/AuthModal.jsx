@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
@@ -14,13 +15,19 @@ import AppleSvg from '../../svg/AppleSvg';
 import ErrorSvg from '../../svg/ErrorSvg';
 import BackArrowSvg from '../../svg/BackArrowSvg';
 
+import Button from '../Button/Button';
 import CodeInput from '../CodeInput/CodeInput';
 import AuthModalInput from '../Inputs/AuthModalInput';
 import { NavLink } from 'react-router';
 import LoadingDot from '../Loaders/LoadingDot';
 
 export default function AuthModal({ isOpen, onClose, children }) {
+    const { lang } = useParams();
+    const { pathname } = useLocation();
+    const isMain = pathname === `/${lang}`;
+
     const dispatch = useDispatch();
+
     const { authInputValue, sendCodeInputValue } = useSelector(reducers => reducers.inputsValueReducer);
     const [code, setCode] = useState('');
 
@@ -28,7 +35,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
 
     const [userAuthStatus, setUserAuthStatus] = useState({ success: false, flow: null });
     const [activeVerifyCode, setActiveVerifyCode] = useState(false);
-    const [showErrorToasty, setShowErrorToasty] = useState(false);
+    const [showErrorToasty, setShowErrorToasty] = useState({ active: false, message: '' });
 
     const [loadings, setLoadings] = useState({ loadingAuth: false });
     const { loadingAuth } = loadings;
@@ -70,6 +77,20 @@ export default function AuthModal({ isOpen, onClose, children }) {
     }
 
     useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                resetInternalState();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
+
+    useEffect(() => {
         if (!activeVerifyCode || sendCodeInputValue.length !== 6) return;
 
         const handleKeyDown = (e) => {
@@ -80,18 +101,23 @@ export default function AuthModal({ isOpen, onClose, children }) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeVerifyCode, sendCodeInputValue]);
 
-    const clearStates = () => {
+    const resetInternalState = () => {
         setActiveVerifyCode(false);
         dispatch(setSendCodeInputValue(''));
-        setShowErrorToasty(false);
+        setShowErrorToasty({ active: false, message: '' });
         setShowInfoBlock(false);
+        setCode('');
+    };
+
+    const clearStates = () => {
+        resetInternalState();
         onClose();
-    }
+    };
 
     const backClickClear = () => {
         setActiveVerifyCode(false);
         dispatch(setSendCodeInputValue(''));
-        setShowErrorToasty(false)
+        setShowErrorToasty({ active: false, message: '' });
     }
 
     const handleCodeChange = (val) => {
@@ -106,8 +132,15 @@ export default function AuthModal({ isOpen, onClose, children }) {
                 const { data } = await Api.userVerfiyAuth(authInputValue, sendCodeInputValue);
                 localStorage.setItem('userData', JSON.stringify(data.user));
                 clearStates();
+
+                if (isMain) {
+                    window.location.reload();
+                }
+
+                window.location.replace(`/${lang}`);
+
             } catch (e) {
-                console.log(e);
+                setShowErrorToasty({ active: true, message: e.response.data.message });
             }
         }
     }
@@ -115,8 +148,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
         try {
             const resultReq = await Api.authUser(authInputValue, sendCodeInputValue, userAuthStatus?.flow);
         } catch (e) {
-            setShowErrorToasty(true);
-            console.log(showErrorToasty);
+            setShowErrorToasty({ active: true, message: e.response.data.message });
         }
     }
 
@@ -125,7 +157,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
         <div className={classNames('auth__modal', { modal__active: isOpen })}>
             <div className='backdrop' role='button' onClick={clearStates} />
 
-            <div className={classNames('modal__main', { active__verify__child: activeVerifyCode, max__height: sendCodeInputValue, active__error: showErrorToasty })}>
+            <div className={classNames('modal__main', { active__verify__child: activeVerifyCode, max__height: sendCodeInputValue, active__error: showErrorToasty.active })}>
                 <div className='modal__close__bar'>
                     <button className={classNames('back', { active: activeVerifyCode })} onClick={backClickClear}>
                         <BackArrowSvg />
@@ -162,14 +194,14 @@ export default function AuthModal({ isOpen, onClose, children }) {
                     </div>
 
                     <div className={classNames('button__container', { show__info__block: showInfoBlock })}>
-                        <button
+                        <Button
                             className={classNames('submit__button', { loading__button: loadingAuth })}
                             type='submit'
                             form='auth__form'
                             disabled={loadingAuth}
                         >
                             {loadingAuth ? <LoadingDot /> : 'Continue'}
-                        </button>
+                        </Button>
                     </div>
 
                     <div className={classNames('container__info', { show__info__block: showInfoBlock })}>
@@ -190,11 +222,11 @@ export default function AuthModal({ isOpen, onClose, children }) {
                 </div>
 
                 <div className={classNames('verify__content', { active__verify__content: activeVerifyCode })}>
-                    <div className={classNames('error__toasty', { show: showErrorToasty })}>
+                    <div className={classNames('error__toasty', { show: showErrorToasty.active })}>
                         <ErrorSvg />
-                        <p className='error__text'>Wait 1 minute before requesting a code.</p>
+                        <p className='error__text'>{showErrorToasty.message}</p>
 
-                        <button className='close__toasty' onClick={() => setShowErrorToasty(false)}>
+                        <button className='close__toasty' onClick={() => setShowErrorToasty({ active: false, message: '' })}>
                             <CloseSvg className='close__svg' />
                         </button>
                     </div>

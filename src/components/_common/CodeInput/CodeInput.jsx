@@ -130,7 +130,7 @@ function CodeInput({
             spellCheck={false}
             animate={{
               y: isAnimated ? -3 : 0,
-              scale: isAnimated ? 1.05 : 1,
+              scale: isAnimated ? 1.05 : 1
             }}
             transition={transition}
             style={{

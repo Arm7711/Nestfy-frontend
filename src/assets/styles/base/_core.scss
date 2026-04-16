@@ -88,3 +88,10 @@ input:-webkit-autofill:active {
     -webkit-text-fill-color: #000 !important;
     box-shadow: 0 0 0px 1000px transparent inset !important;
 }
+
+button{
+    transition: all 0.5s;
+    &:active{
+        transform: scale(0.97);
+    }
+}
