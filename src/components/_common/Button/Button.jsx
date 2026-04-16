@@ -1,25 +1,22 @@
 import React from 'react';
-import classNamesButton from 'classnames';
 
 export default function Button(
-    { className, classNames, min = false, middle = false, max = false, children, borderRadius, width, height, onClick }
+    { className = 'common__button', type, form, id, disbaled, min = false, middle = false, max = false, children, borderRadius, width, height, onClick }
 ) {
     return (
         <button
-            className={
-                classNamesButton(
-                    `common__button 
-                    ${className}
-                    `,
-                    { ...classNames, min, middle, max }
-                )
-            }
+            id={id}
+            type={type}
+            form={form}
+            disabled={disbaled}
+            className={className}
 
             style={{
                 borderRadius,
-                width,
-                height
+                width: min ? 88 : middle ? 135 : max ? 155 : width,
+                height: min ? 48 : middle ? 50 : max ? 52 : height,
             }}
+
 
             onClick={onClick}
         >

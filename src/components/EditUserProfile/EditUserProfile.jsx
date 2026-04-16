@@ -61,17 +61,20 @@ export default function EditUserProfile() {
                             <figure className='avatar__figure'>
                                 <img src={userData?.avatar} className='user__avatar__image' draggable='false' alt="User profile image" />
 
-                                <span className='edit__image'>
+                                <label className='edit__image' htmlFor='input__user__avatar'>
                                     <CameraSvg />
                                     <p className='text'>Edit</p>
-                                </span>
+                                </label>
+
+                                <input type="file" id='input__user__avatar' hidden readOnly />
                             </figure>
                             :
                             <div className='user'>
-                                <span className='add__image'>
+                                <label className='add__image' htmlFor='input__user__avatar'>
                                     <CameraSvg />
                                     <p className='text'>Add</p>
-                                </span>
+                                </label>
+                                <input type="file" id='input__user__avatar' hidden readOnly />
                                 <p className='letter'>{userData?.name[0] || 'U'}</p>
                             </div>
                         }
@@ -102,6 +105,15 @@ export default function EditUserProfile() {
                                 <p className='label__text'>{title}</p>
                             </button>
                         ))}
+                    </div>
+
+                    <div className='user__about__me__container'>
+                        <h1 className='title'>About me</h1>
+
+                        <div className='box__about'>
+                            <h3 className='subtitle'>Write something fun and punchy.</h3>
+                            <p className='intro' role='button'>Add intro</p>
+                        </div>
                     </div>
                 </div>
             </div>

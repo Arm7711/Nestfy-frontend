@@ -281,6 +281,10 @@
                             transition: all 0.3s;
                         }
 
+                        &:active {
+                            transform: scale(0.8);
+                        }
+
                         &.close {
                             .line {
                                 transition: all 0.5s;
