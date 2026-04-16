@@ -11,7 +11,14 @@ import WorkSvg from '../svg/WorkSvg';
 import LampSvg from '../svg/LampSvg';
 import MessLangSvg from '../svg/MessLangSvg';
 
-import { userInfoEdit } from '../../data/editProfileData';
+import TelegramSvg from '../../assets/images/icons/telegram-svg.svg?react';
+import FacebookSvg from '../../assets/images/icons/facebook-svg.svg?react';
+import InstagramSvg from '../../assets/images/icons/instagram-svg.svg?react';
+import WebsiteSvg from '../../assets/images/icons/website-svg.svg?react';
+import LinkedinSvg from '../../assets/images/icons/linkedin-svg.svg?react';
+
+import { userInfoEdit, userInfoEditSocial } from '../../data/editProfileData';
+import Footer from '../layout/Footer/Footer';
 
 export default function EditUserProfile() {
     const { lang } = useParams()
@@ -25,18 +32,18 @@ export default function EditUserProfile() {
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                setHideBlock(true);
-            }
+            setHideBlock(entry.isIntersecting);
         }, {
             threshold: 0.1
         });
 
-        if (triggerRef.current) {
-            observer.observe(triggerRef.current);
-        }
+        const el = triggerRef.current;
+        if (el) observer.observe(el);
 
-        return () => observer.disconnect();
+        return () => {
+            if (el) observer.unobserve(el);
+            observer.disconnect();
+        };
     }, []);
 
     useEffect(() => {
@@ -45,7 +52,7 @@ export default function EditUserProfile() {
 
     return createPortal(
         <div className={classNames('edit__user__profile', { active__mode: isEditMode })}>
-            <div className='edit__user__profile__done__container'>
+            <div className={classNames('edit__user__profile__done__container', { hidden: hideBlock })}>
                 <div className='container'>
                     <Button min={true} onClick={() => remove('editMode')}>
                         Done
@@ -115,8 +122,35 @@ export default function EditUserProfile() {
                             <p className='intro' role='button'>Add intro</p>
                         </div>
                     </div>
+
+                    <div className='user__social__media__links__container'>
+                        <div className='info'>
+                            <h1 className='title'>Social Medias Links</h1>
+                            <p className='desc'>Select the social networks that will be displayed on your profile.</p>
+                        </div>
+
+                        <div className='social__links__container'>
+                            {userInfoEditSocial.map(({ title, social }) => (
+                                <div className='social__item'>
+                                    {
+                                        (social === 'telegram' && <TelegramSvg className='icon cls-2' />) ||
+                                        (social === 'facebook' && <FacebookSvg className='icon cls-3' />) ||
+                                        (social === 'linkedin' && <LinkedinSvg className='icon cls-4' />) ||
+                                        (social === 'website' && <WebsiteSvg className='icon cls-5' />) ||
+                                        (social === 'instagram' && <InstagramSvg className='icon cls-6' />)
+                                    }
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+
+                    <div className='done__button__container' ref={triggerRef}>
+                        <Button min={true} onClick={() => remove('editMode')}>Done</Button>
+                    </div>
                 </div>
             </div>
+
         </div>
         , document.getElementById('root'));
 }

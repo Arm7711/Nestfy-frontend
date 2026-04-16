@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import Header from '../../components/layout/Header/Header';
 import Footer from "../../components/layout/Footer/Footer.jsx"
 import classNames from 'classnames';
+import WelcomeToasty from '../../components/WelcomeToasty/WelcomeToasty.jsx';
 
 export default function Layout() {
     const { lang } = useParams();
@@ -25,6 +26,7 @@ export default function Layout() {
 
             <main className={classNames('nestfy__main', { profile__page: isProfilePage, main__page: isMainPage })}>
                 {<Outlet />}
+                <WelcomeToasty />
             </main>
 
             <Footer />

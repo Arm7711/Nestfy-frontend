@@ -79,7 +79,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden) {
-                resetInternalState();
+                setActiveVerifyCode(true);
             }
         };
 
@@ -101,9 +101,21 @@ export default function AuthModal({ isOpen, onClose, children }) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeVerifyCode, sendCodeInputValue]);
 
+    useEffect(() => {
+        if (!activeVerifyCode || isOpen) return;
+
+        const timer = setTimeout(() => {
+            setActiveVerifyCode(false);
+        }, 60000);
+
+        if (!isOpen && !activeVerifyCode) {
+            clearTimeout(timer)
+        }
+        
+        return () => clearTimeout(timer);
+    }, [activeVerifyCode]);
+
     const resetInternalState = () => {
-        setActiveVerifyCode(false);
-        dispatch(setSendCodeInputValue(''));
         setShowErrorToasty({ active: false, message: '' });
         setShowInfoBlock(false);
         setCode('');

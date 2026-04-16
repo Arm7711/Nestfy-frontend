@@ -1,3 +1,4 @@
+// BouncyText.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import Letter from './Letter/Letter';
 
@@ -9,11 +10,11 @@ export default function BouncyText({
     lift = 36,
     delay = 70,
     mode = "wave",
-    fontSize = "3rem",
-    fontFamily = "'Space Mono', monospace",
+    fontSize = "17px",
     autoPlay = true,
     loop = false,
     loopPause = 1200,
+    startAfter = 0,
     onLetterClick,
 }) {
     const chars = [...text];
@@ -51,9 +52,9 @@ export default function BouncyText({
 
     useEffect(() => {
         if (!autoPlay) return;
-        const t = setTimeout(play, 200);
+        const t = setTimeout(play, 200 + startAfter);
         return () => clearTimeout(t);
-    }, [autoPlay, play]);
+    }, [autoPlay, play, startAfter]);
 
     useEffect(() => {
         if (!loop) return;
@@ -64,11 +65,11 @@ export default function BouncyText({
 
     return (
         <span
+            className="animation__text"
             style={{
                 display: "inline-flex",
                 flexWrap: "wrap",
                 fontSize,
-                fontFamily,
                 fontWeight: 700,
                 letterSpacing: "0.02em",
                 perspective: "600px",

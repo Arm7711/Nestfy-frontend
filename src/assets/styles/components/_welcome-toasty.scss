@@ -1,0 +1,34 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
+.welcome__toasty {
+    width: 230px;
+    height: 65px;
+    box-shadow: $elevation-elevation3-box-shadow;
+    position: fixed;
+    z-index: 2;
+    background-color: white;
+    border-radius: 15px;
+    bottom: -100%;
+    transform: scale(0.3);
+    opacity: 0;
+    visibility: hidden;
+    left: calc(50% - 115px);
+    @include allCenter();
+    animation: animShow 0.8s 0.4s forwards;
+
+    @keyframes animShow {
+        to{
+            bottom: 10%;
+            transform: scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    .animation__text {
+        span {
+            color: black !important;
+        }
+    }
+}

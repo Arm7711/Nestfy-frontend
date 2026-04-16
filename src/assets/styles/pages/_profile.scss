@@ -4,6 +4,7 @@
 .user__profile__page {
     width: 100%;
     height: calc(100vh - 110px);
+    position: relative;
 
     .user__profile__page__container {
         width: 100%;
@@ -38,7 +39,8 @@
                 gap: 12px;
 
                 .option__about {
-                    width: 310px;
+                    width: 100%;
+                    max-width: 310px;
                     height: 60px;
                     border-radius: 20px;
                     border: none;

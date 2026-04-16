@@ -28,6 +28,24 @@ export const searchTabFields = [
     }
 ];
 
+export const searchTabFieldsInScroll = [
+    {
+        tabName: 'anywhere',
+        title: 'Anywhere',
+        content: ''
+    },
+    {
+        tabName: 'anytime',
+        title: 'Anytime',
+        content: ''
+    },
+    {
+        tabName: 'guest',
+        title: 'Add guests',
+        content: ''
+    }
+];
+
 export const headerMenuData = [
     {
         filedName: 'helpCenter',

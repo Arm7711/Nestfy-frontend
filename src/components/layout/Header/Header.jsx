@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import AuthModal from '../../_common/Modals/AuthModal';
 import V1Calendar from '../../_common/V1Calendar/V1Calendar';
 import MenuIcon from '../../_common/MenuIcon/MenuIcon';
+import useIsAtTop from '../../../hooks/useIsAtTop';
 
 import SiteLogo from '../../../assets/images/logo/nestfy-site-logo.svg?react';
 import SiteLogoSvg from '../../../assets/images/logo/site-logo-n.svg?react'
@@ -14,7 +15,7 @@ import ServicesIcon from '../../HeaderVideoIcons/ServicesIcon/ServicesIcon';
 import SearchSvg from '../../svg/SearchSvg';
 import LangSvg from '../../svg/LangSvg';
 
-import { tabFields, searchTabFields, headerMenuData, authHeaderMenuData } from '../../../data/headerData';
+import { tabFields, searchTabFields, headerMenuData, authHeaderMenuData, searchTabFieldsInScroll } from '../../../data/headerData';
 import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 import Api from '../../../api/Api';
@@ -22,6 +23,11 @@ import Api from '../../../api/Api';
 export default function Header({ isProfilePage, isHelpPage, isAuth }) {
     const { lang } = useParams();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
+    const isTop = useIsAtTop();
+    const [activeScrollHeader, setActiveScrollHeader] = useState(false);
+
+    console.log(isTop);
+
 
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
@@ -62,6 +68,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
             }
             if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
                 setActiveSearchBar(false);
+                setActiveScrollHeader(false);
             }
         }
 
@@ -72,22 +79,45 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
         };
     }, [openHeaderMenu]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!isTop) {
+                setActiveSearchBar(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isTop]);
+
+    useEffect(() => {
         const el = tabRef.current.get(headerActiveTab.tabName);
         const elS = searchTabRef.current.get(searchActiveTab.tabName);
+
         if (!el || !elS) return;
 
-        const rect = el.getBoundingClientRect();
-        const parentRect = el.parentElement.getBoundingClientRect();
+        const update = () => {
+            const rect = el.getBoundingClientRect();
+            const parentRect = el.parentElement.getBoundingClientRect();
 
-        const rectS = elS.getBoundingClientRect();
-        const sParentReact = elS.parentElement.getBoundingClientRect();
+            const rectS = elS.getBoundingClientRect();
+            const sParentRect = elS.parentElement.getBoundingClientRect();
 
-        setSearchTabWidth(rectS.width);
-        setSearchSliceTX(rectS.left - sParentReact.left);
+            setTabWidth(rect.width);
+            setTranslateX(rect.left - parentRect.left);
 
-        setTabWidth(rect.width);
-        setTranslateX(rect.left - parentRect.left);
+            setSearchTabWidth(rectS.width);
+            setSearchSliceTX(rectS.left - sParentRect.left);
+        };
+
+        update();
+
+        const ro = new ResizeObserver(update);
+        ro.observe(el);
+        ro.observe(elS);
+
+        return () => ro.disconnect();
     }, [headerActiveTab, searchActiveTab]);
 
     const changeTab = (item) => {
@@ -112,200 +142,214 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
         }
     };
 
+    console.log(activeScrollHeader, 'asadad');
+
+
+    const searchBarFunciton = () => {
+        if (!isTop) {
+            setActiveScrollHeader(true);
+        }
+        setActiveSearchBar(true);
+    }
+
     return (
-        <header className={classNames('header', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
-            <div className={classNames('header__section__first', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
-                <div className={classNames('header__section__first__content', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
-                    <NavLink to={`/${lang}`} className='header__section__first__logo__block'>
-                        {isHelpPage
-                            ?
-                            <>
-                                <SiteLogoSvg className='header__section__first__logo' />
-                                <h1 className='help__title'>Help center</h1>
-                            </>
-                            :
-                            <SiteLogo className={classNames('header__section__first__logo', { profile__page__header: isProfilePage })} />
-                        }
-                    </NavLink>
-
-                    <div className={classNames('header__section__first__tab__list', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}
-                    >
-                        <span
-                            className='active__tab'
-                            style={{
-                                width: tabWidth,
-                                transform: `translateX(${translateX}px)`
-                            }}
-                        />
-
-                        {tabFields?.map(({ tabName, tab, title }, index) => (
-                            <NavLink className='tab__list__item' key={index} ref={
-                                el => {
-                                    if (el) {
-                                        tabRef.current.set(tabName, el);
-                                    } else {
-                                        tabRef.current.delete(tabName);
-                                    }
-                                }}
-                                to={`/${lang}/${tab}`}
-                                role='button'
-                                onClick={() => setHeaderActiveTab({ tabName, tabIndex: index })}
-                            >
-                                <div className={classNames('icon__container', { active__tab__icon: headerActiveTab.tabName === tabName })}>
-                                    {tab === 'home'
-                                        ?
-                                        <HomeIcon
-                                            selected={headerActiveTab.tabName === tabName}
-                                        />
-                                        :
-                                        <ServicesIcon
-                                            selected={headerActiveTab.tabName === tabName}
-
-                                        />
-                                    }
-                                </div>
-                                <div className={classNames('list__item__title', { active__tab__title: headerActiveTab.tabName === tabName })}>
-                                    <p className='title'>{title}</p>
-                                </div>
-                            </NavLink>
-                        ))}
-                    </div>
-
-                    <div className='header__section__tab__bar__tools'>
-
-                        {
-                            isAuth
+        <>
+            <header className={classNames('header', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}>
+                <div className={classNames('header__section__first', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}>
+                    <div className={classNames('header__section__first__content', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
+                        <NavLink to={`/${lang}`} className='header__section__first__logo__block'>
+                            {isHelpPage
                                 ?
-                                <NavLink to={`/${lang}/profile`} className='header__section__tab__bar__tools__item profile'>
-                                    <p className='user__letter'>{userData ? userData?.name[0] : 'U'}</p>
-                                </NavLink>
+                                <>
+                                    <SiteLogoSvg className='header__section__first__logo' />
+                                    <h1 className='help__title'>Help center</h1>
+                                </>
                                 :
-                                <div className='header__section__tab__bar__tools__item lang'>
-                                    <LangSvg />
-                                </div>
-                        }
+                                <SiteLogo className={classNames('header__section__first__logo', { profile__page__header: isProfilePage })} />
+                            }
+                        </NavLink>
 
-                        <div
-                            className={classNames('header__section__tab__bar__tools__item menu',
-                                {
-                                    active__menu: openHeaderMenu,
-                                    is__auth: isAuth,
-                                    profile__page__header: isProfilePage
-                                }
-                            )}
-                            ref={headerMenuRef}
+                        <div className={classNames('header__section__first__tab__list', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}
                         >
-                            <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
-                                <MenuIcon
-                                    checked={openHeaderMenu}
-                                    onChange={() => setOpenHeaderMenu(prev => !prev)}
-                                />
-                            </button>
+                            <span
+                                className='active__tab'
+                                style={{
+                                    width: tabWidth,
+                                    transform: `translateX(${translateX}px)`
+                                }}
+                            />
 
-                            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+                            {tabFields?.map(({ tabName, tab, title }, index) => (
+                                <NavLink className='tab__list__item' key={index} ref={
+                                    el => {
+                                        if (el) {
+                                            tabRef.current.set(tabName, el);
+                                        } else {
+                                            tabRef.current.delete(tabName);
+                                        }
+                                    }}
+                                    to={`/${lang}/${tab}`}
+                                    role='button'
+                                    onClick={() => setHeaderActiveTab({ tabName, tabIndex: index })}
+                                >
+                                    <div className={classNames('icon__container', { active__tab__icon: headerActiveTab.tabName === tabName })}>
+                                        {tab === 'home'
+                                            ?
+                                            <HomeIcon
+                                                selected={headerActiveTab.tabName === tabName}
+                                            />
+                                            :
+                                            <ServicesIcon
+                                                selected={headerActiveTab.tabName === tabName}
 
-                            <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
-                                {(isAuth ? authHeaderMenuData : headerMenuData).map((item, index) => (
-                                    <button className='menu__item' key={index} onClick={() => authModalOpen(item?.filedName)}>
-                                        {item?.navigationTo ? (
-                                            <NavLink
-                                                to={`/${lang}${item.navigationTo}`}
-                                                onClick={() => setOpenHeaderMenu(false)}
-                                                className='content'
-                                            >
-                                                {item.content}
-                                            </NavLink>
-                                        ) : (
-                                            <p
-                                                role='button'
-                                                className='content'
-                                                onClick={() => item?.action === 'logout' && logOut()}
-                                            >
-                                                {item.content}
-                                            </p>
-                                        )}
-                                    </button>
-                                ))}
+                                            />
+                                        }
+                                    </div>
+                                    <div className={classNames('list__item__title', { active__tab__title: headerActiveTab.tabName === tabName })}>
+                                        <p className='title'>{title}</p>
+                                    </div>
+                                </NavLink>
+                            ))}
+                        </div>
+
+                        <div className='header__section__tab__bar__tools'>
+
+                            {
+                                isAuth
+                                    ?
+                                    <NavLink to={`/${lang}/profile`} className='header__section__tab__bar__tools__item profile'>
+                                        <p className='user__letter'>{userData ? userData?.name[0] : 'U'}</p>
+                                    </NavLink>
+                                    :
+                                    <div className='header__section__tab__bar__tools__item lang'>
+                                        <LangSvg />
+                                    </div>
+                            }
+
+                            <div
+                                className={classNames('header__section__tab__bar__tools__item menu',
+                                    {
+                                        active__menu: openHeaderMenu,
+                                        is__auth: isAuth,
+                                        profile__page__header: isProfilePage
+                                    }
+                                )}
+                                ref={headerMenuRef}
+                            >
+                                <button className={classNames('toggle', { close: openHeaderMenu })} onClick={() => setOpenHeaderMenu(prev => !prev)}>
+                                    <MenuIcon
+                                        checked={openHeaderMenu}
+                                        onChange={() => setOpenHeaderMenu(prev => !prev)}
+                                    />
+                                </button>
+
+                                <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+
+                                <div className={classNames('header__section__menu__content', { acitve__menu__content: openHeaderMenu })}>
+                                    {(isAuth ? authHeaderMenuData : headerMenuData).map((item, index) => (
+                                        <button className='menu__item' key={index} onClick={() => authModalOpen(item?.filedName)}>
+                                            {item?.navigationTo ? (
+                                                <NavLink
+                                                    to={`/${lang}${item.navigationTo}`}
+                                                    onClick={() => setOpenHeaderMenu(false)}
+                                                    className='content'
+                                                >
+                                                    {item.content}
+                                                </NavLink>
+                                            ) : (
+                                                <p
+                                                    role='button'
+                                                    className='content'
+                                                    onClick={() => item?.action === 'logout' && logOut()}
+                                                >
+                                                    {item.content}
+                                                </p>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div >
-
-            <div
-                className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page__header: isProfilePage, help__page__header: isHelpPage })}
-                ref={searchBarRef}
-                onClick={() => setActiveSearchBar(true)}
-            >
-                <div
-                    className={classNames('selected__slice', { active: activeSearchBar })}
-                    style={
-                        {
-                            width: searchTabWidth,
-                            transform: `translateX(${searchSliceTX}px)`
-                        }
-                    }
-                />
-
-                {searchTabFields?.map((item, index) => (
-                    <div
-                        className={classNames('tab__item', { active__tab__search: searchActiveTab?.tabName === item?.tabName })}
-                        key={index}
-                        onClick={() => setSearchAtiveTab({ tabName: item?.tabName, tabIndex: index })}
-                        ref={el => {
-                            if (el) {
-                                searchTabRef.current.set(item.tabName, el);
-                            } else {
-                                searchTabRef.current.delete(item.tabName);
-                            }
-                        }}
-                    >
-                        <h2 className='title'>{item?.title}</h2>
-                        <p className='desc'>{
-                            index === 0 ? (whereOptionValue || item?.content)
-                                : index === 1 ? (selectedDays || item?.content)
-                                    : item?.content
-                        }</p>
-                    </div>
-                ))}
+                </div >
 
                 <div
-                    className={
-                        classNames(
-                            'option__container',
-                            {
-                                active: activeSearchBar,
-                                first__active__tab: searchActiveTab.tabIndex === 0,
-                                middle__active__tab: searchActiveTab.tabIndex === 1,
-                                last__active__tab: searchActiveTab.tabIndex === 2,
-                            })}
-                    style={{
-                        width: searchActiveTab.tabIndex === 1 ? '100%' : '50%',
-                        left: searchActiveTab.tabIndex === 2 ? '50%' : '0%',
-                    }
-                    }
+                    className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}
+                    ref={searchBarRef}
+                    onClick={searchBarFunciton}
                 >
-                    {searchActiveTab.tabIndex === 0 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 0 })}>
-                        <div className='locations__container'>
-                            <h1 className='title'>Suggested destinations</h1>
-                            {locations.map((item, index) => (
-                                <LocationsBlock item={item} key={index} onClick={() => changeTab(item)} />
-                            ))}
+                    <div
+                        className={classNames('selected__slice', { active: activeSearchBar })}
+                        style={
+                            {
+                                width: searchTabWidth,
+                                transform: `translateX(${searchSliceTX}px)`
+                            }
+                        }
+                    />
+
+                    {searchTabFields?.map((item, index) => (
+                        <div
+                            className={classNames('tab__item', { active__tab__search: searchActiveTab?.tabName === item?.tabName, in__scroll: !isTop })}
+                            key={index}
+                            onClick={() => setSearchAtiveTab({ tabName: item?.tabName, tabIndex: index })}
+                            ref={el => {
+                                if (el) {
+                                    searchTabRef.current.set(item.tabName, el);
+                                } else {
+                                    searchTabRef.current.delete(item.tabName);
+                                }
+                            }}
+                        >
+                            <h2 className='title'>{isTop || activeScrollHeader ? item?.title : searchTabFieldsInScroll[index]?.title}</h2>
+                            <p className={classNames('desc', {in__scroll: !isTop && !activeScrollHeader})}>{
+                                index === 0 ? (whereOptionValue || item?.content)
+                                    : index === 1 ? (selectedDays || item?.content)
+                                        : item?.content
+                            }</p>
                         </div>
-                    </div>}
+                    ))}
 
-                    {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content option__tab__content__calendar', { active: searchActiveTab.tabIndex === 1 })}>
-                        <V1Calendar />
-                    </div>}
+                    <div
+                        className={
+                            classNames(
+                                'option__container',
+                                {
+                                    active: activeSearchBar,
+                                    first__active__tab: searchActiveTab.tabIndex === 0,
+                                    middle__active__tab: searchActiveTab.tabIndex === 1,
+                                    last__active__tab: searchActiveTab.tabIndex === 2,
+                                })}
+                        style={{
+                            width: searchActiveTab.tabIndex === 1 ? '100%' : '50%',
+                            left: searchActiveTab.tabIndex === 2 ? '50%' : '0%',
+                        }
+                        }
+                    >
+                        {searchActiveTab.tabIndex === 0 && <div className={classNames('option__tab__content', { active: searchActiveTab.tabIndex === 0 })}>
+                            <div className='locations__container'>
+                                <h1 className='title'>Suggested destinations</h1>
+                                {locations.map((item, index) => (
+                                    <LocationsBlock item={item} key={index} onClick={() => changeTab(item)} />
+                                ))}
+                            </div>
+                        </div>}
+
+                        {searchActiveTab.tabIndex === 1 && <div className={classNames('option__tab__content option__tab__content__calendar', { active: searchActiveTab.tabIndex === 1 })}>
+                            <V1Calendar />
+                        </div>}
+                    </div>
+
+
+                    <button className={classNames('search__button', { active__button: activeSearchBar })}>
+                        <SearchSvg />
+
+                        <p className='search__text'>Search</p>
+                    </button>
                 </div>
+            </header >
 
-
-                <button className={classNames('search__button', { active__button: activeSearchBar })}>
-                    <SearchSvg />
-
-                    <p className='search__text'>Search</p>
-                </button>
-            </div>
-        </header >
+            <div className={classNames('backdrop', { active: !isTop && activeScrollHeader })} />
+        </>
     )
 }
