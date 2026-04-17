@@ -15,6 +15,7 @@
     flex-direction: column;
     padding: 4px 32px 12px 32px;
     transition: all 0.4s;
+    will-change: transform, height;
 
     &.help__page__header {
         height: 80px;
@@ -433,8 +434,11 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        transition: all $motion-springs-fast-duration $motion-springs-fast-easing;
+        transition:
+            all $motion-springs-fast-duration $motion-springs-fast-easing,
+            width 1s cubic-bezier(.39, 0.51, 0.92, 2.72) 0.1s;
         z-index: 4;
+        will-change: transform, height;
 
         &.profile__page__header,
         &.help__page__header {
@@ -443,8 +447,10 @@
         }
 
         &.scroll {
-            width: 33.33%;
-            transition: all $motion-springs-fast-duration $motion-springs-fast-easing;
+            width: 25.33%;
+            transition:
+                all $motion-springs-fast-duration $motion-springs-fast-easing,
+                width 0.6s cubic-bezier(.19, .21, .22, 1.12) 0.01s;
             transform: translateY(-63px);
             min-height: 46px;
             height: 46px;
@@ -467,6 +473,7 @@
             height: 66px;
             width: 100%;
             transform: translateY(0);
+            padding-right: 0;
 
             .search__button {
                 width: 48px;
@@ -621,6 +628,7 @@
             z-index: 1;
             @include boxShadow(35px);
             transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            will-change: transform, height;
         }
 
         .selected__slice {

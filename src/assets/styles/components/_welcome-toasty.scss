@@ -9,21 +9,36 @@
     z-index: 2;
     background-color: white;
     border-radius: 15px;
-    bottom: -100%;
-    transform: scale(0.3);
-    opacity: 0;
-    visibility: hidden;
+    bottom: 10%;
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
     left: calc(50% - 115px);
     @include allCenter();
-    animation: animShow 0.8s 0.4s forwards;
+    transition: all 0.4s;
+    animation: animShow 0.8s;
 
     @keyframes animShow {
-        to{
+        from {
+            bottom: -100%;
+            transform: scale(0.3);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        to {
             bottom: 10%;
             transform: scale(1);
             opacity: 1;
             visibility: visible;
         }
+    }
+
+    &.hidden {
+        bottom: 0 !important;
+        transform: scale(0.3) !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 
     .animation__text {

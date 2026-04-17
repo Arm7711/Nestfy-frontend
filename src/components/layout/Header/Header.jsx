@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import React, { useRef, useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useParams } from 'react-router';
 import classNames from 'classnames';
@@ -25,9 +25,6 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
     const isTop = useIsAtTop();
     const [activeScrollHeader, setActiveScrollHeader] = useState(false);
-
-    console.log(isTop);
-
 
     const tabRef = useRef(new Map());
     const [headerActiveTab, setHeaderActiveTab] = useState(
@@ -80,18 +77,23 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
     }, [openHeaderMenu]);
 
     useEffect(() => {
+        let ticking = false;
+
         const handleScroll = () => {
-            if (!isTop) {
-                setActiveSearchBar(false);
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    if (!isTop) setActiveSearchBar(false);
+                    ticking = false;
+                });
+                ticking = true;
             }
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isTop]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const el = tabRef.current.get(headerActiveTab.tabName);
         const elS = searchTabRef.current.get(searchActiveTab.tabName);
 
@@ -101,14 +103,16 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
             const rect = el.getBoundingClientRect();
             const parentRect = el.parentElement.getBoundingClientRect();
 
-            const rectS = elS.getBoundingClientRect();
-            const sParentRect = elS.parentElement.getBoundingClientRect();
-
             setTabWidth(rect.width);
             setTranslateX(rect.left - parentRect.left);
 
-            setSearchTabWidth(rectS.width);
-            setSearchSliceTX(rectS.left - sParentRect.left);
+            if (isTop || activeScrollHeader) {
+                const rectS = elS.getBoundingClientRect();
+                const sParentRect = elS.parentElement.getBoundingClientRect();
+
+                setSearchTabWidth(rectS.width);
+                setSearchSliceTX(rectS.left - sParentRect.left);
+            }
         };
 
         update();
@@ -118,7 +122,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
         ro.observe(elS);
 
         return () => ro.disconnect();
-    }, [headerActiveTab, searchActiveTab]);
+    }, [headerActiveTab, searchActiveTab, isTop, activeScrollHeader]);
 
     const changeTab = (item) => {
         setWhereOptionValue(item?.title);
@@ -141,9 +145,6 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
             console.log(e);
         }
     };
-
-    console.log(activeScrollHeader, 'asadad');
-
 
     const searchBarFunciton = () => {
         if (!isTop) {
@@ -302,7 +303,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
                             }}
                         >
                             <h2 className='title'>{isTop || activeScrollHeader ? item?.title : searchTabFieldsInScroll[index]?.title}</h2>
-                            <p className={classNames('desc', {in__scroll: !isTop && !activeScrollHeader})}>{
+                            <p className={classNames('desc', { in__scroll: !isTop && !activeScrollHeader })}>{
                                 index === 0 ? (whereOptionValue || item?.content)
                                     : index === 1 ? (selectedDays || item?.content)
                                         : item?.content
