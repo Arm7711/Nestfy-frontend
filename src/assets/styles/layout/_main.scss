@@ -1,16 +1,19 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
 .nestfy__main {
     flex: 1;
     width: 100%;
     min-height: 2000px;
     height: fit-content;
     padding-top: 80px;
-    transition: all 0.4s;
+    transition: padding $motion-springs-fast-duration $motion-springs-fast-easing;
 
-    &.main__page{
+    &.main__page {
         padding-top: 200px;
     }
 
-    &.profile__page{
+    &.profile__page {
         padding-top: 96px;
     }
 }

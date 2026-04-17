@@ -20,7 +20,7 @@ import { locations } from '../../../data/loacationsData';
 import LocationsBlock from '../../LocationsBlock/LocationsBlock';
 import Api from '../../../api/Api';
 
-export default function Header({ isProfilePage, isHelpPage, isAuth }) {
+export default function Header({ isProfilePage, isHelpPage, isAuth, isMainPage }) {
     const { lang } = useParams();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
     const isTop = useIsAtTop();
@@ -152,12 +152,13 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
         }
         setActiveSearchBar(true);
     }
+    
 
     return (
         <>
-            <header className={classNames('header', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}>
-                <div className={classNames('header__section__first', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}>
-                    <div className={classNames('header__section__first__content', { profile__page__header: isProfilePage, help__page__header: isHelpPage })}>
+            <header className={classNames('header', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop && isMainPage, scroll__header: !isTop && activeScrollHeader })}>
+                <div className={classNames('header__section__first', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop && isMainPage, scroll__header: !isTop && activeScrollHeader })}>
+                    <div className={classNames('header__section__first__content', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop && isMainPage, scroll__header: !isTop && activeScrollHeader })}>
                         <NavLink to={`/${lang}`} className='header__section__first__logo__block'>
                             {isHelpPage
                                 ?
@@ -170,7 +171,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
                             }
                         </NavLink>
 
-                        <div className={classNames('header__section__first__tab__list', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}
+                        <div className={classNames('header__section__first__tab__list', { profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop && isMainPage, scroll__header: !isTop && activeScrollHeader })}
                         >
                             <span
                                 className='active__tab'
@@ -275,7 +276,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
                 </div >
 
                 <div
-                    className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop, scroll__header: !isTop && activeScrollHeader })}
+                    className={classNames('header__search__form__container', { active__bar: activeSearchBar, profile__page__header: isProfilePage, help__page__header: isHelpPage, scroll: !isTop && isMainPage, scroll__header: !isTop && activeScrollHeader })}
                     ref={searchBarRef}
                     onClick={searchBarFunciton}
                 >
@@ -331,7 +332,9 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
                             <div className='locations__container'>
                                 <h1 className='title'>Suggested destinations</h1>
                                 {locations.map((item, index) => (
-                                    <LocationsBlock item={item} key={index} onClick={() => changeTab(item)} />
+                                    <React.Fragment key={index}>
+                                        <LocationsBlock item={item} onClick={() => changeTab(item)} />
+                                    </React.Fragment>
                                 ))}
                             </div>
                         </div>}
@@ -350,7 +353,7 @@ export default function Header({ isProfilePage, isHelpPage, isAuth }) {
                 </div>
             </header >
 
-            <div className={classNames('backdrop', { active: !isTop && activeScrollHeader })} />
+            <div className={classNames('backdrop__header', { active: !isTop && activeScrollHeader })} />
         </>
     )
 }

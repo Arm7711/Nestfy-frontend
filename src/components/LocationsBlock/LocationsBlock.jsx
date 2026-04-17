@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function LocationsBlock({ item,key,onClick }) {
+export default function LocationsBlock({ item,onClick }) {
     return (
         <motion.div
             className='locations__item'
@@ -9,7 +9,6 @@ export default function LocationsBlock({ item,key,onClick }) {
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.2, ease: 'linear' }}
             viewport={{ once: false, margin: '-20px' }}
-            key={key}
             onClick={onClick}
         >
             <figure className='item__figure'>

@@ -37,8 +37,8 @@ export default function AuthModal({ isOpen, onClose, children }) {
     const [activeVerifyCode, setActiveVerifyCode] = useState(false);
     const [showErrorToasty, setShowErrorToasty] = useState({ active: false, message: '' });
 
-    const [loadings, setLoadings] = useState({ loadingAuth: false });
-    const { loadingAuth } = loadings;
+    const [loadings, setLoadings] = useState({ loadingAuth: false, loadingSendCode: false });
+    const { loadingAuth, loadingSendCode } = loadings;
     const [submitResult, setSubmitResult] = useState({
         is: true,
         message: '',
@@ -78,7 +78,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
 
     useEffect(() => {
         const handleVisibilityChange = () => {
-            if (document.hidden) {
+            if (document.hidden && is && message === 'valid') {
                 setActiveVerifyCode(true);
             }
         };
@@ -111,7 +111,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
         if (!isOpen && !activeVerifyCode) {
             clearTimeout(timer)
         }
-        
+
         return () => clearTimeout(timer);
     }, [activeVerifyCode]);
 
@@ -140,6 +140,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
 
     const sendCode = async () => {
         if (sendCodeInputValue.length === 6) {
+            setLoadings(prev => ({ ...prev, loadingSendCode: true }));
             try {
                 const { data } = await Api.userVerfiyAuth(authInputValue, sendCodeInputValue);
                 localStorage.setItem('userData', JSON.stringify(data.user));
@@ -154,6 +155,7 @@ export default function AuthModal({ isOpen, onClose, children }) {
             } catch (e) {
                 setShowErrorToasty({ active: true, message: e.response.data.message });
             }
+            setLoadings(prev => ({ ...prev, loadingSendCode: false }));
         }
     }
     const sendNewCode = async () => {
@@ -262,7 +264,9 @@ export default function AuthModal({ isOpen, onClose, children }) {
                         </div>
 
                         <div className={classNames('send__result__button__container', { active: sendCodeInputValue })}>
-                            <button className='send__result__button' onClick={sendCode} disabled={sendCodeInputValue.length < 6}>Continue</button>
+                            <button className='send__result__button' onClick={sendCode} disabled={sendCodeInputValue.length < 6}>
+                                {loadingSendCode ? <LoadingDot /> : 'Continue'}
+                            </button>
                         </div>
                     </div>
                 </div>
