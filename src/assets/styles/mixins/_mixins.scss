@@ -5,6 +5,65 @@
     flex-direction: $flex-direction;
 }
 
+@mixin flexStartRow() {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+@mixin flexStartColumn() {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+@mixin flexCenterRow() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+@mixin flexCenterColumn() {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+@mixin flexEndRow() {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: row;
+}
+
+@mixin flexEndCloumn() {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+@mixin commonButtonStyle($bg: black, $color: white) {
+    background-color: $bg;
+    color: $color;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.5s;
+
+    &:hover {
+        background-color: transparent;
+        color: $bg;
+        border: 1px solid $bg;
+    }
+}
+
 @mixin boxShadow($border-radius: 15px) {
     background-color: white !important;
     box-shadow: 0 2px 20px 1px rgba(0, 0, 0, .08);

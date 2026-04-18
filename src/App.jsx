@@ -9,7 +9,8 @@ import NotFound from './pages/NotFound/NotFound';
 import HelpDetails from "./pages/Help/HelpDetailes.jsx";
 import Profile from './pages/Profile/Profile.jsx';
 import MainPage from "./pages/MainPage/MainPage.jsx";
-import Services from './pages/Services/Services.jsx'
+import Services from './pages/Services/Services.jsx';
+import AccountSettings from "./pages/AccountSettings/AccountSettings.jsx";
 
 import RedirectNoAuth from './components/redirect/RedirectNoAuth.jsx';
 import { bootstrapAuth } from './auth/bootstrapAuth';
@@ -28,6 +29,7 @@ const App = () => {
         <Route index element={<MainPage />} />
         <Route path='home' element={<Home />} />
         <Route path='services' element={<Services />} />
+
         <Route path='help-center' element={<Help />} />
         <Route path="help-center/:tabSlug/:section/:itemSlug" element={<HelpDetails />} />
 
@@ -36,6 +38,24 @@ const App = () => {
           element={
             <RedirectNoAuth>
               <Profile />
+            </RedirectNoAuth>
+          }
+        />
+
+        <Route
+          path='account-settings'
+          element={
+            <RedirectNoAuth>
+              <AccountSettings />
+            </RedirectNoAuth>
+          }
+        />
+
+        <Route
+          path='account-settings/:activeTab'
+          element={
+            <RedirectNoAuth>
+              <AccountSettings />
             </RedirectNoAuth>
           }
         />

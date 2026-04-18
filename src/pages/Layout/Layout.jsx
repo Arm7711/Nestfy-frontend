@@ -17,6 +17,8 @@ export default function Layout() {
         matchPath({ path: '/:lang' }, pathname);
     const isHelpPage = pathname === `/${lang}/help-center`;
     const isProfilePage = pathname === `/${lang}/profile`;
+    const isSettingsPage = pathname.startsWith(`/${lang}/account-settings`);
+
 
     const status = useSelector(state => state.authReducer.status);
 
@@ -25,11 +27,17 @@ export default function Layout() {
 
     return (
         <div className='nestfy__page'>
-            <Header isProfilePage={isProfilePage} isHelpPage={isHelpPage} isAuth={status === 'auth'} isMainPage={isMainPage} />
+            <Header
+                isProfilePage={isProfilePage}
+                isHelpPage={isHelpPage}
+                isAuth={status === 'auth'}
+                isMainPage={isMainPage}
+                isSettingsPage={isSettingsPage}
+            />
 
             <main className={classNames('nestfy__main', { profile__page: isProfilePage, main__page: isMainPage })}>
                 {<Outlet />}
-                <WelcomeToasty />
+                {isMainPage && <WelcomeToasty />}
             </main>
 
             <Footer />
