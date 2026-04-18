@@ -106,6 +106,7 @@ const Footer = () => {
                 <Link className="footer__bottomLink" to={makeHref("bottom", l.label)}>
                   {l.label}
                 </Link>
+                
                 {i !== footerBottom.leftLinks.length - 1 && (
                   <span className="footer__dot" aria-hidden="true">
                     ·
