@@ -11,6 +11,8 @@ import Profile from './pages/Profile/Profile.jsx';
 import MainPage from "./pages/MainPage/MainPage.jsx";
 import Services from './pages/Services/Services.jsx';
 import AccountSettings from "./pages/AccountSettings/AccountSettings.jsx";
+import FooterPage from "./components/layout/Footer/FooterDetailes.jsx";
+import ScrollToTop from "./components/_common/ScrollToTop.jsx";
 
 import RedirectNoAuth from './components/redirect/RedirectNoAuth.jsx';
 import { bootstrapAuth } from './auth/bootstrapAuth';
@@ -22,6 +24,8 @@ const App = () => {
   }, []);
 
   return (
+    <>
+    <ScrollToTop />
     <Routes>
       <Route path="/" element={<Navigate to="/en" replace />} />
 
@@ -60,11 +64,13 @@ const App = () => {
           }
         />
       </Route>
+      <Route path="/footer/:group/:slug" element={<FooterPage />} />
 
 
       <Route path='/404' element={<NotFound />} />
       <Route path="/*" element={<Navigate to='/404' replace />} />
     </Routes>
+    </>
   );
 };
 
