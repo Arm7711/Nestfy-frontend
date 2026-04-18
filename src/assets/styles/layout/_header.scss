@@ -60,6 +60,17 @@
         }
     }
 
+    &.account__settings__header {
+        padding-top: 0;
+        height: 80px;
+        background-color: white;
+
+        &::after {
+            background-color: #F1F1F1;
+            height: 1px;
+        }
+    }
+
     &.scroll {
         transition: all $motion-springs-fast-duration $motion-springs-fast-easing;
         height: 80px;
@@ -97,6 +108,10 @@
             height: 80px;
         }
 
+        &.account__settings__header {
+            height: 80px;
+        }
+
         &.scroll {
             height: 80px;
         }
@@ -117,11 +132,20 @@
                 height: 96px;
             }
 
+            &.account__settings__header {
+                height: 80px;
+            }
+
             .header__section__first__logo__block {
                 width: 33%;
                 max-width: 33%;
                 height: 38px;
                 @include allCenter(flex-start, center, row);
+                transition: all 0.4s;
+
+                &.settings__page__logo {
+                    height: 50px;
+                }
 
                 .header__section__first__logo {
                     width: 125px;
@@ -130,6 +154,10 @@
 
                     &.profile__page__header {
                         width: 100px;
+                    }
+
+                    &.account__settings__header {
+                        height: 100px;
                     }
                 }
             }
@@ -146,6 +174,7 @@
                 transition: all 0.4s;
 
                 &.profile__page__header,
+                &.account__settings__header,
                 &.help__page__header {
                     transform: translateY(-150%);
                 }
@@ -220,6 +249,41 @@
                 }
             }
 
+            .settings__done__container {
+                width: 33%;
+                max-width: 33%;
+                height: 100%;
+                position: relative;
+                padding-right: calc(36px + 18px);
+                @include allCenter(flex-end, center, row);
+                gap: 12px;
+                margin-right: -33.33%;
+                visibility: hidden;
+                transition: all 0.5s 0.2s;
+
+                &.active {
+                    transition-delay: 0.4s;
+                    margin-right: 0;
+                    visibility: visible;
+                }
+
+                .settings__done__button {
+                    width: 94px;
+                    height: 40px;
+                    background-color: $palette-grey200;
+                    border-radius: 25px;
+                    border: none;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s;
+
+                    &:hover {
+                        background-color: $palette-grey400;
+                    }
+                }
+            }
+
             .header__section__tab__bar__tools {
                 width: 33%;
                 max-width: 33%;
@@ -228,6 +292,12 @@
                 padding-right: calc(36px + 18px);
                 @include allCenter(flex-end, center, row);
                 gap: 12px;
+                transition: all 0.5s;
+
+                &.hidden {
+                    transform: translateY(-150%);
+                    visibility: hidden;
+                }
 
 
                 .header__section__tab__bar__tools__item {
@@ -441,6 +511,7 @@
         will-change: transform, height;
 
         &.profile__page__header,
+        &.account__settings__header,
         &.help__page__header {
             transform: translateY(-300%);
             visibility: hidden;

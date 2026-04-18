@@ -1,0 +1,108 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
+.user__account__settings {
+    width: 100%;
+    height: calc(100vh - 80px);
+    @include flexStartRow;
+
+    .user__account__settings__aside {
+        width: 25%;
+        height: 100%;
+        border: none;
+        border-right: 1px solid #F1F1F1;
+        padding-left: 64px;
+        padding-top: 48px;
+        @include flexStartColumn;
+        gap: 20px;
+
+        .title__container {
+            width: 100%;
+            height: fit-content;
+
+            .title {
+                font-size: 30px;
+                font-weight: 600;
+            }
+        }
+
+        .tabs__container {
+            width: 100%;
+            height: fit-content;
+            @include flexStartColumn;
+            position: relative;
+
+            &::after {
+                content: "";
+                width: 90%;
+                height: 1px;
+                background-color: #F1F1F1;
+                position: absolute;
+                bottom: -30px;
+            }
+
+            .tab__link {
+                width: 100%;
+                max-width: 341px;
+                height: 56px;
+                background-color: transparent;
+                border-radius: 16px;
+                transition: all 0.4s;
+
+                &.active__tab {
+                    background-color: #F2F2F2;
+                }
+
+                &:hover {
+                    opacity: 0.7;
+                    transform: scale(0.98);
+                }
+
+                .tab__item {
+                    width: 100%;
+                    height: 100%;
+                    @include allCenter(flex-start, center);
+                    padding-left: 20px;
+                    border: none;
+                    border-radius: 12px;
+                    background-color: transparent;
+                    font-size: 17px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    gap: 12px;
+
+                    .icon {
+                        width: 24px;
+                        height: 24px;
+                    }
+                }
+            }
+        }
+    }
+
+    .user__account__settings__section {
+        width: 75%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        @include allCenter(center, flex-start);
+
+        .container {
+            width: 100%;
+            max-width: 772px;
+            height: 100%;
+            border: 1px solid black;
+            padding-top: 48px;
+
+            .title__container {
+                width: 100%;
+                height: fit-content;
+
+                .title {
+                    font-size: 30px;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
