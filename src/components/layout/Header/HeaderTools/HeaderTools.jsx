@@ -49,10 +49,15 @@ export default function HeaderTools({
             </div>
 
             <div className={classNames('settings__done__container', { active: isSettingsPage })}>
-                <NavLink to={`/${lang}/profile`}>
-                    <button className='settings__done__button'>
-                        Done
-                    </button>
+                <NavLink
+                    to={`/${lang}/profile`}
+                    className={
+                        classNames('settings__done__button', {
+                            active: isSettingsPage
+                        })
+                    }
+                >
+                    <span className='text'>Done</span>
                 </NavLink>
             </div>
         </>

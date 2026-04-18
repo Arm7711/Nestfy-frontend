@@ -276,7 +276,24 @@
                     font-size: 15px;
                     font-weight: 600;
                     cursor: pointer;
-                    transition: all 0.3s;
+                    @include flexCenterRow;
+                    transform: scaleX(0.6);
+                    transform-origin: right;
+                    transition: backgorund 0.3s, transform 0.3s 0.2s cubic-bezier(0.39, 0.175, 0.265, 1.1);
+
+                    .text {
+                        transition: all 0.3s;
+                        transform: scaleX(1.2);
+                    }
+
+                    &.active {
+                        transition: backgorund 0.3s, transform 0.3s 0.8s cubic-bezier(0.39, 0.175, 0.265, 1.1);
+                        transform: scaleX(1);
+
+                        .text {
+                            transform: scaleX(1);
+                        }
+                    }
 
                     &:hover {
                         background-color: $palette-grey400;
