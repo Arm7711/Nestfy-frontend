@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import SearchSvg from '../../../svg/SearchSvg';
@@ -5,23 +6,43 @@ import SearchOptions from '../SearchOptions/SearchOptions';
 import { searchTabFields, searchTabFieldsInScroll } from '../../../../data/headerData';
 
 export default function HeaderSearchBar({
-    searchBarRef,
-    isTop,
-    isProfilePage,
-    isHelpPage,
-    isSettingsPage,
-    activeSearchBar,
-    activeScrollHeader,
-    searchActiveTab,
-    setSearchActiveTab,
-    searchTabRef,
-    searchTabWidth,
-    searchSliceTX,
-    whereOptionValue,
-    setWhereOptionValue,
-    onBarClick,
+    searchBarRef, isTop, isProfilePage, isHelpPage, isSettingsPage,
+    activeSearchBar, activeScrollHeader, searchActiveTab, setSearchActiveTab,
+    searchTabRef, searchTabWidth, searchSliceTX,
+    whereOptionValue, setWhereOptionValue, onBarClick,
 }) {
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
+    const isFirstOpen = useRef(true);
+    const [noAnimation, setNoAnimation] = useState(false);
+
+    useEffect(() => {
+        if (activeSearchBar && isFirstOpen.current) {
+            setNoAnimation(true);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => setNoAnimation(false));
+            });
+            isFirstOpen.current = false;
+        }
+    }, [activeSearchBar]);
+
+    useEffect(() => {
+        if (activeScrollHeader) {
+            setNoAnimation(true);
+
+            const el = searchBarRef.current;
+            if (!el) return;
+
+            const handleTransitionEnd = (e) => {
+                if (e.propertyName === 'width') {
+                    setNoAnimation(false);
+                    el.removeEventListener('transitionend', handleTransitionEnd);
+                }
+            };
+
+            el.addEventListener('transitionend', handleTransitionEnd);
+            return () => el.removeEventListener('transitionend', handleTransitionEnd);
+        }
+    }, [activeScrollHeader]);
 
     const handleLocationClick = (item) => {
         setWhereOptionValue(item?.title);
@@ -42,7 +63,10 @@ export default function HeaderSearchBar({
             onClick={onBarClick}
         >
             <div
-                className={classNames('selected__slice', { active: activeSearchBar })}
+                className={classNames('selected__slice', {
+                    active: activeSearchBar,
+                    no__animation: noAnimation,
+                })}
                 style={{
                     width: searchTabWidth,
                     transform: `translateX(${searchSliceTX}px)`,
@@ -63,25 +87,20 @@ export default function HeaderSearchBar({
                     }}
                 >
                     <h2 className='title'>
-                        {isTop || activeScrollHeader
-                            ? item?.title
-                            : searchTabFieldsInScroll[index]?.title}
+                        {isTop || activeScrollHeader ? item?.title : searchTabFieldsInScroll[index]?.title}
                     </h2>
                     <p className={classNames('desc', { in__scroll: !isTop && !activeScrollHeader })}>
                         {index === 0
                             ? whereOptionValue || item?.content
                             : index === 1
-                            ? selectedDays || item?.content
-                            : item?.content}
+                                ? selectedDays || item?.content
+                                : item?.content}
                     </p>
                 </div>
             ))}
 
             {activeSearchBar && (
-                <SearchOptions
-                    searchActiveTab={searchActiveTab}
-                    onLocationClick={handleLocationClick}
-                />
+                <SearchOptions searchActiveTab={searchActiveTab} onLocationClick={handleLocationClick} />
             )}
 
             <button className={classNames('search__button', { active__button: activeSearchBar })}>
