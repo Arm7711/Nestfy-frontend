@@ -1,14 +1,12 @@
 import { NavLink } from 'react-router';
 import classNames from 'classnames';
+import { motion } from "framer-motion";
 import HomeIcon from '../../..//HeaderVideoIcons/HomeIcon/HomeIcon';
 import ServicesIcon from '../../../HeaderVideoIcons/ServicesIcon/ServicesIcon';
 import { tabFields } from '../../../../data/headerData';
 
 export default function HeaderTabList({
     lang,
-    tabRef,
-    tabWidth,
-    translateX,
     headerActiveTab,
     setHeaderActiveTab,
     isProfilePage,
@@ -27,47 +25,53 @@ export default function HeaderTabList({
                 scroll__header: !isTop && activeScrollHeader,
             })}
         >
-            <span
-                className='active__tab'
-                style={{
-                    width: tabWidth,
-                    transform: `translateX(${translateX}px)`,
-                }}
-            />
 
-            {tabFields?.map(({ tabName, tab, title }, index) => (
-                <NavLink
-                    className='tab__list__item'
-                    key={index}
-                    ref={el => {
-                        if (el) tabRef.current.set(tabName, el);
-                        else tabRef.current.delete(tabName);
-                    }}
-                    to={`/${lang}/${tab}`}
-                    role='button'
-                    onClick={() => setHeaderActiveTab({ tabName, tabIndex: index })}
-                >
-                    <div
-                        className={classNames('icon__container', {
-                            active__tab__icon: headerActiveTab.tabName === tabName,
-                        })}
+            {tabFields?.map(({ tabName, tab, title }, index) => {
+                const isActive = headerActiveTab.tabName === tabName;
+
+                return (
+                    <NavLink
+                        className='tab__list__item'
+                        key={index}
+                        to={`/${lang}/${tab}`}
+                        role='button'
+                        onClick={() => setHeaderActiveTab({ tabName, tabIndex: index })}
+                        style={{ position: "relative" }}
                     >
-                        {tab === 'home' ? (
-                            <HomeIcon selected={headerActiveTab.tabName === tabName} />
-                        ) : (
-                            <ServicesIcon selected={headerActiveTab.tabName === tabName} />
+                        {isActive && (
+                            <motion.span
+                                layoutId="header-tab-indicator"
+                                className="active__tab"
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 500,
+                                    damping: 35
+                                }}
+                            />
                         )}
-                    </div>
 
-                    <div
-                        className={classNames('list__item__title', {
-                            active__tab__title: headerActiveTab.tabName === tabName,
-                        })}
-                    >
-                        <p className='title'>{title}</p>
-                    </div>
-                </NavLink>
-            ))}
+                        <div
+                            className={classNames('icon__container', {
+                                active__tab__icon: isActive,
+                            })}
+                        >
+                            {tab === 'home' ? (
+                                <HomeIcon selected={isActive} />
+                            ) : (
+                                <ServicesIcon selected={isActive} />
+                            )}
+                        </div>
+
+                        <div
+                            className={classNames('list__item__title', {
+                                active__tab__title: isActive,
+                            })}
+                        >
+                            <p className='title'>{title}</p>
+                        </div>
+                    </NavLink>
+                );
+            })}
         </div>
     );
 }

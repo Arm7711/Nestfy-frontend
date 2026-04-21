@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useParams } from 'react-router-dom';
-import '../../assets/styles/pages/_help.scss';
+import { motion } from "framer-motion";
 import { helpTabs, helpContent } from '../../data/helpData.js';
 import AuthModal from '../../components/_common/Modals/AuthModal';
 
@@ -33,16 +33,33 @@ const Help = () => {
           </div>
 
           <nav className="help-tabs">
-            {helpTabs.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                className={activeTab === tab ? 'active' : ''}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
+            {helpTabs.map((tab) => {
+              const isActive = activeTab === tab;
+
+              return (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={isActive ? "active" : ""}
+                  style={{ position: "relative" }}
+                >
+                  {tab}
+
+                  {isActive && (
+                    <motion.span
+                      layoutId="help-tab-indicator"
+                      className="help-tab-indicator"
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </nav>
         </header>
 

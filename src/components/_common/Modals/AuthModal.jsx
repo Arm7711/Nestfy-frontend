@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { motion, AnimatePresence } from 'framer-motion';
 import classNames from 'classnames';
 import Api from '../../../api/Api';
 import useValidateEmail from '../../../hooks/useValidateEmail';
@@ -168,109 +169,136 @@ export default function AuthModal({ isOpen, onClose, children }) {
 
 
     return createPortal(
-        <div className={classNames('auth__modal', { modal__active: isOpen })}>
-            <div className='backdrop' role='button' onClick={clearStates} />
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    className="auth__modal"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    <motion.div
+                        className="backdrop"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        onClick={clearStates}
+                    />
 
-            <div className={classNames('modal__main', { active__verify__child: activeVerifyCode, max__height: sendCodeInputValue, active__error: showErrorToasty.active })}>
-                <div className='modal__close__bar'>
-                    <button className={classNames('back', { active: activeVerifyCode })} onClick={backClickClear}>
-                        <BackArrowSvg />
-                    </button>
+                    <motion.div
+                        className={classNames('modal__main', {
+                            active__verify__child: activeVerifyCode,
+                            max__height: sendCodeInputValue,
+                            active__error: showErrorToasty.active
+                        })}
+                        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                    >
+                        <div className='modal__close__bar'>
+                            <button className={classNames('back', { active: activeVerifyCode })} onClick={backClickClear}>
+                                <BackArrowSvg />
+                            </button>
 
-                    <button className='modal__close__bar__button' onClick={clearStates}>
-                        <span className='container'>
-                            <CloseSvg />
-                        </span>
-                    </button>
-                </div>
-
-                <div className={classNames('content', { hidden: activeVerifyCode })}>
-                    <div className='content__logo__block'>
-                        <img src={siteLogo} className='site__logo' draggable={false} alt="Nestfy site logo" />
-                    </div>
-                    <div className='content__title'>
-                        <h3 className='title'>Log in or sign up</h3>
-                    </div>
-
-                    <div className={classNames('content__auth__block', { active__error__container: !is })}>
-                        <AuthModalInput onSubmit={submitForm} onClick={() => setShowInfoBlock(true)} activeError={is} loaderAuth={loadingAuth} />
-                        <p className={classNames('error__message', { active__error: !is })}>
-                            <ErrorSvg />
-                            {message === 'empty' ? 'Please enter a phone number or email.' : 'Please enter a valid email address or phone number.'}
-                        </p>
-                    </div>
-
-                    <div className={classNames('content__information', { show: showInfoBlock })}>
-                        <p className='text'>
-                            We’ll send a confirmation code by text or email. Message and data rates apply.
-                            <NavLink to='/privacy-policy' className='link'>Privacy Policy</NavLink>
-                        </p>
-                    </div>
-
-                    <div className={classNames('button__container', { show__info__block: showInfoBlock })}>
-                        <Button
-                            className={classNames('submit__button', { loading__button: loadingAuth })}
-                            type='submit'
-                            form='auth__form'
-                            disabled={loadingAuth}
-                        >
-                            {loadingAuth ? <LoadingDot /> : 'Continue'}
-                        </Button>
-                    </div>
-
-                    <div className={classNames('container__info', { show__info__block: showInfoBlock })}>
-                        <span className='line' />
-                        <p className='or'>or</p>
-                        <span className='line' />
-                    </div>
-
-                    <div className={classNames('other__options__container', { show__info__block: showInfoBlock })}>
-                        <button className='option__button' disabled={loadingAuth}>
-                            <GoogleSvg />
-                        </button>
-
-                        <button className='option__button' disabled={loadingAuth}>
-                            <AppleSvg />
-                        </button>
-                    </div>
-                </div>
-
-                <div className={classNames('verify__content', { active__verify__content: activeVerifyCode })}>
-                    <div className={classNames('error__toasty', { show: showErrorToasty.active })}>
-                        <ErrorSvg />
-                        <p className='error__text'>{showErrorToasty.message}</p>
-
-                        <button className='close__toasty' onClick={() => setShowErrorToasty({ active: false, message: '' })}>
-                            <CloseSvg className='close__svg' />
-                        </button>
-                    </div>
-
-                    <div className='info__container'>
-                        <h1 className='title'>Confirm it’s you</h1>
-                        <p className='info'>We sent a code to {authInputValue}</p>
-
-                        <div className='code__input__container'>
-                            <CodeInput
-                                value={code}
-                                onChange={handleCodeChange}
-                                isActive={activeVerifyCode}
-                                error={false}
-                            />
-                        </div>
-
-                        <div className='send__new__code__container'>
-                            <p className='info'>Didn’t get it?</p>
-                            <button className='send__code' onClick={sendNewCode}>Send a new code</button>
-                        </div>
-
-                        <div className={classNames('send__result__button__container', { active: sendCodeInputValue })}>
-                            <button className='send__result__button' onClick={sendCode} disabled={sendCodeInputValue.length < 6}>
-                                {loadingSendCode ? <LoadingDot /> : 'Continue'}
+                            <button className='modal__close__bar__button' onClick={clearStates}>
+                                <span className='container'>
+                                    <CloseSvg />
+                                </span>
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        , document.getElementById('root'))
+
+                        <div className={classNames('content', { hidden: activeVerifyCode })}>
+                            <div className='content__logo__block'>
+                                <img src={siteLogo} className='site__logo' draggable={false} alt="Nestfy site logo" />
+                            </div>
+                            <div className='content__title'>
+                                <h3 className='title'>Log in or sign up</h3>
+                            </div>
+
+                            <div className={classNames('content__auth__block', { active__error__container: !is })}>
+                                <AuthModalInput onSubmit={submitForm} onClick={() => setShowInfoBlock(true)} activeError={is} loaderAuth={loadingAuth} />
+                                <p className={classNames('error__message', { active__error: !is })}>
+                                    <ErrorSvg />
+                                    {message === 'empty' ? 'Please enter a phone number or email.' : 'Please enter a valid email address or phone number.'}
+                                </p>
+                            </div>
+
+                            <div className={classNames('content__information', { show: showInfoBlock })}>
+                                <p className='text'>
+                                    We’ll send a confirmation code by text or email. Message and data rates apply.
+                                    <NavLink to='/privacy-policy' className='link'>Privacy Policy</NavLink>
+                                </p>
+                            </div>
+
+                            <div className={classNames('button__container', { show__info__block: showInfoBlock })}>
+                                <Button
+                                    className={classNames('submit__button', { loading__button: loadingAuth })}
+                                    type='submit'
+                                    form='auth__form'
+                                    disabled={loadingAuth}
+                                >
+                                    {loadingAuth ? <LoadingDot /> : 'Continue'}
+                                </Button>
+                            </div>
+
+                            <div className={classNames('container__info', { show__info__block: showInfoBlock })}>
+                                <span className='line' />
+                                <p className='or'>or</p>
+                                <span className='line' />
+                            </div>
+
+                            <div className={classNames('other__options__container', { show__info__block: showInfoBlock })}>
+                                <button className='option__button' disabled={loadingAuth}>
+                                    <GoogleSvg />
+                                </button>
+
+                                <button className='option__button' disabled={loadingAuth}>
+                                    <AppleSvg />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className={classNames('verify__content', { active__verify__content: activeVerifyCode })}>
+                            <div className={classNames('error__toasty', { show: showErrorToasty.active })}>
+                                <ErrorSvg />
+                                <p className='error__text'>{showErrorToasty.message}</p>
+
+                                <button className='close__toasty' onClick={() => setShowErrorToasty({ active: false, message: '' })}>
+                                    <CloseSvg className='close__svg' />
+                                </button>
+                            </div>
+
+                            <div className='info__container'>
+                                <h1 className='title'>Confirm it’s you</h1>
+                                <p className='info'>We sent a code to {authInputValue}</p>
+
+                                <div className='code__input__container'>
+                                    <CodeInput
+                                        value={code}
+                                        onChange={handleCodeChange}
+                                        isActive={activeVerifyCode}
+                                        error={false}
+                                    />
+                                </div>
+
+                                <div className='send__new__code__container'>
+                                    <p className='info'>Didn’t get it?</p>
+                                    <button className='send__code' onClick={sendNewCode}>Send a new code</button>
+                                </div>
+
+                                <div className={classNames('send__result__button__container', { active: sendCodeInputValue })}>
+                                    <button className='send__result__button' onClick={sendCode} disabled={sendCodeInputValue.length < 6}>
+                                        {loadingSendCode ? <LoadingDot /> : 'Continue'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+        , document.getElementById('modal-root'))
 }

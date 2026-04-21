@@ -152,5 +152,5 @@ export default function EditUserProfile() {
             </div>
 
         </div>
-        , document.getElementById('root'));
+        , document.getElementById('modal-root'));
 }

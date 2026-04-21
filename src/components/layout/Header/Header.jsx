@@ -12,11 +12,16 @@ import HeaderSearchBar from './HeaderSearchBar/HeaderSearchBar';
 
 import { headerMenuData, authHeaderMenuData } from '../../../data/headerData';
 
-export default function Header({ isProfilePage, isHelpPage, isAuth, isMainPage, isSettingsPage }) {
+export default function Header({
+    isProfilePage,
+    isHelpPage,
+    isAuth,
+    isMainPage,
+    isSettingsPage
+}) {
     const { lang } = useParams();
     const isTop = useIsAtTop();
     const userData = JSON.parse(localStorage.getItem('userData') || null);
-
 
     const [activeScrollHeader, setActiveScrollHeader] = useState(false);
     const [activeSearchBar, setActiveSearchBar] = useState(false);
@@ -25,80 +30,86 @@ export default function Header({ isProfilePage, isHelpPage, isAuth, isMainPage, 
     const [whereOptionValue, setWhereOptionValue] = useState('');
 
 
-    const [headerActiveTab, setHeaderActiveTab] = useState({ tabName: 'homeTab', tabIndex: 0 });
-    const [tabWidth, setTabWidth] = useState(0);
-    const [translateX, setTranslateX] = useState(0);
+    const [headerActiveTab, setHeaderActiveTab] = useState({
+        tabName: 'homeTab',
+        tabIndex: 0
+    });
+    const [searchActiveTab, setSearchActiveTab] = useState({
+        tabName: 'where',
+        tabIndex: 0
+    });
 
-
-    const [searchActiveTab, setSearchActiveTab] = useState({ tabName: 'where', tabIndex: 0 });
     const [searchTabWidth, setSearchTabWidth] = useState(0);
     const [searchSliceTX, setSearchSliceTX] = useState(0);
-
 
     const tabRef = useRef(new Map());
     const searchTabRef = useRef(new Map());
     const searchBarRef = useRef(null);
     const headerMenuRef = useRef(null);
 
-
     useEffect(() => {
         function handleClick(event) {
-            if (openHeaderMenu && headerMenuRef.current) {
-                if (!headerMenuRef.current.contains(event.target)) {
-                    setOpenHeaderMenu(false);
-                }
+            if (
+                openHeaderMenu &&
+                headerMenuRef.current &&
+                !headerMenuRef.current.contains(event.target)
+            ) {
+                setOpenHeaderMenu(false);
             }
-            if (searchBarRef.current && !searchBarRef.current.contains(event.target)) {
+
+            if (
+                searchBarRef.current &&
+                !searchBarRef.current.contains(event.target)
+            ) {
                 setActiveSearchBar(false);
                 setActiveScrollHeader(false);
             }
         }
+
         document.addEventListener('mousedown', handleClick);
         return () => document.removeEventListener('mousedown', handleClick);
     }, [openHeaderMenu]);
 
-
     useEffect(() => {
         let ticking = false;
+
         const handleScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    if (!isTop) setActiveSearchBar(false);
-                    ticking = false;
-                });
-                ticking = true;
-            }
+            if (ticking) return;
+
+            ticking = true;
+            requestAnimationFrame(() => {
+                if (!isTop) {
+                    setActiveSearchBar(false);
+                }
+                ticking = false;
+            });
         };
+
         window.addEventListener('scroll', handleScroll, { passive: true });
+
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isTop]);
 
 
     useLayoutEffect(() => {
-        const el = tabRef.current.get(headerActiveTab.tabName);
         const elS = searchTabRef.current.get(searchActiveTab.tabName);
-        if (!el || !elS) return;
+        if (!elS) return;
 
         const update = () => {
-            const rect = el.getBoundingClientRect();
-            const parentRect = el.parentElement.getBoundingClientRect();
-            setTabWidth(rect.width);
-            setTranslateX(rect.left - parentRect.left);
+            const rectS = elS.getBoundingClientRect();
+            const sParentRect = elS.parentElement.getBoundingClientRect();
 
-            if (isTop || activeScrollHeader) {
-                const rectS = elS.getBoundingClientRect();
-                const sParentRect = elS.parentElement.getBoundingClientRect();
-                setSearchTabWidth(rectS.width);
-                setSearchSliceTX(rectS.left - sParentRect.left);
-            }
+            setSearchTabWidth(rectS.width);
+            setSearchSliceTX(rectS.left - sParentRect.left);
         };
 
         update();
+
         const ro = new ResizeObserver(update);
-        ro.observe(el);
         ro.observe(elS);
+
         return () => ro.disconnect();
-    }, [headerActiveTab, searchActiveTab, isTop, activeScrollHeader]);
+    }, [searchActiveTab]);
 
     const logOut = async () => {
         try {
@@ -143,8 +154,6 @@ export default function Header({ isProfilePage, isHelpPage, isAuth, isMainPage, 
                         <HeaderTabList
                             lang={lang}
                             tabRef={tabRef}
-                            tabWidth={tabWidth}
-                            translateX={translateX}
                             headerActiveTab={headerActiveTab}
                             setHeaderActiveTab={setHeaderActiveTab}
                             isProfilePage={isProfilePage}

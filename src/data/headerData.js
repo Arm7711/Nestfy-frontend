@@ -84,7 +84,7 @@ export const authHeaderMenuData = [
     {
         fieldName: 'language',
         content: 'Language & Currency',
-        navigationTo: '/language'
+        action: 'language'
     },
     {
         fieldName: 'helpCenter',

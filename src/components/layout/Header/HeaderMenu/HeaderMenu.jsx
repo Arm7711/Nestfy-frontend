@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router';
 import classNames from 'classnames';
 import AuthModal from '../../../_common/Modals/AuthModal';
 import MenuIcon from '../../../_common/MenuIcon/MenuIcon';
+import LangCurrenciesModal from '../../../_common/Modals/LangCurrenciesModal/LangCurrenciesModal';
 
 export default function HeaderMenu({
     lang,
@@ -14,11 +16,24 @@ export default function HeaderMenu({
     headerMenuRef,
     menuData,
     onLogout,
+    handleSaveLangCurrency,
+    isLangCurrencyOpen,
+    setIsLangCurrencyOpen,
 }) {
     const handleMenuItemClick = (itemName) => {
         if (itemName === 'auth') {
             setIsAuthModalOpen(true);
             setOpenHeaderMenu(false);
+        }
+    };
+
+    const allActions = (action) => {
+        if (action === 'logout') {
+            onLogout();
+        }
+
+        if (action === 'language') {
+            setIsLangCurrencyOpen(true);
         }
     };
 
@@ -31,6 +46,12 @@ export default function HeaderMenu({
             })}
             ref={headerMenuRef}
         >
+            <LangCurrenciesModal
+                isOpen={isLangCurrencyOpen}
+                onClose={() => setIsLangCurrencyOpen(false)}
+                onSave={handleSaveLangCurrency}
+            />
+
             <button
                 className={classNames('toggle', { close: openHeaderMenu })}
                 onClick={() => setOpenHeaderMenu(prev => !prev)}
@@ -69,7 +90,7 @@ export default function HeaderMenu({
                             <p
                                 role='button'
                                 className='content'
-                                onClick={() => item?.action === 'logout' && onLogout()}
+                                onClick={() => allActions(item?.action)}
                             >
                                 {item.content}
                             </p>
