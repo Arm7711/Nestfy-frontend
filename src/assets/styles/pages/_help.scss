@@ -99,10 +99,21 @@ a {
     padding-bottom: 4px;
     transition: all 0.4s;
 
-    &.active {
-      color: #000;
-      font-weight: 500;
-    }
+  }
+
+   button {
+    position: relative;
+    padding: 8px 12px;
+  }
+
+  .help-tab-indicator {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background: black;
+    border-radius: 2px;
   }
 }
 
@@ -429,27 +440,7 @@ a {
     color: inherit;
     padding-bottom: 15px;
     position: relative;
-
-    &::after {
-      content: "";
-      position: absolute;
-      left: unset;
-      right: 0;
-      bottom: 0;
-      width: 0;
-      height: 3px;
-      background-color: black;
-      transition: all 0.5s;
-      border-radius: 20px;
-    }
-
-    &.active {
-      &::after {
-        width: 100%;
-        left: 0;
-        right: unset;
-      }
-    }
+    
   }
 }
 

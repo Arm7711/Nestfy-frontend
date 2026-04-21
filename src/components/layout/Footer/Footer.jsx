@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import "../../../assets/styles/layout/_footer.scss";
-import {inspirationTabs,inspirationByTab,footerLinkColumns,footerBottom,} from "../../../data/footerData.js";
+import { Link, NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
+
+import { inspirationTabs, inspirationByTab, footerLinkColumns, footerBottom, } from "../../../data/footerData.js";
 import { FiGlobe, FiChevronDown } from "react-icons/fi";
 import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { HiCurrencyDollar } from "react-icons/hi2";
@@ -11,6 +12,7 @@ const makeHref = (group, label) => `/footer/${slugify(group)}/${slugify(label)}`
 
 const Footer = () => {
   const [activeTab, setActiveTab] = useState(inspirationTabs[0]);
+  const MotionNavLink = motion(NavLink);
 
   const inspirationItems = useMemo(() => {
     return inspirationByTab[activeTab] || [];
@@ -29,16 +31,30 @@ const Footer = () => {
           >
             {inspirationTabs.map((tab) => {
               const isActive = tab === activeTab;
+
               return (
                 <button
                   key={tab}
                   type="button"
-                  className={`footer__tab ${isActive ? "is-active" : ""}`}
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveTab(tab)}
+                  className={`footer__tab ${isActive ? "is-active" : ""}`}
+                  style={{ position: "relative" }}
                 >
                   {tab}
+
+                  {isActive && (
+                    <motion.span
+                      layoutId="footer-tab-indicator"
+                      className="footer__tabIndicator"
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30
+                      }}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -52,11 +68,22 @@ const Footer = () => {
               const to = makeHref(activeTab, item.title);
 
               return (
-                <Link
+                <MotionNavLink
                   key={`${item.title}-${idx}`}
-                  className={`footer__place ${isAction ? "is-action" : ""}`}
                   to={to}
                   role="listitem"
+                  initial={{ opacity: 0, y: 15, scale: 0.94 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.25,
+                    delay: idx * 0.05,
+                    ease: "easeOut"
+                  }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={({ isActive }) =>
+                    `footer__place ${isAction ? "is-action" : ""} ${isActive ? "is-active" : ""}`
+                  }
                 >
                   <div className="footer__placeTitle">
                     {item.title}
@@ -71,7 +98,7 @@ const Footer = () => {
                   {item.subtitle ? (
                     <div className="footer__placeSub">{item.subtitle}</div>
                   ) : null}
-                </Link>
+                </MotionNavLink>
               );
             })}
           </div>
@@ -106,7 +133,7 @@ const Footer = () => {
                 <Link className="footer__bottomLink" to={makeHref("bottom", l.label)}>
                   {l.label}
                 </Link>
-                
+
                 {i !== footerBottom.leftLinks.length - 1 && (
                   <span className="footer__dot" aria-hidden="true">
                     ·

@@ -1,4 +1,3 @@
-// BouncyText.jsx
 import { useState, useEffect, useRef, useCallback } from "react";
 import Letter from './Letter/Letter';
 
