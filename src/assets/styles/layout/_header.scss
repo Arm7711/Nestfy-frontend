@@ -523,6 +523,7 @@
 
     .header__search__form__container {
         width: 100%;
+        min-width: 400px;
         max-width: 850px;
         height: 66px;
         min-height: 66px;
@@ -564,6 +565,16 @@
                     left: 7px;
                 }
             }
+
+            &:hover {
+                .tab__item {
+                    &:hover {
+                        background-color: white;
+                    }
+                }
+
+                box-shadow: $elevation-elevation5-box-shadow;
+            }
         }
 
         &.scroll__header {
@@ -581,6 +592,16 @@
 
                 .icon {
                     left: 13px;
+                }
+            }
+
+            &:hover {
+                box-shadow: none;
+
+                .tab__item {
+                    &:hover {
+                        background-color: transparent;
+                    }
                 }
             }
         }
@@ -726,8 +747,15 @@
             position: absolute;
             z-index: 1;
             @include boxShadow(35px);
-            transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
             will-change: transform, height;
+
+            &.active {
+                transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+
+            // &.no__animation {
+            //     transition: none;
+            // }
         }
 
         .selected__slice {

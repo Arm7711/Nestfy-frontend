@@ -92,15 +92,20 @@ export default function Header({
 
 
     useLayoutEffect(() => {
+        if (!isTop && !activeScrollHeader) {
+            return;
+        }
+
         const elS = searchTabRef.current.get(searchActiveTab.tabName);
         if (!elS) return;
 
         const update = () => {
             const rectS = elS.getBoundingClientRect();
             const sParentRect = elS.parentElement.getBoundingClientRect();
+            const borderLeft = parseFloat(getComputedStyle(elS.parentElement).borderLeftWidth) || 0;
 
             setSearchTabWidth(rectS.width);
-            setSearchSliceTX(rectS.left - sParentRect.left);
+            setSearchSliceTX(rectS.left - sParentRect.left - borderLeft);
         };
 
         update();
@@ -109,7 +114,7 @@ export default function Header({
         ro.observe(elS);
 
         return () => ro.disconnect();
-    }, [searchActiveTab]);
+    }, [searchActiveTab, isTop, activeScrollHeader]);
 
     const logOut = async () => {
         try {
