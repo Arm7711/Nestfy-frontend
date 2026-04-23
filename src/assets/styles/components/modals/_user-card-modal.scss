@@ -1,0 +1,193 @@
+@use '../../variables/variables' as *;
+@use '../../mixins//mixins' as *;
+
+.user__card__modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    @include allCenter();
+
+    .backdrop {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    .user__card__modal__main {
+        width: 480px;
+        height: 380px;
+        background-color: white;
+        @include boxShadow(35px);
+        z-index: 2;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+        padding-top: 50px;
+
+
+        .modal__close__bar {
+            width: 100%;
+            height: 50px;
+            border-radius: 35px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            @include allCenter(flex-end, flex-end, row);
+            padding-right: 16px;
+
+            .back {
+                width: 33px;
+                height: 33px;
+                @include allCenter();
+                border-radius: 50%;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.6s;
+                position: absolute;
+                left: -100%;
+
+                .icon {
+                    width: 22px;
+                    height: 22px;
+                }
+
+                &:hover {
+                    background-color: $modal-close-button-background-color;
+                }
+
+                &.active {
+                    left: 16px;
+                }
+            }
+
+            .modal__close__bar__button {
+                width: 33px;
+                height: 33px;
+                @include allCenter();
+                border-radius: 50%;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                transition: all 0.4s;
+
+                .container {
+                    width: 100%;
+                    height: 100%;
+                    @include allCenter();
+
+                    .icon {
+                        width: 18px;
+                        height: 18px;
+                        fill: black;
+                    }
+                }
+
+                &:hover {
+                    background-color: $modal-close-button-background-color;
+                }
+            }
+        }
+
+        .container__card {
+            width: 346px;
+            height: 235px;
+            position: relative;
+            transform: scale(0.77) translateY(100px);
+            opacity: 0;
+            animation: showAnim 0.4s 0.2s forwards;
+
+            @keyframes showAnim {
+
+                to {
+                    transform: scale(1) translateY(0px);
+                    opacity: 1;
+                }
+            }
+
+            .user__card__front {
+                width: 100%;
+                height: 100%;
+                border-radius: 30px;
+                box-shadow: $elevation-elevation3-box-shadow;
+                @include allCenter(center, center, column);
+                gap: 15px;
+                transition: all 0.5s;
+                cursor: pointer;
+                transform: perspective(1000px) rotateY(0deg);
+                backface-visibility: hidden;
+                position: absolute;
+                animation: animFront 3s 0.4s linear(0, 0.23384579402426442, 0.6295015467224175, 0.9269977268474615, 1.0680972140532536, 1.0937514949673017, 1.065725804753661, 1.0287913801237734, 1.0033480968647872, 0.9924438130425742, 0.9913826622628178, 0.9944459509898653, 0.9978281578809479, 0.9999714006371833, 1.0007881202383326, 1.0007783438606672, 1.0004619752860102, 1.0001575174703423, 0.9999798489190652, 0.9999211933025269) forwards;
+
+                @keyframes animFront {
+                    to {
+                        transform: perspective(1000px) rotateY(180deg);
+                    }
+                }
+
+                &:hover {
+                    box-shadow: $elevation-elevation4-box-shadow;
+                }
+
+                &:active {
+                    transform: scale(0.98);
+                }
+
+                .about__me__user {
+                    width: 104px;
+                    height: 104px;
+                    background-color: black;
+                    border-radius: 50%;
+                    @include allCenter();
+                    user-select: none;
+
+                    .user {
+                        font-size: 32px;
+                        color: white;
+                        font-weight: 600;
+                    }
+                }
+
+
+                .user__name {
+                    font-size: 22px;
+                    font-weight: 600;
+                    margin-bottom: -8px;
+                }
+
+                .status {
+                    font-size: 14px;
+                    color: $palette-grey800;
+                }
+
+            }
+
+            .user__card__back {
+                width: 100%;
+                height: 100%;
+                border: 1px solid black;
+                @include boxShadow(30px);
+                transform: perspective(1000px) rotateY(-180deg);
+                backface-visibility: hidden;
+                position: absolute;
+                padding:20px;
+                animation: animBack 3s 0.4s linear(0, 0.23384579402426442, 0.6295015467224175, 0.9269977268474615, 1.0680972140532536, 1.0937514949673017, 1.065725804753661, 1.0287913801237734, 1.0033480968647872, 0.9924438130425742, 0.9913826622628178, 0.9944459509898653, 0.9978281578809479, 0.9999714006371833, 1.0007881202383326, 1.0007783438606672, 1.0004619752860102, 1.0001575174703423, 0.9999798489190652, 0.9999211933025269) forwards;
+
+                @keyframes animBack {
+                    to {
+                        transform: perspective(1000px) rotateY(0deg);
+                    }
+                }
+            }
+        }
+    }
+}

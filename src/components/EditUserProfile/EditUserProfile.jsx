@@ -32,18 +32,14 @@ export default function EditUserProfile() {
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
-            setHideBlock(entry.isIntersecting);
-        }, {
-            threshold: 0.1
-        });
+            const isBelowViewport = !entry.isIntersecting && entry.boundingClientRect.top > 0;
+            setHideBlock(!isBelowViewport);
+        }, { threshold: 0 });
 
         const el = triggerRef.current;
         if (el) observer.observe(el);
 
-        return () => {
-            if (el) observer.unobserve(el);
-            observer.disconnect();
-        };
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -152,5 +148,5 @@ export default function EditUserProfile() {
             </div>
 
         </div>
-        , document.getElementById('modal-root'));
+        , document.getElementById('root'));
 }

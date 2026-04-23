@@ -69,6 +69,14 @@ html {
             justify-content: center;
             align-items: center;
             background-color: white !important;
+
+            &:has(.edit__user__profile.active__mode) {
+                .nestfy__page {
+                    .nestfy__main {
+                       margin-bottom: 500px;
+                    }
+                }
+            }
         }
     }
 }
@@ -89,9 +97,10 @@ input:-webkit-autofill:active {
     box-shadow: 0 0 0px 1000px transparent inset !important;
 }
 
-button{
+button {
     transition: all 0.5s;
-    &:active{
+
+    &:active {
         transform: scale(0.97);
     }
 }

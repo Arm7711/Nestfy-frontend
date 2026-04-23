@@ -25,31 +25,29 @@ export default function LanguageTab({ selectedLang, onSelect }) {
 
             <div className="section_title">Suggested languages and regions</div>
             <div className="language_grid">
-                {SUGGESTED_LANGUAGES.map((lang, index) => (
+                {SUGGESTED_LANGUAGES.map((lang, idx) => (
                     <LanguageItem
-                        key={langKey(lang)}
-                        name={lang.name}
-                        region={lang.region}
-                        index={index}
+                        key={`${lang.name}/${lang.region}`}
+                        language={lang}
+                        index={idx}
                         langs={true}
-                        isActive={selectedLang === langKey(lang)}
-                        onClick={() => onSelect(langKey(lang))}
+                        isActive={selectedLang?.code === lang.code && selectedLang?.region === lang.region}
+                        onClick={(selected) => onSelect(selected)}
                     />
                 ))}
             </div>
 
             <hr className="section_divider" />
 
-            <div className="section_title">Choose a language and region</div>
             <div className="language_grid">
-                {LANGUAGES.map((lang, index) => (
+                {LANGUAGES.map((lang, idx) => (
                     <LanguageItem
-                        key={langKey(lang)}
-                        name={lang.name}
-                        index={index}
-                        region={lang.region}
-                        isActive={selectedLang === langKey(lang)}
-                        onClick={() => onSelect(langKey(lang))}
+                        key={`${lang.name}/${lang.region}`}
+                        language={lang}
+                        index={idx}
+                        langs={false}
+                        isActive={selectedLang?.code === lang.code && selectedLang?.region === lang.region}
+                        onClick={(selected) => onSelect(selected)}
                     />
                 ))}
             </div>

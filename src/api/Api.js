@@ -99,6 +99,16 @@ class Api {
         }
     }
 
+    static async getUserSettings() {
+        const { data } = await Api.instance.get('/settings/profile');
+        return data;
+    }
+
+    static async editUserSettings(body) {
+        const { data } = await Api.instance.put('/settings/profile', { ...body });
+        return data;
+    }
+
     static async logout() {
         await Api.instance.post('/auth/logout');
         setAccessToken(null);

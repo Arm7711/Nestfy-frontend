@@ -1,8 +1,9 @@
-import { NavLink } from 'react-router';
-import LangSvg from '../../../svg/LangSvg';
-import HeaderMenu from '../HeaderMenu/HeaderMenu';
-import classNames from 'classnames';
 import { useState } from 'react';
+import { NavLink } from 'react-router';
+import classNames from 'classnames';
+import Api from '../../../../api/Api';
+import HeaderMenu from '../HeaderMenu/HeaderMenu';
+import LangSvg from '../../../svg/LangSvg';
 
 export default function HeaderTools({
     lang,
@@ -19,9 +20,25 @@ export default function HeaderTools({
     onLogout,
 }) {
     const [isLangCurrencyOpen, setIsLangCurrencyOpen] = useState(false);
+    const [langSelectedUserAccount, setLangSelectedUserAccount] = useState('');
 
-    const handleSaveLangCurrency = ({ language, currency }) => {
-        localStorage.setItem('langAndCurrency', JSON.stringify({language,currency}));
+    const handleSaveLangCurrency = async ({ language, region, languageCode, currency }) => {
+        if (isAuth) {
+            try {
+                const { data } = await Api.getUserSettings();
+                setLangSelectedUserAccount(data.language);
+
+                await Api.editUserSettings({ language: languageCode });
+                localStorage.setItem('lang', languageCode);
+
+                window.location.reload();
+            } catch (e) {
+                console.log(e);
+            }
+        } else {
+            localStorage.setItem('lang', languageCode);
+            window.location.reload();
+        }
         setIsLangCurrencyOpen(false);
     };
 

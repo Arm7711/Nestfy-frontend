@@ -99,9 +99,7 @@ export default function HeaderSearchBar({
                 </div>
             ))}
 
-            {activeSearchBar && (
-                <SearchOptions searchActiveTab={searchActiveTab} onLocationClick={handleLocationClick} />
-            )}
+                <SearchOptions active={activeSearchBar} searchActiveTab={searchActiveTab} onLocationClick={handleLocationClick} />
 
             <button className={classNames('search__button', { active__button: activeSearchBar })}>
                 <SearchSvg />

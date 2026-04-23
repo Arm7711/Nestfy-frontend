@@ -3,11 +3,11 @@ import { locations } from '../../../../data/loacationsData';
 import LocationsBlock from '../../../LocationsBlock/LocationsBlock';
 import V1Calendar from '../../../_common/V1Calendar/V1Calendar';
 
-export default function SearchOptions({ searchActiveTab, onLocationClick }) {
+export default function SearchOptions({ active, searchActiveTab, onLocationClick }) {
     return (
         <div
             className={classNames('option__container', {
-                active: true,
+                active,
                 first__active__tab: searchActiveTab.tabIndex === 0,
                 middle__active__tab: searchActiveTab.tabIndex === 1,
                 last__active__tab: searchActiveTab.tabIndex === 2,

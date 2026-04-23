@@ -193,9 +193,9 @@ export default function AuthModal({ isOpen, onClose, children }) {
                             max__height: sendCodeInputValue,
                             active__error: showErrorToasty.active
                         })}
-                        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                        initial={{ scale: 0.95, opacity: 0, y: 100 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
-                        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                        exit={{ scale: 0.95, opacity: 0, y: 100 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                     >
                         <div className='modal__close__bar'>
