@@ -1,6 +1,6 @@
 import React from 'react';
 import AccountSettingsAside from './AccountSettingsAside/AccountSettingsAside';
-import AccountSettingsSection from './AccountSettingsSection/AccountSettingsSection';
+import AccountSettingsSection from './AccountSettingsSection/index';
 
 export default function AccountSettings() {
     return (
