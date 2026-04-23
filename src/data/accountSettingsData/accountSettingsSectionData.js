@@ -26,7 +26,7 @@ export const accountSettingsSectionData = [
                 descInfo: 'Used for account contact.',
                 inputLabels: ['Phone number'],
                 type: 'text',
-                metaKey: 'phoneNumber'
+                metaKey: 'phone'
             },
             {
                 title: 'Date of birth',
@@ -34,7 +34,9 @@ export const accountSettingsSectionData = [
                 descInfo: 'Used for verification and safety.',
                 inputLabels: ['Date of birth'],
                 type: 'text',
-                metaKey: 'dateOfBirth'
+                metaKey: 'dateOfBirth',
+                mask: 'date-slash',
+                maxLength: 10
             },
             {
                 title: 'Gender',
