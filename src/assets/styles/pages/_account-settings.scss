@@ -80,29 +80,445 @@
         }
     }
 
-    .user__account__settings__section {
-        width: 75%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        @include allCenter(center, flex-start);
+    // .user__account__settings__section {
+    //     width: 75%;
+    //     height: 100%;
+    //     overflow-x: hidden;
+    //     overflow-y: auto;
+    //     @include allCenter(center, flex-start);
 
-        .container {
-            width: 100%;
-            max-width: 772px;
-            height: 100%;
-            border: 1px solid black;
-            padding-top: 48px;
+    //     .container {
+    //         width: 100%;
+    //         max-width: 772px;
+    //         height: 100%;
+    //         border: 1px solid black;
+    //         padding-top: 48px;
 
-            .title__container {
-                width: 100%;
-                height: fit-content;
+    //         .title__container {
+    //             width: 100%;
+    //             height: fit-content;
 
-                .title {
-                    font-size: 30px;
-                    font-weight: 600;
-                }
-            }
+    //             .title {
+    //                 font-size: 30px;
+    //                 font-weight: 600;
+    //             }
+    //         }
+    //     }
+    // }
+}
+
+
+
+// ─── Design tokens ───────────────────────────────────────────────────────────
+$color_text_primary:   #222222;
+$color_text_secondary: #717171;
+$color_text_disabled:  #b0b0b0;
+$color_border:         #dddddd;
+$color_border_focus:   #222222;
+$color_white:          #ffffff;
+$color_black:          #222222;
+$color_btn_hover:      #3a3a3a;
+$color_error:          #c13515;
+$color_success:        #008a05;
+$color_toggle_on:      #222222;
+$color_toggle_off:     #dddddd;
+$color_skeleton:       #f0f0f0;
+$color_skeleton_shine: #f8f8f8;
+
+$font_family: 'Circular', 'Cereal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+$radius_sm:  8px;
+$radius_md:  12px;
+$radius_pill: 9999px;
+
+$transition_fast:   0.15s ease;
+$transition_normal: 0.25s ease;
+$transition_slow:   0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ─── Section wrapper ──────────────────────────────────────────────────────────
+.account_settings_section {
+    flex: 1;
+    max-width: 700px;
+    padding: 0 24px 64px;
+
+    &__heading {
+        padding: 32px 0 16px;
+        border-bottom: 1px solid $color_border;
+        margin-bottom: 8px;
+    }
+
+    &__title {
+        font-family: $font_family;
+        font-size: 26px;
+        font-weight: 600;
+        color: $color_text_primary;
+        letter-spacing: -0.3px;
+        margin: 0;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__fetch_error {
+        padding: 20px 0;
+        color: $color_error;
+        font-size: 14px;
+    }
+}
+
+// ─── Skeleton loader ──────────────────────────────────────────────────────────
+@keyframes skeleton_shimmer {
+    0%   { background-position: -600px 0; }
+    100% { background-position:  600px 0; }
+}
+
+.account_settings_section__skeleton {
+    display: flex;
+    flex-direction: column;
+}
+
+.skeleton_row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 0;
+    border-bottom: 1px solid $color_border;
+
+    &__line {
+        height: 14px;
+        border-radius: $radius_sm;
+        background: linear-gradient(
+            90deg,
+            $color_skeleton 25%,
+            $color_skeleton_shine 50%,
+            $color_skeleton 75%
+        );
+        background-size: 600px 100%;
+        animation: skeleton_shimmer 1.4s infinite linear;
+
+        &--short { width: 140px; }
+        &--long  { width: 220px; }
+    }
+}
+
+// ─── Settings item ────────────────────────────────────────────────────────────
+.settings_item {
+    border-bottom: 1px solid $color_border;
+    transition: background-color $transition_normal;
+
+    &:first-child { border-top: none; }
+
+    &--saved {
+        .settings_item__title {
+            color: $color_success;
+            transition: color $transition_fast;
         }
     }
+
+    // ── Collapsed header ──
+    &__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 20px 0;
+    }
+
+    &__meta {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__title {
+        font-size: 15px;
+        font-weight: 500;
+        color: $color_text_secondary;
+        font-family: $font_family;
+        line-height: 1.4;
+        transition: color $transition_fast;
+    }
+
+    &__value {
+        font-size: 15px;
+        font-weight: 400;
+        color: $color_text_primary;
+        font-family: $font_family;
+        line-height: 1.5;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &--empty  { color: $color_text_disabled; }
+        &--muted  { color: $color_text_secondary; }
+    }
+
+    &__desc {
+        font-size: 13px;
+        color: $color_text_secondary;
+        line-height: 1.5;
+        margin: 0;
+        font-family: $font_family;
+    }
+
+    &__ctrl {
+        flex-shrink: 0;
+        padding-top: 2px;
+    }
+
+    // ── Edit / Cancel buttons ──
+    &__btn {
+        font-family: $font_family;
+        font-size: 15px;
+        font-weight: 500;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        line-height: 1.5;
+        transition: color $transition_fast;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &--edit {
+            color: $color_text_primary;
+            &:hover { color: $color_btn_hover; }
+        }
+
+        &--cancel {
+            color: $color_text_secondary;
+            &:hover { color: $color_text_primary; }
+        }
+    }
+
+    // ── Expanded form ──
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 4px 0 28px;
+    }
+
+    &__row_inputs {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+        }
+    }
+
+    // ── Save button ──
+    &__save_btn {
+        align-self: flex-start;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 80px;
+        height: 44px;
+        padding: 0 20px;
+        background-color: $color_black;
+        color: $color_white;
+        font-family: $font_family;
+        font-size: 15px;
+        font-weight: 600;
+        border: none;
+        border-radius: $radius_md;
+        cursor: pointer;
+        transition:
+            background-color $transition_fast,
+            transform $transition_fast,
+            opacity $transition_fast;
+
+        &:hover:not(:disabled) {
+            background-color: $color_btn_hover;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        &--loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    &__spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+    }
+
+    &__error {
+        font-size: 13px;
+        color: $color_error;
+        margin: 0;
+        font-family: $font_family;
+        line-height: 1.5;
+    }
+
+    // ── Readonly style ──
+    &--readonly {
+        .settings_item__header { padding: 18px 0; }
+
+        .settings_item__title {
+            font-size: 14px;
+            color: $color_text_secondary;
+        }
+
+        .settings_item__value {
+            font-size: 14px;
+        }
+    }
+}
+
+// ─── Floating label input ─────────────────────────────────────────────────────
+.floating_input {
+    position: relative;
+    flex: 1;
+
+    &__field {
+        width: 100%;
+        box-sizing: border-box;
+        height: 56px;
+        padding: 22px 12px 8px;
+        font-family: $font_family;
+        font-size: 15px;
+        color: $color_text_primary;
+        background: $color_white;
+        border: 1px solid $color_border;
+        border-radius: $radius_sm;
+        outline: none;
+        appearance: none;
+        transition: border-color $transition_fast, box-shadow $transition_fast;
+
+        &:focus {
+            border-color: $color_border_focus;
+            box-shadow: 0 0 0 2px rgba(34, 34, 34, 0.08);
+        }
+
+        // Float label when focused or has value
+        &:focus + .floating_input__label,
+        &:not(:placeholder-shown) + .floating_input__label {
+            top: 10px;
+            font-size: 11px;
+            color: $color_text_secondary;
+            font-weight: 500;
+        }
+
+        &--select {
+            cursor: pointer;
+            padding-top: 20px;
+
+            // Show label raised for selects
+            & + .floating_input__label { pointer-events: none; }
+        }
+    }
+
+    &__label {
+        position: absolute;
+        top: 50%;
+        left: 12px;
+        transform: translateY(-50%);
+        font-family: $font_family;
+        font-size: 15px;
+        color: $color_text_disabled;
+        pointer-events: none;
+        transition:
+            top       $transition_fast,
+            font-size $transition_fast,
+            color     $transition_fast;
+
+        &--raised {
+            top: 10px;
+            font-size: 11px;
+            color: $color_text_secondary;
+            font-weight: 500;
+            transform: none;
+        }
+    }
+}
+
+// ─── Toggle switch ────────────────────────────────────────────────────────────
+.toggle_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+
+    &__label {
+        font-family: $font_family;
+        font-size: 15px;
+        color: $color_text_primary;
+    }
+}
+
+.toggle_switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    &__track {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: 48px;
+        height: 28px;
+        border-radius: $radius_pill;
+        background-color: $color_toggle_off;
+        transition: background-color $transition_normal;
+        padding: 0 3px;
+    }
+
+    &__thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: $color_white;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        transform: translateX(0);
+        transition: transform $transition_normal;
+    }
+
+    input:checked ~ &__track {
+        background-color: $color_toggle_on;
+    }
+
+    input:checked ~ &__track &__thumb {
+        transform: translateX(20px);
+    }
+
+    input:focus-visible ~ &__track {
+        box-shadow: 0 0 0 3px rgba(34, 34, 34, 0.2);
+    }
+}
+
+// ─── Spin animation ───────────────────────────────────────────────────────────
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
