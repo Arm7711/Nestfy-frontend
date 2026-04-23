@@ -14,7 +14,11 @@ export default function LangCurrenciesModal({
   onSave,
 }) {
   const [activeTab, setActiveTab] = useState('language');
-  const [selectedLang, setSelectedLang] = useState('English/United States');
+  const [selectedLang, setSelectedLang] = useState({
+    name: 'English',
+    region: 'United States',
+    code: 'en'
+  });
   const [selectedCurr, setSelectedCurr] = useState('United States dollar');
 
   const modalRoot = document.getElementById('modal-root');
@@ -35,7 +39,12 @@ export default function LangCurrenciesModal({
   }, [isOpen, onClose]);
 
   const handleSave = () => {
-    onSave?.({ language: selectedLang, currency: selectedCurr });
+    onSave?.({
+      language: selectedLang.name,
+      region: selectedLang.region,
+      languageCode: selectedLang.code,
+      currency: selectedCurr
+    });
     onClose?.();
   };
 

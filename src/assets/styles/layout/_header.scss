@@ -750,7 +750,7 @@
             will-change: transform, height;
 
             &.active {
-                transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                transition: all 0.5s cubic-bezier(0.74, 1.15, 0.84, 1);
             }
 
             // &.no__animation {

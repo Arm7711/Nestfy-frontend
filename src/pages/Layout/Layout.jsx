@@ -1,8 +1,9 @@
-import React from 'react';
-import { Outlet, useParams, matchPath } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useParams, matchPath, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { DEFAULT_LANG } from '../../utils/getLanguageByCode.js';
 
+import Api from '../../api/Api.js';
 import Header from '../../components/layout/Header/Header';
 import Footer from "../../components/layout/Footer/Footer.jsx"
 import classNames from 'classnames';
@@ -10,6 +11,7 @@ import WelcomeToasty from '../../components/WelcomeToasty/WelcomeToasty.jsx';
 
 export default function Layout() {
     const { lang } = useParams();
+    const navigate = useNavigate();
     const { pathname } = useLocation();
     const isMainPage =
         matchPath({ path: '/:lang/home' }, pathname) ||
@@ -19,10 +21,34 @@ export default function Layout() {
     const isProfilePage = pathname === `/${lang}/profile`;
     const isSettingsPage = pathname.startsWith(`/${lang}/account-settings`);
 
-
     const status = useSelector(state => state.authReducer.status);
 
-    console.log(status);
+    const [userSelectedLang, setUserSelectedLang] = useState('');
+
+    useEffect(() => {
+        const stored = localStorage.getItem('lang') || DEFAULT_LANG;
+
+        if (!lang) return;
+
+        if (lang !== stored) {
+            navigate(`/${stored}`, { replace: true });
+        }
+    }, [lang]);
+
+    useEffect(() => {
+        (async () => {
+            if (status === 'auth') {
+                try {
+                    const { data } = await Api.getUserSettings();
+                    setUserSelectedLang(data.language);
+
+                    localStorage.setItem('langAndCurrency', userSelectedLang);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        })()
+    }, [])
 
 
     return (

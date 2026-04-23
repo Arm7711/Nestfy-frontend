@@ -7,7 +7,7 @@
     position: fixed;
     z-index: 1000;
     left: 0;
-    top:0;
+    top: 0;
     @include allCenter();
 
     .backdrop {
@@ -31,9 +31,9 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
-        transition: all 0.5s ease;
 
         &.active__verify__child {
+            transition: all 0.5s ease;
             transition-delay: 0.1s;
             height: calc(230px + 50px);
         }
@@ -43,6 +43,7 @@
             height: calc(280px + 50px);
 
             &.active__error {
+                transition: all 0.5s ease;
                 height: calc(280px + 50px + 75px);
 
                 .active__verify__content {
@@ -57,6 +58,7 @@
         }
 
         &.active__error {
+            transition: all 0.5s ease;
             height: calc(230px + 50px + 55px);
         }
 

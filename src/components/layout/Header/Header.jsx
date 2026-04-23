@@ -78,8 +78,13 @@ export default function Header({
 
             ticking = true;
             requestAnimationFrame(() => {
-                if (!isTop) {
+                if (!isTop && !activeScrollHeader) {
                     setActiveSearchBar(false);
+                }
+
+                if (isTop && activeScrollHeader) {
+                    setActiveSearchBar(false);
+                    setActiveScrollHeader(false);
                 }
                 ticking = false;
             });
