@@ -3,11 +3,11 @@
 
 .user__account__settings {
     width: 100%;
-    height: fit-content;
+    height: calc(100vh - 80px);
     @include flexStartRow;
 
     .user__account__settings__aside {
-        width: 30%;
+        width: 25%;
         height: 100%;
         border: none;
         position: relative;
@@ -17,11 +17,11 @@
         @include flexStartColumn;
         gap: 20px;
 
-        &::after{
+        &::after {
             content: "";
             position: absolute;
             width: 0.5px;
-            height: calc(100vh - 80px - 10px);
+            height: calc(100vh - 80px);
             background-color: #F1F1F1;
             top: 0;
             right: 0;
@@ -34,6 +34,8 @@
             .title {
                 font-size: 30px;
                 font-weight: 600;
+                transform-origin: top;
+                transform: scaleY(1.1);
             }
         }
 
@@ -92,5 +94,3 @@
     }
 
 }
-
-

@@ -246,6 +246,8 @@
                 .title {
                     font-size: 30px;
                     font-weight: 600;
+                    transform-origin: top;
+                    transform: scaleY(1.1);
                 }
 
                 .info {
@@ -321,6 +323,8 @@
                     font-size: 30px;
                     font-weight: 600;
                     letter-spacing: -0.6px;
+                    transform-origin: top;
+                    transform: scaleY(1.1);
                 }
             }
 

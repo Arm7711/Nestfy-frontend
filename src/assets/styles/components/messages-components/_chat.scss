@@ -1,0 +1,17 @@
+@use '../../variables/variables' as *;
+@use '../../mixins//mixins' as *;
+
+.nestfy__chat {
+    width: 70%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    @include flexCenterRow;
+
+    .nestfy__chat__container {
+        width: 100%;
+        max-width: 772px;
+        height: 100%;
+        padding-top: 48px;
+    }
+}

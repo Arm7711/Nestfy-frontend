@@ -18,7 +18,9 @@ export default function Layout() {
         matchPath({ path: '/:lang/services' }, pathname) ||
         matchPath({ path: '/:lang' }, pathname);
     const isHelpPage = pathname === `/${lang}/help-center`;
-    const isProfilePage = pathname === `/${lang}/profile`;
+    const isProfilePage = pathname === `/${lang}/profile` || pathname === `/${lang}/messages` || pathname.startsWith(`/${lang}/account-settings`);
+    const profileEndpoints = pathname === `/${lang}/messages` || pathname.startsWith(`/${lang}/account-settings`);
+    const onlyProfilePage = pathname === `/${lang}/profile`;
     const isSettingsPage = pathname.startsWith(`/${lang}/account-settings`);
 
     const status = useSelector(state => state.authReducer.status);
@@ -61,12 +63,12 @@ export default function Layout() {
                 isSettingsPage={isSettingsPage}
             />
 
-            <main className={classNames('nestfy__main', { profile__page: isProfilePage, main__page: isMainPage })}>
+            <main className={classNames('nestfy__main', { only__profile__page: onlyProfilePage, profile__page: isProfilePage, main__page: isMainPage })}>
                 {<Outlet />}
                 {isMainPage && <WelcomeToasty />}
             </main>
 
-            <Footer />
+            {!profileEndpoints && <Footer isMainPage={isMainPage} />}
         </div>
     )
 }

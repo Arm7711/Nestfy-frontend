@@ -33,7 +33,7 @@
         @include allCenter();
         transition: all 0.4s;
 
-        &.hidden{
+        &.hidden {
             bottom: -100%;
             opacity: 0;
             visibility: hidden;
@@ -198,6 +198,8 @@
                 .title {
                     font-size: 32px;
                     font-weight: 700;
+                    transform-origin: top;
+                    transform: scaleY(1.1);
                 }
 
                 .box__about {
@@ -237,6 +239,8 @@
                 .title {
                     font-size: 32px;
                     font-weight: 700;
+                    transform-origin: top;
+                    transform: scaleY(1.1);
                 }
 
                 .desc {
@@ -317,6 +321,8 @@
                     .title {
                         font-size: 32px;
                         font-weight: 700;
+                        transform-origin: top;
+                        transform: scaleY(1.1);
                     }
 
                     .desc {

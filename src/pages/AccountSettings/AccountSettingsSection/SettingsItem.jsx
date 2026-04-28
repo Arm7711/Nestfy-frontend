@@ -205,7 +205,7 @@ export default function SettingsItem({ item, tabName, serverData, onSaveSuccess,
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            initial={{ opacity: 0, y: 20, scale: 0 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.05, ease: 'spring' }}
             viewport={{ once: false, margin: '-20px' }}

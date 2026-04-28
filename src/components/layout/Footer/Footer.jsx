@@ -7,10 +7,11 @@ import { FiGlobe, FiChevronDown } from "react-icons/fi";
 import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { HiCurrencyDollar } from "react-icons/hi2";
 import { slugify } from "./FooterDetailes.jsx";
+import classNames from "classnames";
 
 const makeHref = (group, label) => `/footer/${slugify(group)}/${slugify(label)}`;
 
-const Footer = () => {
+const Footer = ({isMainPage}) => {
   const [activeTab, setActiveTab] = useState(inspirationTabs[0]);
   const MotionNavLink = motion(NavLink);
 
@@ -21,7 +22,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer__inner">
-        <section className="footer__inspiration" aria-label="Inspiration">
+        <section className={classNames('footer__inspiration', {'visible': isMainPage})} aria-label="Inspiration">
           <h2 className="footer__title">Inspiration for future getaways</h2>
 
           <div
@@ -105,7 +106,7 @@ const Footer = () => {
         </section>
 
         <section className="footer__links" aria-label="Footer links">
-          <div className="footer__linkGrid">
+          <div className={classNames('footer__linkGrid', {is__main__page: isMainPage})}>
             {footerLinkColumns.map((col) => (
               <div key={col.heading} className="footer__col">
                 <h3 className="footer__colTitle">{col.heading}</h3>

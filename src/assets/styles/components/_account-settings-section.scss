@@ -2,10 +2,10 @@
 @use '../mixins/mixins' as *;
 
 .account_settings_section_container {
-    width: 70%;
+    width: 75%;
     height: 100%;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     @include allCenter(center, flex-start);
 
     .account_settings_section {

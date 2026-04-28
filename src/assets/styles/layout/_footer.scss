@@ -1,12 +1,24 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
 .footer {
-  background: #fff;
+  background: $palette-grey100;
   color: #222;
+  margin-top: 25px;
 }
 
 .footer__inner {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 28px 24px 18px;
+  padding: 28px 48px 28px;
+}
+
+.footer__inspiration {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
 }
 
 .footer__title {
@@ -33,7 +45,7 @@
   color: #717171;
   cursor: pointer;
   position: relative;
-  
+
   .footer__tabIndicator {
     position: absolute;
     left: 0;
@@ -111,30 +123,39 @@
 }
 
 .footer__linkGrid {
+  max-width: 1600px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 40px;
+  transition: all 0.4s;
+
+  &.is__main__page{
+    max-width: none;
+  }
 }
 
 .footer__colTitle {
   margin: 0 0 12px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: #222;
 }
 
 .footer__colList {
+  display: flex;
+  flex-direction: column;
   list-style: none;
   padding: 0;
   margin: 0;
+  gap:5px;
 }
 
-.footer__colItem + .footer__colItem {
+.footer__colItem+.footer__colItem {
   margin-top: 10px;
 }
 
 .footer__colLink {
-  font-size: 16px;
+  font-size: 15px;
   color: #222;
   text-decoration: none;
 }
@@ -145,7 +166,7 @@
 
 .footer__bottom {
   border-top: 1px solid #e6e6e6;
-  padding-top: 14px;
+  padding-top: 25px;
   display: flex;
   justify-content: space-between;
   gap: 18px;
@@ -428,12 +449,14 @@
     grid-template-columns: 1fr;
     gap: 26px;
   }
+
   .asH1,
   .asLead {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
   }
+
   .asHero__cta {
     justify-content: center;
   }
@@ -479,11 +502,13 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+
 @media (max-width: 760px) {
   .asServices__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
 @media (max-width: 460px) {
   .asServices__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -546,7 +571,7 @@
 }
 
 .asFace--big {
-  width:18%;
+  width: 18%;
   height: 18%;
 }
 
@@ -655,9 +680,9 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-   object-fit: contain;
-     object-position: top center;
-     height: 400px;
+  object-fit: contain;
+  object-position: top center;
+  height: 400px;
 }
 
 .asMiniCard__caption {
@@ -792,7 +817,7 @@
 }
 
 ////////
-.asPhoneMedia{
+.asPhoneMedia {
   aspect-ratio: 1 / 1;
   scale: 100%;
   overflow: hidden;
@@ -802,19 +827,26 @@
   animation: asHeroMediaIn .7s ease-out .1s forwards;
 }
 
-.asPhoneVideo{
+.asPhoneVideo {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-@keyframes asHeroMediaIn{
-  to { transform: translateY(0); opacity: 1; }
+@keyframes asHeroMediaIn {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-@media (prefers-reduced-motion: reduce){
-  .asPhoneMedia{ animation: none; transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .asPhoneMedia {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
 }
 
 .footer__place:hover .footer__placeSub {

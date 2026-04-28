@@ -1,7 +1,6 @@
 @use '../variables/variables' as *;
 @use '../mixins/mixins' as *;
 
-
 .common__button {
     width: 120px;
     height: 52px;
@@ -30,7 +29,7 @@
         height: 48px;
     }
 
-    &.middle {
+    &.mid {
         width: 135px;
         height: 50px;
     }
@@ -38,5 +37,47 @@
     &.max {
         width: 155px;
         height: 52px;
+    }
+
+    &.secondary {
+        background-color: $palette-grey200;
+        color: black;
+
+        &:disabled {
+            &:hover {
+                background-color: $palette-grey200;
+                border: 1px solid transparent;
+                color: black;
+            }
+        }
+    }
+
+    &.primary {
+        background-color: black;
+        border: 1px solid transparent;
+        color: white;
+
+
+        &:disabled {
+            &:hover {
+                background-color: black;
+                border: 1px solid transparent;
+                color: white;
+            }
+        }
+    }
+
+    &.loading {
+        background-color: $palette-grey200;
+        color: black;
+
+
+        &:disabled {
+            &:hover {
+                background-color: $palette-grey200;
+                border: 1px solid transparent;
+                color: black;
+            }
+        }
     }
 }
