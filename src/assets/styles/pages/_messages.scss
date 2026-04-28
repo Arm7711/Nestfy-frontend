@@ -1,0 +1,9 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
+.nestfy__messages {
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    @include flexStartRow;
+}

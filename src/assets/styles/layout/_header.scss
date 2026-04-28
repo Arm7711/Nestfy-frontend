@@ -82,6 +82,18 @@
         background-color: white;
     }
 
+    &.header__default {
+        background-image: linear-gradient(rgb(255, 255, 255) 39.9%, rgb(248, 248, 248) 100%);
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: initial;
+    }
+
     &::after {
         content: "";
         width: 100%;

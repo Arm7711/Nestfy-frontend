@@ -66,37 +66,39 @@ export default function Profile() {
                 </aside>
 
                 <div className='user__profile__page__container__about__section'>
-                    <div className='info__container'>
-                        <h2 className='title'>
-                            About me
-                        </h2>
-                        <button className='edit__button' onClick={() => set("editMode", true)}>
-                            Edit
-                        </button>
-                    </div>
-
-                    <div className='about__profile'>
-                        <div className='user__card' role='button' onClick={() => setUserCardModalOpen(true)}>
-                            <div className='about__me__user'>
-                                <p className='user'>{userData?.name[0]}</p>
-                            </div>
-
-                            <p className='user__name'>{userDataInfo?.fullName || userDataInfo?.preferredFirstName || userData?.name}</p>
-                            <p className='status'>Guest</p>
+                    <div className='profile__container'>
+                        <div className='info__container'>
+                            <h2 className='title'>
+                                About me
+                            </h2>
+                            <button className='edit__button' onClick={() => set("editMode", true)}>
+                                Edit
+                            </button>
                         </div>
 
-                        <div className='user__profile__info'>
-                            <h2 className='title'>
-                                Complete your profile
-                            </h2>
+                        <div className='about__profile'>
+                            <div className='user__card' role='button' onClick={() => setUserCardModalOpen(true)}>
+                                <div className='about__me__user'>
+                                    <p className='user'>{userData?.name[0]}</p>
+                                </div>
 
-                            <p className='desc'>
-                                Your Airbnb profile is an important part of every reservation. Complete yours to help other hosts and guests get to know you.
-                            </p>
+                                <p className='user__name'>{userDataInfo?.fullName || userDataInfo?.preferredFirstName || userData?.name}</p>
+                                <p className='status'>Guest</p>
+                            </div>
 
-                            <Button className='get__started' middle={true} onClick={chnageActiveMode}>
-                                Get started
-                            </Button>
+                            <div className='user__profile__info'>
+                                <h2 className='title'>
+                                    Complete your profile
+                                </h2>
+
+                                <p className='desc'>
+                                    Your Airbnb profile is an important part of every reservation. Complete yours to help other hosts and guests get to know you.
+                                </p>
+
+                                <Button className='get__started' middle={true} onClick={chnageActiveMode}>
+                                    Get started
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,166 @@
+@use '../../variables/variables' as *;
+@use '../../mixins//mixins' as *;
+
+.nestfy__messages__aside {
+    width: 30%;
+    height: 100%;
+    border: none;
+    position: relative;
+    padding-left: 64px;
+    padding-top: 48px;
+    padding-right: 20px;
+    @include flexStartColumn;
+    gap: 20px;
+    transition: width 0.4s;
+    position: relative;
+
+    .chats__tools {
+        width: 100%;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        @include allCenter(flex-end, center);
+        gap: 12px;
+        z-index: 12;
+        padding-right: 48px;
+        transition: all 0.5s;
+
+        &.active__input {
+            padding-left: 20px;
+        }
+
+        .search__container {
+            width: 40px;
+            min-width: 40px;
+            height: 40px;
+            background-color: $palette-bg-secondary;
+            @include flexCenterRow;
+            position: relative;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.49, 0.41, 0.42, 1.22);
+            border: 1px solid none;
+
+            &.active {
+                width: calc(100% - 40px - 96px);
+                border: 1px solid $palette-border-quarternary;
+                border-radius: 35px;
+            }
+
+            &:active {
+                transform: scale(0.94);
+            }
+
+            .search__button {
+                position: absolute;
+                left: 0;
+                width: 40px;
+                height: 40px;
+                border-radius: 35px;
+                border: none;
+                background-color: transparent;
+                @include flexCenterRow;
+                cursor: pointer;
+
+                .icon__container {
+                    width: 100%;
+                    height: 100%;
+                    @include flexCenterRow;
+
+                    .icon {
+                        width: 20px;
+                        height: 20px;
+                        stroke: black !important;
+
+                        path {
+                            stroke: black !important;
+                        }
+                    }
+                }
+            }
+        }
+
+        .settings__button {
+            width: 40px;
+            height: 40px;
+            border-radius: 35px;
+            border: none;
+            background-color: $palette-bg-secondary;
+            @include flexCenterRow;
+            transition: all 0.5s 0.1s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+
+            &:active {
+                transform: scale(0.94);
+            }
+
+            .icon__container {
+                width: 40px;
+                height: 40px;
+                @include flexCenterRow;
+                transition: all 0.5s cubic-bezier(0.49, 0.41, 0.42, 1.22);
+
+                &.hidden {
+                    transform: translateX(100px);
+                }
+
+                .icon {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            .cancle__text {
+                position: absolute;
+                left: -150%;
+                transition: all 0.5s cubic-bezier(0.49, 0.41, 0.42, 1.22);
+                font-weight: 600;
+                font-size: 15px;
+
+                &.active {
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+            }
+
+            &.cancle__button {
+                width: 77px;
+                border-radius: 12px;
+                background-color: transparent;
+
+                &:hover {
+                    background-color: $palette-bg-secondary;
+                }
+            }
+        }
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        width: 0.5px;
+        height: calc(100vh - 80px);
+        background-color: #F1F1F1;
+        top: 0;
+        right: 0;
+    }
+
+    .messages__title__container {
+        width: 100%;
+        max-width: 358px;
+        height: fit-content;
+
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            transform-origin: top;
+            transform: scaleY(1.1);
+            transition: all 0.4s;
+
+            &.hidden {
+                opacity: 0;
+            }
+        }
+    }
+}

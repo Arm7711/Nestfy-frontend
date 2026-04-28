@@ -146,6 +146,7 @@ export default function Header({
         account__settings__header: isSettingsPage,
         scroll: scrollClass,
         scroll__header: scrollHeaderClass,
+        header__default: isTop && !activeScrollHeader && isMainPage
     };
 
     return (

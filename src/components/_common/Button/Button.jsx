@@ -1,7 +1,27 @@
 import React from 'react';
+import classNamesReact from 'classnames';
+import LoadingDot from '../Loaders/LoadingDot';
 
 export default function Button(
-    { className = 'common__button', type, form, id, disbaled, min = false, middle = false, max = false, children, borderRadius, width, height, onClick }
+    {
+        className = 'common__button',
+        classNames = {},
+        variants = 'primary',
+        type,
+        form,
+        id,
+        disbaled,
+        min = false,
+        middle = false,
+        max = false,
+        children,
+        borderRadius,
+        width,
+        height,
+        onClick,
+        loading = false,
+        ...props
+    }
 ) {
     return (
         <button
@@ -9,18 +29,23 @@ export default function Button(
             type={type}
             form={form}
             disabled={disbaled}
-            className={className}
+            className={classNamesReact({
+                'min': min,
+                'mid': middle,
+                'max': max,
+                loading,
+                'primary': variants === 'primary',
+                'secondary': variants === 'secondary',
+                ...classNames
+            }, className)}
 
             style={{
                 borderRadius,
-                width: min ? 88 : middle ? 135 : max ? 155 : width,
-                height: min ? 48 : middle ? 50 : max ? 52 : height,
             }}
-
 
             onClick={onClick}
         >
-            {children || 'button'}
+            {loading ? <LoadingDot /> : children || 'button'}
         </button>
     )
 }

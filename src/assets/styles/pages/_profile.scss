@@ -3,18 +3,18 @@
 
 .user__profile__page {
     width: 100%;
-    height: calc(100vh - 110px);
+    height: calc(100vh - 96px);
     position: relative;
 
     .user__profile__page__container {
         width: 100%;
         height: 100%;
         @include allCenter(space-between, flex-start, row);
-        padding-right: 48px;
+        padding-right: 0;
         gap: 20px;
 
         .user__profile__page__container__profile__section {
-            width: 31%;
+            width: 30%;
             height: 100%;
             border-right: 1px solid $palette-grey400;
             display: flex;
@@ -27,6 +27,8 @@
             .title {
                 font-size: 30px;
                 font-weight: 700;
+                transform-origin: top;
+                transform: scaleY(1.1);
             }
 
             .about__me__options__contianer {
@@ -90,153 +92,166 @@
 
 
         .user__profile__page__container__about__section {
-            width: 60%;
+            width: 70%;
             height: 100%;
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 10px;
-            padding: 38px 20px 20px 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            @include allCenter(center, flex-start);
+            padding-left: 48px;
 
-            .info__container {
+            .profile__container {
                 width: 100%;
-                height: fit-content;
-                @include allCenter(flex-start, center);
-                gap: 16px;
+                max-width: 1072px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
+                padding: 38px 20px 20px 20px;
 
-                .title {
-                    font-size: 30px;
-                    font-weight: 700;
-                }
-
-                .edit__button {
-                    width: 54px;
-                    height: 32px;
-                    border-radius: 8px;
-                    border: none;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.5s;
-
-                    &:active {
-                        background-color: $palette-grey400;
-                        transform: scale(0.95);
-                    }
-
-                    &:hover {
-                        background-color: $palette-grey300;
-                    }
-                }
-            }
-
-            .about__profile {
-                width: 100%;
-                min-height: 230px;
-                height: fit-content;
-                @include allCenter(flex-start);
-                gap: 40px;
-                padding-top: 20px;
-                padding-bottom: 40px;
-                border-bottom: 1px solid $palette-grey400;
-
-                .user__profile__info {
-                    width: calc(100% - 365px);
-                    height: 230px;
-                    @include allCenter(center, flex-start, column);
-                    gap: 15px;
+                .info__container {
+                    width: 100%;
+                    height: fit-content;
+                    @include allCenter(flex-start, center);
+                    gap: 16px;
 
                     .title {
-                        font-size: 24px;
-                        font-weight: 600;
+                        font-size: 30px;
+                        font-weight: 700;
+                        transform-origin: top;
+                        transform: scaleY(1.1);
                     }
 
-                    .desc {
-                        color: $palette-grey800;
-                        font-size: 15px;
-                        width: 360px;
-                        line-height: 18px;
-                    }
-
-                    .get__started {
-                        width: 135px;
-                        height: 50px;
-                        border-radius: 12px;
-                        background-color: black;
-                        border: 1px solid transparent;
-                        @include allCenter();
-                        font-size: 16px;
-                        color: white;
-                        font-weight: 600;
-                        margin-top: 12px;
-                        transition: all 0.5s;
+                    .edit__button {
+                        width: 54px;
+                        height: 32px;
+                        border-radius: 8px;
+                        border: none;
+                        font-weight: 500;
                         cursor: pointer;
+                        transition: all 0.5s;
+
+                        &:active {
+                            background-color: $palette-grey400;
+                            transform: scale(0.95);
+                        }
 
                         &:hover {
-                            background-color: transparent;
-                            color: black;
-                            border: 1px solid black;
+                            background-color: $palette-grey300;
+                        }
+                    }
+                }
+
+                .about__profile {
+                    width: 100%;
+                    min-height: 230px;
+                    height: fit-content;
+                    @include allCenter(flex-start);
+                    gap: 40px;
+                    padding-top: 20px;
+                    padding-bottom: 40px;
+                    border-bottom: 1px solid $palette-grey400;
+
+                    .user__profile__info {
+                        width: calc(100% - 365px);
+                        height: 230px;
+                        @include allCenter(center, flex-start, column);
+                        gap: 15px;
+
+                        .title {
+                            font-size: 24px;
+                            font-weight: 600;
+                            transform-origin: top;
+                            transform: scaleY(1.1);
+                        }
+
+                        .desc {
+                            color: $palette-grey800;
+                            font-size: 15px;
+                            width: 360px;
+                            line-height: 18px;
+                        }
+
+                        .get__started {
+                            width: 135px;
+                            height: 50px;
+                            border-radius: 12px;
+                            background-color: black;
+                            border: 1px solid transparent;
+                            @include allCenter();
+                            font-size: 16px;
+                            color: white;
+                            font-weight: 600;
+                            margin-top: 12px;
+                            transition: all 0.5s;
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: transparent;
+                                color: black;
+                                border: 1px solid black;
+                            }
+
+                            &:active {
+                                transform: scale(0.95);
+                            }
+                        }
+                    }
+
+                    .user__card {
+                        width: 345px;
+                        height: 230px;
+                        border-radius: 30px;
+                        box-shadow: $elevation-elevation3-box-shadow;
+                        @include allCenter(center, center, column);
+                        gap: 15px;
+                        transition: all 0.5s;
+                        cursor: pointer;
+                        opacity: 0;
+                        transform: translateY(50px);
+                        animation: animCard 0.4s 0.1s forwards;
+
+                        @keyframes animCard {
+                            to {
+                                opacity: 1;
+                                transform: translateY(0px);
+                            }
+                        }
+
+                        &:hover {
+                            box-shadow: $elevation-elevation4-box-shadow;
                         }
 
                         &:active {
-                            transform: scale(0.95);
+                            transform: scale(0.98);
                         }
-                    }
-                }
 
-                .user__card {
-                    width: 345px;
-                    height: 230px;
-                    border-radius: 30px;
-                    box-shadow: $elevation-elevation3-box-shadow;
-                    @include allCenter(center, center, column);
-                    gap: 15px;
-                    transition: all 0.5s;
-                    cursor: pointer;
-                    opacity: 0;
-                    transform: translateY(50px);
-                    animation: animCard 0.4s 0.1s forwards;
+                        .about__me__user {
+                            width: 104px;
+                            height: 104px;
+                            background-color: black;
+                            border-radius: 50%;
+                            @include allCenter();
+                            user-select: none;
 
-                    @keyframes animCard {
-                        to {
-                            opacity: 1;
-                            transform: translateY(0px);
+                            .user {
+                                font-size: 32px;
+                                color: white;
+                                font-weight: 600;
+                            }
                         }
                     }
 
-                    &:hover {
-                        box-shadow: $elevation-elevation4-box-shadow;
+                    .user__name {
+                        font-size: 22px;
+                        font-weight: 600;
+                        margin-bottom: -8px;
                     }
 
-                    &:active {
-                        transform: scale(0.98);
+                    .status {
+                        font-size: 14px;
+                        color: $palette-grey800;
                     }
-
-                    .about__me__user {
-                        width: 104px;
-                        height: 104px;
-                        background-color: black;
-                        border-radius: 50%;
-                        @include allCenter();
-                        user-select: none;
-
-                        .user {
-                            font-size: 32px;
-                            color: white;
-                            font-weight: 600;
-                        }
-                    }
-                }
-
-                .user__name {
-                    font-size: 22px;
-                    font-weight: 600;
-                    margin-bottom: -8px;
-                }
-
-                .status {
-                    font-size: 14px;
-                    color: $palette-grey800;
                 }
             }
         }
