@@ -22,7 +22,9 @@
 
     .modal__main {
         width: 480px;
+        max-width: calc(100vh - 50px);
         height: 488px;
+        max-height: calc(100vh - 50px);
         background-color: white;
         @include boxShadow(35px);
         z-index: 2;
@@ -73,31 +75,19 @@
             @include allCenter(flex-end, flex-end, row);
             padding-right: 16px;
 
-            .back {
-                width: 33px;
+            .title__container {
+                width: 100%;
                 height: 33px;
-                @include allCenter();
-                border-radius: 50%;
-                border: none;
-                background-color: transparent;
-                cursor: pointer;
-                transition: all 0.6s;
-                position: absolute;
-                left: -100%;
+                @include flexCenterRow;
 
-                .icon {
-                    width: 22px;
-                    height: 22px;
-                }
-
-                &:hover {
-                    background-color: $modal-close-button-background-color;
-                }
-
-                &.active {
-                    left: 16px;
+                .title {
+                    font-size: 16px;
+                    font-weight: 600;
+                    transform: scaleY(1.1);
+                    transform-origin: top;
                 }
             }
+
 
             .modal__close__bar__button {
                 width: 33px;
@@ -108,6 +98,8 @@
                 background-color: transparent;
                 cursor: pointer;
                 transition: all 0.4s;
+                position: absolute;
+                right: 16px;
 
                 .container {
                     width: 100%;
@@ -129,15 +121,15 @@
 
         .content {
             width: 100%;
-            height: calc(100% - 50px);
+            height: calc(100% - 60px);
             @include allCenter(flex-start, center, column);
             gap: 12px;
             border-radius: 35px;
-            padding: 0 24px;
+            padding: 0 0;
             transition: all 0.6s, opacity 0.4s;
             position: absolute;
             left: 0;
-            top: 50px;
+            top: 60px;
         }
     }
 }

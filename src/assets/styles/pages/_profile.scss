@@ -15,6 +15,8 @@
 
         .user__profile__page__container__profile__section {
             width: 30%;
+            min-width: 400px;
+            max-width: 420px;
             height: 100%;
             border-right: 1px solid $palette-grey400;
             display: flex;
@@ -22,7 +24,7 @@
             align-items: flex-start;
             flex-direction: column;
             gap: 20px;
-            padding: 38px 8px 20px 96px;
+            padding: 38px 8px 20px 48px;
 
             .title {
                 font-size: 30px;

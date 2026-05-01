@@ -7,6 +7,7 @@ import Api from '../../api/Api';
 import UserCardModal from '../../components/_common/Modals/Profile/UserCardModal';
 import EditUserProfile from '../../components/EditUserProfile/EditUserProfile';
 import Button from '../../components/_common/Button/Button';
+import ImageSkeleton from '../../components/_common/Skeletions/ImageSkeletion';
 
 export default function Profile() {
     const status = useSelector(state => state.authReducer.status);
@@ -51,14 +52,28 @@ export default function Profile() {
                     </h2>
 
                     <div className='about__me__options__contianer'>
-                        {userProfileOptions.map(({ title, optionName }) => (
-                            <button className='option__about'>
+                        {userProfileOptions.map(({ title, optionName }, index) => (
+                            <button className='option__about' key={index}>
                                 {optionName === 'aboutMe' && (
-                                    <div className='about__me'>
-                                        <div className='user'>{userData?.name[0]}</div>
 
+                                    <div className='about__me'>
+                                        <div className='user'>{
+                                            userData?.avatar ? (
+                                                <ImageSkeleton
+                                                    src={userData?.avatar}
+                                                    figureClass={'user__img__figure'}
+                                                    imgClass={'user__img'}
+                                                    rounded='full'
+                                                    width={'100%'}
+                                                    height={'100%'}
+                                                    variant='deafult'
+                                                />
+                                            ) :
+                                                userData?.name[0]
+                                        }</div>
                                         <p className='desc'>{title}</p>
                                     </div>
+
                                 )}
                             </button>
                         ))}
@@ -79,7 +94,18 @@ export default function Profile() {
                         <div className='about__profile'>
                             <div className='user__card' role='button' onClick={() => setUserCardModalOpen(true)}>
                                 <div className='about__me__user'>
-                                    <p className='user'>{userData?.name[0]}</p>
+                                    {userData?.avatar ? (
+                                        <ImageSkeleton
+                                            src={userData?.avatar}
+                                            figureClass={'user__me__figure'}
+                                            imgClass={'user__img__me'}
+                                            rounded='full'
+                                            width={'100%'}
+                                            height={'100%'}
+                                        />
+                                    ) : (
+                                        <p className='user'>{userData?.name[0]}</p>
+                                    )}
                                 </div>
 
                                 <p className='user__name'>{userDataInfo?.fullName || userDataInfo?.preferredFirstName || userData?.name}</p>
@@ -102,7 +128,7 @@ export default function Profile() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }

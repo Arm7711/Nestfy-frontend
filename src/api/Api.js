@@ -109,6 +109,16 @@ class Api {
         return data;
     }
 
+    static async updateAvatar(file) {
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        const { data } = await Api.instance.patch('/settings/profile/avatar', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return data.data;
+    }
+
     static async logout() {
         await Api.instance.post('/auth/logout');
         setAccessToken(null);

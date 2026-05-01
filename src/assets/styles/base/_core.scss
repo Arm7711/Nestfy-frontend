@@ -73,7 +73,7 @@ html {
             &:has(.edit__user__profile.active__mode) {
                 .nestfy__page {
                     .nestfy__main {
-                       margin-bottom: 500px;
+                        margin-bottom: 500px;
                     }
                 }
             }
@@ -101,6 +101,7 @@ button {
     transition: all 0.5s;
 
     &:active {
+        transition: all 0.3s !important;
         transform: scale(0.97);
     }
 }

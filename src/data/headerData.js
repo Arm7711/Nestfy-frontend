@@ -48,12 +48,12 @@ export const searchTabFieldsInScroll = [
 
 export const headerMenuData = [
     {
-        filedName: 'helpCenter',
+        fieldName: 'helpCenter',
         content: 'Help Center',
         navigationTo: '/help-center'
     },
     {
-        filedName: 'auth',
+        fieldName: 'auth',
         content: 'Log in or sign up',
         navigationTo: ''
     }

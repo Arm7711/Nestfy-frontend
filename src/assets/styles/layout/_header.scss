@@ -353,6 +353,10 @@
                         transform: scale(0.95);
                     }
 
+                    .header__section__tab__bar__tools__item__img {
+                        object-fit: cover;
+                    }
+
                     .user__letter {
                         color: white;
                         font-weight: 700;
@@ -475,6 +479,21 @@
                             font-size: 15px;
                             cursor: pointer;
                             transition: all 0.4s;
+
+                            .content {
+                                @include allCenter(flex-start);
+                                gap:12px;
+
+                                .icon__menu{
+                                    width: 16px;
+                                    height: 16px;
+
+                                    &.settings__icon{
+                                        width: 18px;
+                                        height: 18px;
+                                    }
+                                }
+                            }
 
                             &:hover {
                                 padding-left: 12px;
