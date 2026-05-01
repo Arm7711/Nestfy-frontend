@@ -5,6 +5,13 @@ import AuthModal from '../../../_common/Modals/AuthModal';
 import MenuIcon from '../../../_common/MenuIcon/MenuIcon';
 import LangCurrenciesModal from '../../../_common/Modals/LangCurrenciesModal/LangCurrenciesModal';
 
+import WishlistSvg from '../../../svg/WishlistSvg';
+import MenuMessagesSvg from '../../../svg/MenuMessagesSvg';
+import ProfileSvg from '../../../svg/ProfileSvg';
+import SettingsSvg from '../../../svg/SettingsSvg';
+import LangSvg from '../../../svg/LangSvg';
+import HelpSvg from '../../../svg/HelpSvg';
+
 export default function HeaderMenu({
     lang,
     isAuth,
@@ -76,7 +83,7 @@ export default function HeaderMenu({
                     <button
                         className='menu__item'
                         key={index}
-                        onClick={() => handleMenuItemClick(item?.filedName)}
+                        onClick={() => handleMenuItemClick(item?.fieldName)}
                     >
                         {item?.navigationTo ? (
                             <NavLink
@@ -84,6 +91,12 @@ export default function HeaderMenu({
                                 onClick={() => setOpenHeaderMenu(false)}
                                 className='content'
                             >
+                                {isAuth && item?.fieldName === 'wishlist' && <WishlistSvg className='icon__menu' />}
+                                {isAuth && item?.fieldName === 'messages' && <MenuMessagesSvg className='icon__menu' />}
+                                {isAuth && item?.fieldName === 'profile' && <ProfileSvg className='icon__menu' />}
+                                {isAuth && item?.fieldName === 'accountSettings' && <SettingsSvg className='icon__menu settings__icon' />}
+                                {item?.fieldName === 'helpCenter' && <HelpSvg className='icon__menu' />}
+
                                 {item.content}
                             </NavLink>
                         ) : (
@@ -92,6 +105,7 @@ export default function HeaderMenu({
                                 className='content'
                                 onClick={() => allActions(item?.action)}
                             >
+                                {isAuth && item?.fieldName === 'language' && <LangSvg className='icon__menu' />}
                                 {item.content}
                             </p>
                         )}

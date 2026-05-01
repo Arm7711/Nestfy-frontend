@@ -9,6 +9,7 @@ import useScroll from '../../../../hooks/useScroll';
 import CloseSvg from '../../../svg/CloseSvg';
 
 import Button from '../../Button/Button';
+import ImageSkeleton from '../../Skeletions/ImageSkeletion';
 
 export default function AuthModal({ isOpen, onClose, children }) {
     const { lang } = useParams();
@@ -54,7 +55,18 @@ export default function AuthModal({ isOpen, onClose, children }) {
                         <div className='container__card'>
                             <div className='user__card__front'>
                                 <div className='about__me__user'>
-                                    <p className='user'>{userData?.name[0]}</p>
+                                    {userData?.avatar ? (
+                                        <ImageSkeleton
+                                            src={userData?.avatar}
+                                            figureClass={'user__me__figure'}
+                                            imgClass={'user__img__me'}
+                                            rounded='full'
+                                            width={'100%'}
+                                            height={'100%'}
+                                        />
+                                    ) : (
+                                        <p className='user'>{userData?.name[0]}</p>
+                                    )}
                                 </div>
 
                                 <p className='user__name'>{userDataInfo?.fullName || userDataInfo?.preferredFirstName || userData?.name}</p>

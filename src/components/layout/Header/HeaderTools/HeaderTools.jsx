@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Api from '../../../../api/Api';
 import HeaderMenu from '../HeaderMenu/HeaderMenu';
 import LangSvg from '../../../svg/LangSvg';
+import ImageSkeleton from '../../../_common/Skeletions/ImageSkeletion';
 
 export default function HeaderTools({
     lang,
@@ -50,12 +51,25 @@ export default function HeaderTools({
         <>
             <div className={classNames('header__section__tab__bar__tools', { hidden: isSettingsPage })}>
                 {isAuth ? (
-                    <NavLink
-                        to={`/${lang}/profile`}
-                        className='header__section__tab__bar__tools__item profile'
-                    >
-                        <p className='user__letter'>{userData?.name?.[0] ?? 'U'}</p>
-                    </NavLink>
+                    userData?.avatar ?
+                        (
+                            <NavLink to={`/${lang}/profile`}>
+                                <ImageSkeleton
+                                    src={userData?.avatar}
+                                    figureClass={'header__section__tab__bar__tools__item profile'}
+                                    imgClass={'header__section__tab__bar__tools__item__img'}
+                                    rounded='full'
+                                />
+                            </NavLink>
+                        )
+                        : (
+                            <NavLink
+                                to={`/${lang}/profile`}
+                                className='header__section__tab__bar__tools__item profile'
+                            >
+                                <p className='user__letter'>{userData?.name?.[0] ?? 'U'}</p>
+                            </NavLink>
+                        )
                 ) : (
                     <div
                         role='button'
@@ -81,7 +95,7 @@ export default function HeaderTools({
                     isLangCurrencyOpen={isLangCurrencyOpen}
                     setIsLangCurrencyOpen={setIsLangCurrencyOpen}
                 />
-            </div>
+            </div >
 
             <div className={classNames('settings__done__container', { active: isSettingsPage })}>
                 <NavLink
