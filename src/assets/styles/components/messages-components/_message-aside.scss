@@ -239,6 +239,8 @@
             position: relative;
             transition: all 0.4s 0.15s cubic-bezier(0.39, 0.175, 0.265, 1.1);
 
+            
+
             .filter {
                 width: auto;
                 height: 40px;
@@ -334,7 +336,7 @@
                     cursor: pointer;
                     border: 1px solid transparent;
                     font-weight: 600;
-                    transition: all 0.4s;
+                    transition: background-color 0.4s, color 0.4s, border-color 0.4s;
                     gap: 3px;
 
                     .selected {
@@ -370,8 +372,8 @@
                         border: 1px solid black;
                     }
 
-                    &.active{
-                        border:2px solid black;
+                    &.active {
+                        border: 2px solid black;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import classNames from 'classnames';
 import CommonModal from '../../../components/_common/Modals/CommonModal/CommonModal';
 import { useQueryParams } from '../../../hooks/useQueryParams';
@@ -27,13 +27,14 @@ const DEFAULTS = {
 };
 
 export default function MessagesAside() {
-    const { get, set, setMany, remove } = useQueryParams(DEFAULTS);
+    const { get, set, remove } = useQueryParams(DEFAULTS);
     const { lang } = useParams();
 
     const inboxType = get('inbox_type') ?? null;
     const isUnread = get('unread');
     const isArchived = get('archived');
 
+    const [flag, setFlag] = useState(false);
     const [activeSearchInput, setActiveSearchInput] = useState(false);
     const [messagesInputValue, setMessagesInputValue] = useState('');
     const [openMessagesModal, setOpenMessagesModal] = useState(false);
@@ -43,13 +44,33 @@ export default function MessagesAside() {
     const firstFilterRef = useRef(null);
     const [filterWidth, setFilterWidth] = useState(0);
 
-    useEffect(() => {
-        if (!firstFilterRef.current) return;
-        const rect = firstFilterRef.current.getBoundingClientRect();
-        if (rect.width < 300) setFilterWidth(rect.width);
-    }, [isOpenOptionsMenu, inboxType, isArchived, isUnread]);
+    useLayoutEffect(() => {
+        if (!firstFilterRef.current || isOpenOptionsMenu) return;
 
-    useEffect(() => {
+        const el = firstFilterRef.current;
+        let frameId;
+
+        const measure = () => {
+            frameId = requestAnimationFrame(() => {
+                const rect = el.getBoundingClientRect();
+                if (rect.width > 0 && rect.width < 300) {
+                    setFilterWidth(rect.width);
+                }
+            });
+        };
+
+        measure();
+
+        const observer = new ResizeObserver(measure);
+        observer.observe(el);
+
+        return () => {
+            cancelAnimationFrame(frameId);
+            observer.disconnect();
+        };
+    }, [inboxType, isArchived, isOpenOptionsMenu, flag]);
+
+    useLayoutEffect(() => {
         const handleOutside = (e) => {
             if (menuRef.current && !menuRef.current.contains(e.target)) {
                 setIsOpenOptionsMenu(false);
@@ -95,7 +116,6 @@ export default function MessagesAside() {
 
     const activeFilter = FILTER_OPTIONS.find(f => f.value === inboxType) ?? FILTER_OPTIONS[0];
 
-
     if (isArchived) {
         return (
             <div className='nestfy__messages__aside'>
@@ -140,7 +160,6 @@ export default function MessagesAside() {
                             }}
                         >
                             <p className={classNames('cancle__text', { active: activeSearchInput })}>Cancel</p>
-
                             <span className={classNames('icon__container', { hidden: activeSearchInput })}>
                                 <BackArrowSvg />
                             </span>
@@ -156,16 +175,17 @@ export default function MessagesAside() {
                     <div className='chat__message__iono__container'>
                         <MessageSvg />
                     </div>
-
                     <div className='info__no__chats'>
-                        <h1 className='title'>You don’t have any archived messages</h1>
+                        <h1 className='title'>You don't have any archived messages</h1>
                         <p className='desc'>When you archive a message, it will appear here.</p>
-
-                        <NavLink to={`/${lang}/messages`} className={classNames('show__all__messages', { active__no__chats: inboxType !== null || isUnread || isArchived })}>
+                        <NavLink
+                            to={`/${lang}/messages`}
+                            onClick={() => setFlag(prev => !prev)}
+                            className={classNames('show__all__messages', { active__no__chats: inboxType !== null || isUnread || isArchived })}
+                        >
                             Show all messages
                         </NavLink>
                     </div>
-
                 </div>
             </div>
         );
@@ -175,7 +195,6 @@ export default function MessagesAside() {
         <div className='nestfy__messages__aside'>
             <div className='nestfy__messages__aside__header'>
                 <div className={classNames('chats__tools', { active__input: activeSearchInput })}>
-
                     <div className={classNames('search__container', { active: activeSearchInput })}>
                         <div className='input__container'>
                             <input
@@ -289,15 +308,16 @@ export default function MessagesAside() {
                 <div className='chat__message__iono__container'>
                     <MessageSvg />
                 </div>
-
                 <div className='info__no__chats'>
-                    <h1 className='title'>You don’t have any messages</h1>
+                    <h1 className='title'>You don't have any messages</h1>
                     <p className='desc'>When you receive a new message, it will appear here.</p>
-
-                    <NavLink to={`/${lang}/messages`} className={classNames('show__all__messages', { active__no__chats: inboxType !== null || isUnread || isArchived })}>
+                    <NavLink
+                        to={`/${lang}/messages`}
+                        onClick={() => setFlag(prev => !prev)}
+                        className={classNames('show__all__messages', { active__no__chats: inboxType !== null || isUnread || isArchived })}
+                    >
                         Show all messages
                     </NavLink>
-
                 </div>
             </div>
         </div>

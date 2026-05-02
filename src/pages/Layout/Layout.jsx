@@ -23,6 +23,7 @@ export default function Layout() {
     const onlyProfilePage = pathname === `/${lang}/profile`;
     const isSettingsPage = pathname.startsWith(`/${lang}/account-settings`);
 
+    const [userData, setUserData] = useState(JSON.parse(localStorage.getItem('userData') || null));
     const status = useSelector(state => state.authReducer.status);
 
     const [userSelectedLang, setUserSelectedLang] = useState('');
@@ -42,7 +43,11 @@ export default function Layout() {
             if (status === 'auth') {
                 try {
                     const { data } = await Api.getUserSettings();
+
                     setUserSelectedLang(data.language);
+
+                    const updated = { ...userData, avatar: data.avatar };
+                    localStorage.setItem('userData', JSON.stringify(updated));
 
                     localStorage.setItem('langAndCurrency', userSelectedLang);
                 } catch (e) {
