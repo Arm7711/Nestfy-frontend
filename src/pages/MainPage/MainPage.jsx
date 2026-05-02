@@ -1,7 +1,10 @@
-import React from 'react'
+import React from 'react';
+import ListingProductsContainer from '../../components/listing/ListingProductsContainer';
 
 export default function MainPage() {
     return (
-        <div>mainPage</div>
+        <div className='nestfy__main__page'>
+            <ListingProductsContainer />
+        </div>
     )
 }

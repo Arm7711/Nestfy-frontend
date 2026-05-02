@@ -1,0 +1,8 @@
+@use '../../variables/variables' as *;
+@use '../../mixins/mixins' as *;
+
+.listing__container {
+    width: 100%;
+    height: fit-content;
+    border: 1px solid black;
+}

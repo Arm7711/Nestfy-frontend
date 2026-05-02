@@ -1,0 +1,12 @@
+@use '../variables/variables' as *;
+@use '../mixins/mixins' as *;
+
+.nestfy__main__page {
+    width: 100%;
+    max-width: none;
+    height: fit-content;
+    margin: 0 auto;
+    @include flexStartColumn;
+    z-index: 0;
+    padding: 20px 30px;
+}
