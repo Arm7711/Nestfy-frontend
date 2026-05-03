@@ -5,6 +5,15 @@ import classNames from 'classnames';
 
 const EXTRA_CARDS = 1
 
+const BREAKPOINTS = [
+    { maxWidth: 480, cards: 2 },
+    { maxWidth: 640, cards: 3 },
+    { maxWidth: 900, cards: 4 },
+    { maxWidth: 1100, cards: 5 },
+    { maxWidth: 1400, cards: 6 },
+    { maxWidth: Infinity, cards: 7 },
+]
+
 const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClick, onNavigationChange }, ref) {
     const trackRef = useRef(null)
     const containerRef = useRef(null)
@@ -48,22 +57,15 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
         if (!container) return
 
         const containerWidth = container.clientWidth
-        let targetCards = 7
-        let newCardWidth = (containerWidth - (CARD_GAP * (targetCards - 1))) / targetCards
+        const { cards: targetCards } = BREAKPOINTS.find(bp => containerWidth <= bp.maxWidth)
 
-        if (newCardWidth < MIN_CARD_WIDTH) {
-            targetCards = Math.floor((containerWidth + CARD_GAP) / (MIN_CARD_WIDTH + CARD_GAP))
-            if (targetCards < 1) targetCards = 1
-            newCardWidth = (containerWidth - (CARD_GAP * (targetCards - 1))) / targetCards
-        } else if (newCardWidth > MAX_CARD_WIDTH) {
-            targetCards = Math.floor((containerWidth + CARD_GAP) / (MAX_CARD_WIDTH + CARD_GAP))
-            if (targetCards < 1) targetCards = 1
-            newCardWidth = (containerWidth - (CARD_GAP * (targetCards - 1))) / targetCards
-        }
+        const newCardWidth = Math.floor(
+            (containerWidth - CARD_GAP * (targetCards - 1)) / targetCards
+        )
 
         setCardsPerView(targetCards)
-        setCardWidth(Math.floor(newCardWidth))
-    }, [])
+        setCardWidth(newCardWidth)
+    }, []);
 
     useEffect(() => {
         calculateCardWidth()

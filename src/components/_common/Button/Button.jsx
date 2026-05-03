@@ -16,8 +16,8 @@ export default function Button(
         max = false,
         children,
         borderRadius,
-        width,
-        height,
+        width = null,
+        height = null,
         onClick,
         loading = false,
         ...props
@@ -41,6 +41,8 @@ export default function Button(
 
             style={{
                 borderRadius,
+                width,
+                height,
             }}
 
             onClick={onClick}

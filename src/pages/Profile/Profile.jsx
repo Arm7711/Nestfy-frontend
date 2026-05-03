@@ -11,8 +11,8 @@ import ImageSkeleton from '../../components/_common/Skeletions/ImageSkeletion';
 
 export default function Profile() {
     const status = useSelector(state => state.authReducer.status);
-    const userData = JSON.parse(localStorage.getItem("userData") || null);
-    const userDataInfo = JSON.parse(localStorage.getItem("userDataInfo") || null);
+    const userData = JSON.parse(localStorage.getItem("userData")) || {};
+    const userDataInfo = JSON.parse(localStorage.getItem("userDataInfo")) || {};
     const { get, set } = useQueryParams();
 
     const [activeMode, setActiveMode] = useState(false);
@@ -69,7 +69,7 @@ export default function Profile() {
                                                     variant='deafult'
                                                 />
                                             ) :
-                                                userData?.name[0]
+                                                userData?.name?.[0] || 'U'
                                         }</div>
                                         <p className='desc'>{title}</p>
                                     </div>
@@ -104,7 +104,7 @@ export default function Profile() {
                                             height={'100%'}
                                         />
                                     ) : (
-                                        <p className='user'>{userData?.name[0]}</p>
+                                        <p className='user'>{userData?.name?.[0]}</p>
                                     )}
                                 </div>
 
@@ -118,7 +118,7 @@ export default function Profile() {
                                 </h2>
 
                                 <p className='desc'>
-                                    Your Airbnb profile is an important part of every reservation. Complete yours to help other hosts and guests get to know you.
+                                    Your Nestfy profile is an important part of every reservation. Complete yours to help other hosts and guests get to know you.
                                 </p>
 
                                 <Button className='get__started' middle={true} onClick={chnageActiveMode}>
