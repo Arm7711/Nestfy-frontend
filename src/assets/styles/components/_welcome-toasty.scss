@@ -2,13 +2,13 @@
 @use '../mixins/mixins' as *;
 
 .welcome__toasty {
-    width: 230px;
-    height: 65px;
-    box-shadow: $elevation-elevation3-box-shadow;
+    width: 250px;
+    height: 60px;
+    box-shadow: $elevation-elevation5-box-shadow;
     position: fixed;
     z-index: 2;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 12px;
     bottom: 10%;
     transform: scale(1);
     opacity: 1;
@@ -16,7 +16,7 @@
     left: calc(50% - 115px);
     @include allCenter();
     transition: all 0.4s;
-    animation: animShow 0.8s;
+    animation: animShow 0.8s cubic-bezier(0.375, 1.2, 0.365, 1);
 
     @keyframes animShow {
         from {
@@ -41,7 +41,20 @@
         visibility: hidden !important;
     }
 
+    .icon__container {
+        width: 42px;
+        height: 42px;
+        @include flexStartRow;
+        transform: translateX(-12px);
+
+        .icon {
+            width: 42px !important;
+            height: 42px !important;
+        }
+    }
+
     .animation__text {
+        transform: translateX(-12px);
         span {
             color: black !important;
         }

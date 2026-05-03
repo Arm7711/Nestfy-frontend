@@ -263,6 +263,7 @@ export default function MessagesAside() {
                     <div
                         ref={menuRef}
                         role='button'
+                        style={{ width: filterWidth }}
                         className={classNames('filter menu__filter', { active: isOpenOptionsMenu })}
                         onClick={(e) => { e.stopPropagation(); setIsOpenOptionsMenu(p => !p); }}
                     >

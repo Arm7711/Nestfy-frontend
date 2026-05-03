@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react'
-import ListingCard from './ListingCard'
+import ListingCard from './ListingCard';
+import ImageSkeleton from '../_common/Skeletions/ImageSkeletion';
+import classNames from 'classnames';
 
 const EXTRA_CARDS = 1
 
@@ -9,7 +11,33 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
     const [cardWidth, setCardWidth] = useState(null)
     const [canLeft, setCanLeft] = useState(false)
     const [canRight, setCanRight] = useState(false)
-    const [cardsPerView, setCardsPerView] = useState(7)
+    const [cardsPerView, setCardsPerView] = useState(7);
+    const sectionFirstItems = items ? items?.slice(0, 3) : [];
+
+    const showAllRef = useRef(null)
+    const [isShowAllVisible, setIsShowAllVisible] = useState(false)
+
+    useEffect(() => {
+        const root = trackRef.current
+        const target = showAllRef.current
+
+        if (!root || !target) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsShowAllVisible(entry.isIntersecting)
+            },
+            {
+                root,
+                threshold: 0.1
+            }
+        )
+
+        observer.observe(target)
+
+        return () => observer.disconnect()
+    }, [cardWidth, items.length])
+
 
     const MIN_CARD_WIDTH = 140
     const MAX_CARD_WIDTH = 280
@@ -122,7 +150,7 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
                 <div className="listing_slider_track" style={{ gap: `${CARD_GAP}px` }}>
                     {items.slice(0, 7).map((item, i) => (
                         <div key={item.id ?? i} className="listing_slider_item" style={{ width: 200, flex: '0 0 200px' }}>
-                            <ListingCard item={item} />
+                            <ListingCard isSlider={false} item={item} />
                         </div>
                     ))}
                 </div>
@@ -145,16 +173,32 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
                         role="listitem"
                         style={{ flex: `0 0 ${cardWidth}px`, width: `${cardWidth}px` }}
                     >
-                        <ListingCard item={item} onClick={() => onCardClick?.(item)} />
+                        <ListingCard isSlider={false} item={item} onClick={() => onCardClick?.(item)} />
                     </div>
                 ))}
 
                 <div
+                    ref={showAllRef}
                     className="listing_slider_item"
                     role="listitem"
                     style={{ flex: `0 0 ${cardWidth}px`, width: `${cardWidth}px` }}
                 >
-                    <article className='listing_card'>2121</article>
+                    <article className='listing_card listing_card__show__all'>
+                        <div className='lisiting__card__gallery__carousel'>
+                            {sectionFirstItems.map(({ images }, index) => (
+                                <ImageSkeleton
+                                    key={index}
+                                    src={images[0]}
+                                    figureClass={classNames(`figure__card figure__card--${index + 1}`, { show__animation: isShowAllVisible })}
+                                    imgClass={'card__img'}
+                                    width={90}
+                                    height={90}
+                                />
+                            ))}
+                        </div>
+
+                        <button className='see__all'>See all</button>
+                    </article>
                 </div>
             </div>
         </div>

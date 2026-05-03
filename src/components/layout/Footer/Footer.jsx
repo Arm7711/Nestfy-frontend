@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import Api from "../../../api/Api.js";
 
+import LangCurrenciesModal from "../../_common/Modals/LangCurrenciesModal/LangCurrenciesModal.jsx";
 import { inspirationTabs, inspirationByTab, footerLinkColumns, footerBottom, } from "../../../data/footerData.js";
 import { FiGlobe, FiChevronDown } from "react-icons/fi";
 import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
@@ -11,18 +13,49 @@ import classNames from "classnames";
 
 const makeHref = (group, label) => `/footer/${slugify(group)}/${slugify(label)}`;
 
-const Footer = ({isMainPage}) => {
+const Footer = ({ isMainPage }) => {
   const [activeTab, setActiveTab] = useState(inspirationTabs[0]);
   const MotionNavLink = motion(NavLink);
+
+  const [isLangCurrencyOpen, setIsLangCurrencyOpen] = useState(false);
+  const [langSelectedUserAccount, setLangSelectedUserAccount] = useState('');
 
   const inspirationItems = useMemo(() => {
     return inspirationByTab[activeTab] || [];
   }, [activeTab]);
 
+
+  const handleSaveLangCurrency = async ({ language, region, languageCode, currency }) => {
+    if (isAuth) {
+      try {
+        const { data } = await Api.getUserSettings();
+        setLangSelectedUserAccount(data.language);
+
+        await Api.editUserSettings({ language: languageCode });
+        localStorage.setItem('lang', languageCode);
+
+        window.location.reload();
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      localStorage.setItem('lang', languageCode);
+      window.location.reload();
+    }
+    setIsLangCurrencyOpen(false);
+  };
+
   return (
     <footer className="footer">
+
+      <LangCurrenciesModal
+        isOpen={isLangCurrencyOpen}
+        onClose={() => setIsLangCurrencyOpen(false)}
+        onSave={handleSaveLangCurrency}
+      />
+
       <div className="footer__inner">
-        <section className={classNames('footer__inspiration', {'visible': isMainPage})} aria-label="Inspiration">
+        <section className={classNames('footer__inspiration', { 'visible': isMainPage })} aria-label="Inspiration">
           <h2 className="footer__title">Inspiration for future getaways</h2>
 
           <div
@@ -106,7 +139,7 @@ const Footer = ({isMainPage}) => {
         </section>
 
         <section className="footer__links" aria-label="Footer links">
-          <div className={classNames('footer__linkGrid', {is__main__page: isMainPage})}>
+          <div className={classNames('footer__linkGrid', { is__main__page: isMainPage })}>
             {footerLinkColumns.map((col) => (
               <div key={col.heading} className="footer__col">
                 <h3 className="footer__colTitle">{col.heading}</h3>
@@ -145,7 +178,7 @@ const Footer = ({isMainPage}) => {
           </div>
 
           <div className="footer__bottomRight">
-            <Link className="footer__pill" to={makeHref("locale", footerBottom.locale.label)}>
+            <Link className="footer__pill" onClick={() => setIsLangCurrencyOpen(true)} role="button">
               <FiGlobe className="footer__icon" aria-hidden="true" />
               {footerBottom.locale.label}
             </Link>
