@@ -5,7 +5,7 @@ import '../src/assets/styles/main.scss';
 import Layout from './pages/Layout/Layout';
 import Home from './pages/Home/Home';
 import Help from './pages/Help/Help';
-import NotFound from './pages/NotFound/NotFound';
+import NotFound from './pages/NotFound/NotFound.jsx';
 import HelpDetails from "./pages/Help/HelpDetailes.jsx";
 import Profile from './pages/Profile/Profile.jsx';
 import MainPage from "./pages/MainPage/MainPage.jsx";

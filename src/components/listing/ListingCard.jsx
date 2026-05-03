@@ -9,7 +9,7 @@ import { getPropertyTypeMeta } from '../../utils/listing/getPropertyTypeMeta';
 import ImageSkeletion from '../_common/Skeletions/ImageSkeletion';
 
 
-export default function ListingCard({ item, onClick }) {
+export default function ListingCard({ item, isSlider = true, onClick }) {
     const {
         images: rawImages = [],
         badge,
@@ -25,7 +25,7 @@ export default function ListingCard({ item, onClick }) {
 
     const images = Array.isArray(rawImages) ? rawImages : [rawImages]
     const count = images.length
-    const isMulti = count > 1
+    const isMulti = count > 1 && isSlider
 
     const [idx, setIdx] = useState(0)
     const [liked, setLiked] = useState(false)

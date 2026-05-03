@@ -269,7 +269,7 @@
                     overflow: hidden;
 
                     &.active {
-                        width: 370px;
+                        width: 370px !important;
                         height: 200px;
                         background-color: white;
                         box-shadow: $elevation-elevation4-box-shadow;

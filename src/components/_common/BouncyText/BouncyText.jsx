@@ -9,7 +9,7 @@ export default function BouncyText({
     lift = 36,
     delay = 70,
     mode = "wave",
-    fontSize = "17px",
+    fontSize = "16px",
     autoPlay = true,
     loop = false,
     loopPause = 1200,
@@ -70,7 +70,7 @@ export default function BouncyText({
                 flexWrap: "wrap",
                 fontSize,
                 fontWeight: 700,
-                letterSpacing: "0.02em",
+                letterSpacing: "0.01em",
                 perspective: "600px",
             }}
         >

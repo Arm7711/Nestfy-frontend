@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink, useParams } from 'react-router';
-import classNames from 'classnames'
-import { useQueryParams } from '../../hooks/useQueryParams'
+import classNames from 'classnames';
+import { AnimatePresence } from 'framer-motion';
+import { useQueryParams } from '../../hooks/useQueryParams';
 import Button from '../_common/Button/Button';
 import Api from '../../api/Api';
 
@@ -23,8 +24,10 @@ import { userInfoEdit, userInfoEditSocial } from '../../data/editProfileData';
 import CommonModal from '../_common/Modals/CommonModal/CommonModal';
 import TextareaCounter from '../_common/TextareaCounter/TextareaCounter';
 import LoadingDot from '../_common/Loaders/LoadingDot';
-
 import ImageSkeleton from '../_common/Skeletions/ImageSkeletion';
+
+// ─── Photo Upload Modal ────────────────────────────────────────────────────────
+import PhotoUploadModal from './components/PhotoUploadModal';
 
 const LABEL_CONFIG = {
     travel: { field: 'travel', maxLength: 40, title: 'Where have you always wanted to travel?', desc: "Whether it's on your bucket list or your shortlist, tell us a place you can't wait to visit.", placeholder: "Where I've always wanted to go:" },
@@ -51,12 +54,17 @@ export default function EditUserProfile() {
     const [labelInputError, setLabelInputError] = useState('');
 
     const [isLoading, setIsLoading] = useState(false);
-
-    const triggerRef = useRef(null);
-    const [hideBlock, setHideBlock] = useState(false);
-
     const [avatarLoading, setAvatarLoading] = useState(false);
 
+    // ── Photo upload modal state ───────────────────────────────────────────────
+    const [photoModalOpen, setPhotoModalOpen] = useState(false);
+    const [pendingImageSrc, setPendingImageSrc] = useState(null);  // base64 превью
+    const [pendingFile, setPendingFile] = useState(null);   // оригинальный File объект
+    // ──────────────────────────────────────────────────────────────────────────
+
+    const triggerRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const [hideBlock, setHideBlock] = useState(false);
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
@@ -73,14 +81,33 @@ export default function EditUserProfile() {
         setIsEditMode(editModeFromUrl);
     }, [editModeFromUrl]);
 
-    const handleAvatarChange = async (e) => {
+    // ── Шаг 1: пользователь выбрал файл → читаем в base64, открываем модал ───
+    const handleAvatarChange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setAvatarLoading(true);
-        try {
-            const res = await Api.updateAvatar(file);
+        const reader = new FileReader();
+        reader.onload = () => {
+            setPendingImageSrc(reader.result);  // base64 для превью
+            setPendingFile(file);               // сохраняем оригинальный файл
+            setPhotoModalOpen(true);            // открываем модал
+        };
+        reader.readAsDataURL(file);
 
+        e.target.value = ''; // сброс input чтобы можно было выбрать тот же файл повторно
+    };
+
+    // ── Шаг 2: пользователь нажал "Use this photo" → делаем API запрос ────────
+    const handleConfirmPhoto = async (croppedFile) => {
+        // croppedFile — File или Blob после кропа, либо оригинальный pendingFile
+        const fileToUpload = croppedFile || pendingFile;
+        if (!fileToUpload) return;
+
+        setPhotoModalOpen(false);
+        setAvatarLoading(true);
+
+        try {
+            const res = await Api.updateAvatar(fileToUpload);
             const avatarUrl = res.data?.avatar ?? res.avatar;
 
             const updated = { ...userData, avatar: avatarUrl };
@@ -90,10 +117,19 @@ export default function EditUserProfile() {
             console.error('Avatar upload failed:', err);
         } finally {
             setAvatarLoading(false);
-            e.target.value = '';
+            setPendingImageSrc(null);
+            setPendingFile(null);
         }
     };
 
+    // ── Закрыть модал без сохранения ──────────────────────────────────────────
+    const handleClosePhotoModal = () => {
+        setPhotoModalOpen(false);
+        setPendingImageSrc(null);
+        setPendingFile(null);
+    };
+
+    // ─────────────────────────────────────────────────────────────────────────
 
     const handleSaveBio = async () => {
         if (!bioValue.trim()) { setBioError('Bio cannot be empty'); return; }
@@ -101,11 +137,9 @@ export default function EditUserProfile() {
 
         setIsLoading(true);
         setBioError('');
-
         try {
             const cleanBio = bioValue.trim().replace(/<[^>]*>/g, '');
             await Api.editUserSettings({ bio: cleanBio });
-
             const updated = { ...userData, bio: cleanBio };
             localStorage.setItem('userData', JSON.stringify(updated));
             setUserData(updated);
@@ -119,9 +153,7 @@ export default function EditUserProfile() {
 
     const displayBio = () => (
         <div className='bio__block'>
-            {userData?.bio && (
-                <p className='bio__text'>{userData.bio}</p>
-            )}
+            {userData?.bio && <p className='bio__text'>{userData.bio}</p>}
             <Button
                 variants='secondary'
                 min={true}
@@ -156,17 +188,14 @@ export default function EditUserProfile() {
     const handleSaveLabel = async () => {
         const cfg = LABEL_CONFIG[activeLabelName];
         if (!cfg) return;
-
         const trimmed = labelInputValue.trim();
         if (!trimmed) { setLabelInputError('Field cannot be empty'); return; }
         if (trimmed.length > cfg.maxLength) { setLabelInputError(`Max ${cfg.maxLength} characters`); return; }
 
         setIsLoading(true);
         setLabelInputError('');
-
         try {
             await Api.editUserSettings({ [cfg.field]: trimmed });
-
             const updated = { ...userData, [cfg.field]: trimmed };
             localStorage.setItem('userData', JSON.stringify(updated));
             setUserData(updated);
@@ -193,6 +222,17 @@ export default function EditUserProfile() {
 
                 <div className='user__profile__avatar__container'>
                     <div className='avatar'>
+                        {/* Скрытый input — триггерится через ref */}
+                        <input
+                            ref={fileInputRef}
+                            type='file'
+                            id='input__user__avatar'
+                            accept='image/*'
+                            hidden
+                            onChange={handleAvatarChange}
+                            disabled={avatarLoading}
+                        />
+
                         {userData?.avatar ? (
                             <ImageSkeleton
                                 src={userData.avatar}
@@ -202,32 +242,30 @@ export default function EditUserProfile() {
                                 fit='cover'
                                 figureClass={classNames('avatar__figure', { loading: avatarLoading })}
                             >
-                                <label className='edit__image' htmlFor='input__user__avatar'>
-                                    {avatarLoading ? <LoadingDot /> : <><CameraSvg /><p className='text'>Edit</p></>}
+                                <label
+                                    className='edit__image'
+                                    htmlFor='input__user__avatar'
+                                >
+                                    {avatarLoading
+                                        ? <LoadingDot />
+                                        : <><CameraSvg /><p className='text'>Edit</p></>
+                                    }
                                 </label>
-                                <input
-                                    type='file'
-                                    id='input__user__avatar'
-                                    accept='image/*'
-                                    hidden
-                                    onChange={handleAvatarChange}
-                                    disabled={avatarLoading}
-                                />
                             </ImageSkeleton>
                         ) : (
                             <div className={classNames('user', { loading: avatarLoading })}>
-                                <label className='add__image' htmlFor='input__user__avatar'>
-                                    {avatarLoading ? <LoadingDot /> : <><CameraSvg /><p className='text'>Add</p></>}
+                                <label
+                                    className='add__image'
+                                    htmlFor='input__user__avatar'
+                                >
+                                    {avatarLoading
+                                        ? <LoadingDot />
+                                        : <><CameraSvg /><p className='text'>Add</p></>
+                                    }
                                 </label>
-                                <input
-                                    type='file'
-                                    id='input__user__avatar'
-                                    accept='image/*'
-                                    hidden
-                                    onChange={handleAvatarChange}
-                                    disabled={avatarLoading}
-                                />
-                                <p className='letter'>{userData?.name?.[0] || userData?.fullName?.[0] || 'U'}</p>
+                                <p className='letter'>
+                                    {userData?.name?.[0] || userData?.fullName?.[0] || 'U'}
+                                </p>
                             </div>
                         )}
                     </div>
@@ -247,7 +285,6 @@ export default function EditUserProfile() {
                         {userInfoEdit?.map(({ title, labelName }, index) => {
                             const value = getLabelValue(labelName);
                             const hasValue = Boolean(value);
-
                             return (
                                 <button
                                     key={index}
@@ -259,11 +296,9 @@ export default function EditUserProfile() {
                                     {labelName === 'lamp' && <LampSvg />}
                                     {labelName === 'speak' && <MessLangSvg />}
                                     {labelName === 'live' && <EarthSvg />}
-
                                     <p className='label__text'>
                                         {hasValue ? `${title}: ${value}` : title}
                                     </p>
-
                                     {hasValue && <ChevronRightSvg className='label__arrow' />}
                                 </button>
                             );
@@ -303,13 +338,13 @@ export default function EditUserProfile() {
                 </div>
             </div>
 
+            {/* ── Bio Modal ──────────────────────────────────────────────────── */}
             <CommonModal width={570} height={400} isOpen={isOpenBioModal} onClose={() => setIsOpenBioModal(false)}>
                 <div className='bio__modal__container'>
                     <h1 className='title__bio__modal'>About you</h1>
                     <p className='desc__bio__modal'>
                         Tell us a little bit about yourself so your future Hosts or guests can get to know you.
                     </p>
-
                     <TextareaCounter
                         value={bioValue}
                         onChange={(v) => { setBioValue(v); if (bioError) setBioError(''); }}
@@ -317,7 +352,6 @@ export default function EditUserProfile() {
                         placeholder='Write something about yourself...'
                         error={bioError}
                     />
-
                     <div className='save__container'>
                         <Button min={true} onClick={handleSaveBio} disabled={isLoading} loading={isLoading}>
                             Save
@@ -326,12 +360,12 @@ export default function EditUserProfile() {
                 </div>
             </CommonModal>
 
+            {/* ── Label Modal ────────────────────────────────────────────────── */}
             <CommonModal width={570} height={340} isOpen={Boolean(activeLabelName)} onClose={closeLabelModal}>
                 {activeCfg && (
                     <div className='label__modal__container'>
                         <h1 className='title__label__modal'>{activeCfg.title}</h1>
                         <p className='desc__label__modal'>{activeCfg.desc}</p>
-
                         <div className={classNames('label__input__wrapper', { error: Boolean(labelInputError) })}>
                             <input
                                 className='label__input'
@@ -351,7 +385,6 @@ export default function EditUserProfile() {
                                 <span className='label__input__error'>{labelInputError}</span>
                             )}
                         </div>
-
                         <div className='save__container'>
                             <Button min={true} onClick={handleSaveLabel} disabled={isLoading} loading={isLoading}>
                                 Save
@@ -360,6 +393,18 @@ export default function EditUserProfile() {
                     </div>
                 )}
             </CommonModal>
+
+            {/* ── Photo Upload Modal ─────────────────────────────────────────── */}
+            <AnimatePresence>
+                {photoModalOpen && (
+                    <PhotoUploadModal
+                        imageSrc={pendingImageSrc}
+                        fileInputRef={fileInputRef}
+                        onClose={handleClosePhotoModal}
+                        onConfirm={handleConfirmPhoto}
+                    />
+                )}
+            </AnimatePresence>
 
         </div>,
         document.getElementById('root')
