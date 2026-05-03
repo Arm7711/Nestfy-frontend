@@ -28,10 +28,12 @@
         z-index: 2;
         position: relative;
         display: flex;
-        justify-content: center;
-        align-items: flex-start;
+        justify-content: flex-start;
+        align-items: center;
         overflow: hidden;
         padding-top: 50px;
+        flex-direction: column; 
+        gap:40px;
 
 
         .modal__close__bar {
@@ -179,13 +181,55 @@
                 transform: perspective(1000px) rotateY(-180deg);
                 backface-visibility: hidden;
                 position: absolute;
-                padding:20px;
+                padding: 25px;
                 animation: animBack 3s 0.4s linear(0, 0.23384579402426442, 0.6295015467224175, 0.9269977268474615, 1.0680972140532536, 1.0937514949673017, 1.065725804753661, 1.0287913801237734, 1.0033480968647872, 0.9924438130425742, 0.9913826622628178, 0.9944459509898653, 0.9978281578809479, 0.9999714006371833, 1.0007881202383326, 1.0007783438606672, 1.0004619752860102, 1.0001575174703423, 0.9999798489190652, 0.9999211933025269) forwards;
+                @include allCenter(space-between,flex-start,column);
 
                 @keyframes animBack {
                     to {
                         transform: perspective(1000px) rotateY(0deg);
                     }
+                }
+
+                .user__card__back__info{
+                    width: 100%;
+                    height: fit-content;
+                    @include flexStartColumn;
+                    gap:12px;
+
+                    .title{
+                        font-weight: 700;
+                        font-size: 18px;
+                    }
+
+                    .desc{
+                        line-height: 18px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        color:rgb(81, 81, 81);
+                    }
+                }
+            }
+        }
+
+        .modal__footer__desc {
+            width: 100%;
+            padding-left: 48px;
+            font-size: 12px;
+            color: rgb(81, 81, 81);
+            transform: translateY(120px);
+            animation: animShowTitle 0.8s 0.3s forwards;
+
+            .link{
+                color: rgb(48, 48, 48);
+                text-decoration: underline;
+                font-weight: 600;
+                text-underline-offset: 2px;
+            }
+
+            @keyframes animShowTitle {
+                to{
+                    transform: translateY(0px);
                 }
             }
         }

@@ -8,7 +8,6 @@ function PreviewScreen({ imageSrc, onClose, onEdit, onChooseNew, onUse }) {
 
     return (
         <div className="preview-screen">
-            {/* Header */}
             <div className="preview-screen__header">
                 <button className="preview-screen__icon-btn" onClick={onClose} aria-label="Close">
                     ×
@@ -22,7 +21,6 @@ function PreviewScreen({ imageSrc, onClose, onEdit, onChooseNew, onUse }) {
                 </button>
             </div>
 
-            {/* Photo preview area */}
             <div className="preview-screen__photo-area">
                 <div className="preview-screen__circle">
                     {imageSrc ? (
@@ -31,14 +29,12 @@ function PreviewScreen({ imageSrc, onClose, onEdit, onChooseNew, onUse }) {
                         <div className="preview-screen__placeholder" />
                     )}
                 </div>
+
+                <div className="preview-screen__warning-wrap">
+                    <ReviewWarning onChooseNew={onChooseNew} />
+                </div>
             </div>
 
-            {/* Review warning */}
-            <div className="preview-screen__warning-wrap">
-                <ReviewWarning onChooseNew={onChooseNew} />
-            </div>
-
-            {/* Footer */}
             <div className="preview-screen__footer">
                 <button className="preview-screen__edit-btn" onClick={onEdit}>
                     Edit photo
@@ -48,7 +44,7 @@ function PreviewScreen({ imageSrc, onClose, onEdit, onChooseNew, onUse }) {
                 </button>
             </div>
 
-            {/* Tips overlay */}
+
             <AnimatePresence>
                 {showTips && (
                     <PhotoTipsModal onClose={() => setShowTips(false)} />

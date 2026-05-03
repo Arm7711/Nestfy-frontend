@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, NavLink } from 'react-router';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import classNames from 'classnames';
@@ -74,8 +74,17 @@ export default function AuthModal({ isOpen, onClose, children }) {
                             </div>
 
                             <div className='user__card__back'>
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quas necessitatibus cumque provident, rem accusantium unde delectus vitae architecto odit consequuntur explicabo quisquam magnam. Ratione aut voluptas ut. Doloremque, modi quae?
+                                <div className='user__card__back__info'>
+                                    <h1 className='title'>Your identity isn’t verified</h1>
+                                    <p className='desc'>You’ll need to verify your identity to book or host on Nestfy. Take care of that now to get a head start.</p>
+                                </div>
+
+                                <Button height={40} borderRadius={15}>Get verified</Button>
                             </div>
+                        </div>
+
+                        <div className='modal__footer__desc'>
+                            <NavLink className={'link'}>Learn more</NavLink> about identity verification
                         </div>
 
                     </motion.div>

@@ -81,25 +81,24 @@ export default function EditUserProfile() {
         setIsEditMode(editModeFromUrl);
     }, [editModeFromUrl]);
 
-    // ── Шаг 1: пользователь выбрал файл → читаем в base64, открываем модал ───
+
     const handleAvatarChange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         const reader = new FileReader();
         reader.onload = () => {
-            setPendingImageSrc(reader.result);  // base64 для превью
-            setPendingFile(file);               // сохраняем оригинальный файл
-            setPhotoModalOpen(true);            // открываем модал
+            setPendingImageSrc(reader.result);  
+            setPendingFile(file);         
+            setPhotoModalOpen(true); 
         };
         reader.readAsDataURL(file);
 
-        e.target.value = ''; // сброс input чтобы можно было выбрать тот же файл повторно
+        e.target.value = ''; 
     };
 
-    // ── Шаг 2: пользователь нажал "Use this photo" → делаем API запрос ────────
+
     const handleConfirmPhoto = async (croppedFile) => {
-        // croppedFile — File или Blob после кропа, либо оригинальный pendingFile
         const fileToUpload = croppedFile || pendingFile;
         if (!fileToUpload) return;
 
@@ -122,14 +121,11 @@ export default function EditUserProfile() {
         }
     };
 
-    // ── Закрыть модал без сохранения ──────────────────────────────────────────
     const handleClosePhotoModal = () => {
         setPhotoModalOpen(false);
         setPendingImageSrc(null);
         setPendingFile(null);
     };
-
-    // ─────────────────────────────────────────────────────────────────────────
 
     const handleSaveBio = async () => {
         if (!bioValue.trim()) { setBioError('Bio cannot be empty'); return; }
@@ -222,7 +218,6 @@ export default function EditUserProfile() {
 
                 <div className='user__profile__avatar__container'>
                     <div className='avatar'>
-                        {/* Скрытый input — триггерится через ref */}
                         <input
                             ref={fileInputRef}
                             type='file'
@@ -276,7 +271,7 @@ export default function EditUserProfile() {
                     <div className='user__information'>
                         <h1 className='title'>My profile</h1>
                         <p className='desc'>
-                            Hosts and guests can see your profile and it may appear across Airbnb to help us build trust in our community.{' '}
+                            Hosts and guests can see your profile and it may appear across Nestfy to help us build trust in our community.{' '}
                             <NavLink to={`/${lang}/learn-more`} className='link'>Learn more</NavLink>
                         </p>
                     </div>
@@ -338,7 +333,6 @@ export default function EditUserProfile() {
                 </div>
             </div>
 
-            {/* ── Bio Modal ──────────────────────────────────────────────────── */}
             <CommonModal width={570} height={400} isOpen={isOpenBioModal} onClose={() => setIsOpenBioModal(false)}>
                 <div className='bio__modal__container'>
                     <h1 className='title__bio__modal'>About you</h1>
@@ -360,7 +354,7 @@ export default function EditUserProfile() {
                 </div>
             </CommonModal>
 
-            {/* ── Label Modal ────────────────────────────────────────────────── */}
+
             <CommonModal width={570} height={340} isOpen={Boolean(activeLabelName)} onClose={closeLabelModal}>
                 {activeCfg && (
                     <div className='label__modal__container'>
@@ -394,7 +388,6 @@ export default function EditUserProfile() {
                 )}
             </CommonModal>
 
-            {/* ── Photo Upload Modal ─────────────────────────────────────────── */}
             <AnimatePresence>
                 {photoModalOpen && (
                     <PhotoUploadModal
@@ -402,6 +395,7 @@ export default function EditUserProfile() {
                         fileInputRef={fileInputRef}
                         onClose={handleClosePhotoModal}
                         onConfirm={handleConfirmPhoto}
+                        isOpen={photoModalOpen}
                     />
                 )}
             </AnimatePresence>

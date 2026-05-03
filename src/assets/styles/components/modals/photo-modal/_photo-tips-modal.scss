@@ -1,0 +1,82 @@
+.tips-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.tips-card {
+    background: #2a2a2a;
+    border-radius: 14px;
+    padding: 20px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 6px;
+        border-radius: 5px;
+        transition: color 0.15s;
+        margin-right: 4px;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: -0.01em;
+    }
+
+    &__lead {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.5;
+        margin-bottom: 14px;
+    }
+
+    &__link {
+        color: #fff;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    &__list {
+        list-style: disc;
+        padding-left: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__item {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.5;
+    }
+}

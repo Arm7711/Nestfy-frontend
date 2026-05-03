@@ -2,9 +2,6 @@ import { useState, useCallback } from 'react'
 import Cropper from 'react-easy-crop'
 import ZoomControls from './ZoomControls'
 
-/**
- * Вырезает область кропа и возвращает { previewUrl: string, blob: Blob }
- */
 async function getCroppedImg(imageSrc, pixelCrop) {
     const image = await new Promise((resolve, reject) => {
         const img = new Image()
@@ -19,7 +16,6 @@ async function getCroppedImg(imageSrc, pixelCrop) {
     canvas.height = size
     const ctx = canvas.getContext('2d')
 
-    // Круглый клип
     ctx.beginPath()
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2)
     ctx.clip()
@@ -34,17 +30,17 @@ async function getCroppedImg(imageSrc, pixelCrop) {
         canvas.toBlob((blob) => {
             if (!blob) { reject(new Error('Canvas toBlob failed')); return; }
             resolve({
-                previewUrl: URL.createObjectURL(blob),  // для отображения
-                blob,                                    // для отправки в API
+                previewUrl: URL.createObjectURL(blob),
+                blob, 
             })
         }, 'image/jpeg', 0.92)
     })
 }
 
 /**
- * @param {string}   imageSrc  — base64 оригинального изображения
- * @param {function} onCancel  — вернуться к превью без изменений
- * @param {function} onDone    — ({ previewUrl, blob }) => void
+ * @param {string}   imageSrc
+ * @param {function} onCancel
+ * @param {function} onDone 
  */
 function EditPhotoScreen({ imageSrc, onCancel, onDone }) {
     const [crop, setCrop]                   = useState({ x: 0, y: 0 })
@@ -77,7 +73,6 @@ function EditPhotoScreen({ imageSrc, onCancel, onDone }) {
 
     return (
         <div className="edit-screen">
-            {/* Header */}
             <div className="edit-screen__header">
                 <button
                     className="edit-screen__text-btn"
@@ -96,7 +91,6 @@ function EditPhotoScreen({ imageSrc, onCancel, onDone }) {
                 </button>
             </div>
 
-            {/* Crop area */}
             <div className="edit-screen__crop-area">
                 <Cropper
                     image={imageSrc}
@@ -109,6 +103,7 @@ function EditPhotoScreen({ imageSrc, onCancel, onDone }) {
                     onZoomChange={setZoom}
                     onCropComplete={onCropComplete}
                     style={{
+                        height: '100%',
                         containerStyle: { background: '#111' },
                         cropAreaStyle: {
                             border: '2px solid rgba(255,255,255,0.6)',
@@ -118,7 +113,6 @@ function EditPhotoScreen({ imageSrc, onCancel, onDone }) {
                 />
             </div>
 
-            {/* Zoom controls */}
             <div className="edit-screen__controls">
                 <ZoomControls
                     zoom={zoom}

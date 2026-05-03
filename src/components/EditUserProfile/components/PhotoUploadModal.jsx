@@ -1,25 +1,20 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { createPortal } from 'react-dom'
 import PreviewScreen from './PreviewScreen'
 import EditPhotoScreen from './EditPhotoScreen'
+import useScrollLock from '../../../hooks/useScroll'
 
-const backdropVariants = {
-    hidden:  { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.2 } },
-    exit:    { opacity: 0, transition: { duration: 0.2 } }
-}
+import { backdropVariants, modalVariants } from '../../../data/modals/photoChangeData';
 
-const modalVariants = {
-    hidden:  { opacity: 0, scale: 0.95, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 320, damping: 28, delay: 0.05 } },
-    exit:    { opacity: 0, scale: 0.95, y: 20, transition: { duration: 0.18 } }
-}
 
-function PhotoUploadModal({ imageSrc, fileInputRef, onClose, onConfirm }) {
-    const [screen, setScreen]                   = useState('preview')
-    const [direction, setDirection]             = useState(1)
-    const [croppedPreview, setCroppedPreview]   = useState(null)
-    const [croppedBlob, setCroppedBlob]         = useState(null)
+function PhotoUploadModal({ imageSrc, fileInputRef, onClose, onConfirm, isOpen }) {
+    const [screen, setScreen] = useState('preview')
+    const [direction, setDirection] = useState(1)
+    const [croppedPreview, setCroppedPreview] = useState(null)
+    const [croppedBlob, setCroppedBlob] = useState(null)
+
+    useScrollLock(isOpen);
 
     const goToEdit = () => { setDirection(1); setScreen('edit') }
     const goToPreview = () => { setDirection(-1); setScreen('preview') }
@@ -40,14 +35,13 @@ function PhotoUploadModal({ imageSrc, fileInputRef, onClose, onConfirm }) {
         }
     }
 
-    // Варианты слайда зависят от направления
     const slideVariants = {
-        enter:  (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
+        enter: (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
         center: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 350, damping: 32 } },
-        exit:   (dir) => ({ x: dir > 0 ? '-60%' : '60%', opacity: 0, transition: { duration: 0.22, ease: 'easeInOut' } })
+        exit: (dir) => ({ x: dir > 0 ? '-60%' : '60%', opacity: 0, transition: { duration: 0.22, ease: 'easeInOut' } })
     }
 
-    return (
+    return createPortal(
         <motion.div
             className="pum-backdrop"
             variants={backdropVariants}
@@ -109,7 +103,7 @@ function PhotoUploadModal({ imageSrc, fileInputRef, onClose, onConfirm }) {
                 </div>
             </motion.div>
         </motion.div>
-    )
+        , document.getElementById('modal-root'))
 }
 
 export default PhotoUploadModal

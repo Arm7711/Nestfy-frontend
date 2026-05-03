@@ -1,0 +1,64 @@
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #2e2e2e;
+    border-radius: 40px;
+    padding: 6px 8px;
+
+    &__group {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    &__btn {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, color 0.15s;
+
+        &:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    }
+
+    &__divider {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.15);
+        margin: 0 8px;
+    }
+
+    &__reset {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: background 0.15s, color 0.15s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+    }
+}

@@ -21,4 +21,14 @@
     &.only__profile__page {
         padding-top: 96px;
     }
+
+    &.header__scroll{
+        transition: none;
+        padding-top: 96px;
+    }
+
+    &.header__active__scroll{
+        transition: none;
+        padding-top: 200px;
+    }
 }

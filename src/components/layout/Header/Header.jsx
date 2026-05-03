@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { useParams } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { setHeaderClasses } from '../../../redux/reducers/layoutReducer';
 import classNames from 'classnames';
 
 import useIsAtTop from '../../../hooks/useIsAtTop';
@@ -21,6 +23,7 @@ export default function Header({
 }) {
     const { lang } = useParams();
     const isTop = useIsAtTop();
+    const dispatch = useDispatch();
     const userData = JSON.parse(localStorage.getItem('userData') || null);
 
     const [activeScrollHeader, setActiveScrollHeader] = useState(false);
@@ -139,6 +142,10 @@ export default function Header({
 
     const scrollClass = !isTop && isMainPage;
     const scrollHeaderClass = !isTop && activeScrollHeader;
+    
+    useEffect(() => {
+        dispatch(setHeaderClasses({ isTop, scrollHeaderClass }));
+    }, [isTop, scrollHeaderClass]);
 
     const sharedScrollClasses = {
         profile__page__header: isProfilePage,

@@ -34,12 +34,12 @@ const FAQ = [
   {
     title: "Top questions",
     items: [
-      `Is my service right for Airbnb?
-Airbnb Services is a marketplace for high-quality services that make a guest’s stay even better. Services include catering, chefs, hair styling, makeup, massage, nails, personal training, photography, prepared meals, and spa treatments. Learn more about Airbnb Services standards.`,
+      `Is my service right for Nestfy?
+Nestfy Services is a marketplace for high-quality services that make a guest’s stay even better. Services include catering, chefs, hair styling, makeup, massage, nails, personal training, photography, prepared meals, and spa treatments. Learn more about Nestfy Services standards.`,
 `How do I apply?
 It’s easy to get started. First, share a little about yourself and the service you offer. Then, add photos, set your pricing, and submit your listing for review. We may get back to you with suggested changes, requests to upload licenses, or to ask for proof of insurance. Once your listing is approved, you can publish it and start offering your service to customers immediately. Get started.`,
-`What are Airbnb’s fees?
-It’s free to create and submit a listing for review. Airbnb automatically deducts a 15% service fee from the payout of every service booked.`
+`What are Nestfy’s fees?
+It’s free to create and submit a listing for review. Nestfy automatically deducts a 15% service fee from the payout of every service booked.`
     ],
   },
   {
@@ -47,10 +47,10 @@ It’s free to create and submit a listing for review. Airbnb automatically dedu
     items: [`Do I need to have an existing business?
 It’s usually not necessary to be an established business. Depending on local regulations and the type of service you provide, we may ask for a business license. Learn more about Services quality standards.`,
 `How will guests discover my service?
-Services have a dedicated tab on Airbnb, and can appear at multiple phases of a guest’s trip—from search results and planning recommendations to emails and notifications.
+Services have a dedicated tab on Nestfy, and can appear at multiple phases of a guest’s trip—from search results and planning recommendations to emails and notifications.
 `,
 `How quickly do I get paid?
-Depending on the service you offer, what payout method you set up in your Airbnb profile, and your financial institution, you’ll typically get paid the day after providing a service.
+Depending on the service you offer, what payout method you set up in your Nestfy profile, and your financial institution, you’ll typically get paid the day after providing a service.
 `],
   },
   {
@@ -58,7 +58,7 @@ Depending on the service you offer, what payout method you set up in your Airbnb
     items: [`What does the review process look like?
 After you submit your listing, you’ll receive an email confirmation with any next steps. Every service is reviewed by a real person on our team to ensure it meets our standards.`,
 `How are services evaluated?
-Services on Airbnb are vetted for quality, taking into account things like years of experience, education, certifications, awards, strong portfolios, creative offerings, and positive past feedback from guests.,
+Services on Nestfy are vetted for quality, taking into account things like years of experience, education, certifications, awards, strong portfolios, creative offerings, and positive past feedback from guests.,
 `,
 `How long does the review process take?
 The review process typically takes a few weeks. However, in high-demand areas, it may take longer and you could be placed on a waitlist.`],

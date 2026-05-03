@@ -29,12 +29,12 @@ export default function WelcomeToasty() {
                     
                     <BouncyText
                         text='Welcome to Nestfy'
-                        loop={false}
-                        speed={500}
-                        delay={50}
-                        lift={4}
+                        loop={true}
+                        speed={700}
+                        delay={30}
+                        lift={5}
                         startAfter={850}
-                        mode='rubber'
+                        mode='wave'
                     />
                 </>
             )}
