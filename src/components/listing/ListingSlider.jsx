@@ -1,9 +1,10 @@
-import React, { useRef, useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react'
+import React, { useRef, useState, useEffect, useCallback, useImperativeHandle, forwardRef, useLayoutEffect } from 'react'
 import ListingCard from './ListingCard';
 import ImageSkeleton from '../_common/Skeletions/ImageSkeletion';
 import classNames from 'classnames';
 
 const EXTRA_CARDS = 1
+const CARD_GAP = 12
 
 const BREAKPOINTS = [
     { maxWidth: 480, cards: 2 },
@@ -17,68 +18,61 @@ const BREAKPOINTS = [
 const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClick, onNavigationChange }, ref) {
     const trackRef = useRef(null)
     const containerRef = useRef(null)
-    const [cardWidth, setCardWidth] = useState(null)
+    const cardWidthRef = useRef(200)      
+    const showAllRef = useRef(null)
+
+    const [cardsPerView, setCardsPerView] = useState(7)
     const [canLeft, setCanLeft] = useState(false)
     const [canRight, setCanRight] = useState(false)
-    const [cardsPerView, setCardsPerView] = useState(7);
-    const sectionFirstItems = items ? items?.slice(0, 3) : [];
-
-    const showAllRef = useRef(null)
     const [isShowAllVisible, setIsShowAllVisible] = useState(false)
 
-    useEffect(() => {
-        const root = trackRef.current
-        const target = showAllRef.current
+    const sectionFirstItems = items.slice(0, 3)
 
-        if (!root || !target) return
-
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsShowAllVisible(entry.isIntersecting)
-            },
-            {
-                root,
-                threshold: 0.1
-            }
-        )
-
-        observer.observe(target)
-
-        return () => observer.disconnect()
-    }, [cardWidth, items.length])
-
-
-    const MIN_CARD_WIDTH = 140
-    const MAX_CARD_WIDTH = 280
-    const CARD_GAP = 12
-
-    const calculateCardWidth = useCallback(() => {
+    const updateLayout = useCallback(() => {
         const container = containerRef.current
         if (!container) return
 
         const containerWidth = container.clientWidth
-        const { cards: targetCards } = BREAKPOINTS.find(bp => containerWidth <= bp.maxWidth)
+        const { cards } = BREAKPOINTS.find(bp => containerWidth <= bp.maxWidth)
+        const newCardWidth = Math.floor((containerWidth - CARD_GAP * (cards - 1)) / cards)
 
-        const newCardWidth = Math.floor(
-            (containerWidth - CARD_GAP * (targetCards - 1)) / targetCards
-        )
+        container.style.setProperty('--card-width', `${newCardWidth}px`)
+        container.style.setProperty('--card-gap', `${CARD_GAP}px`)
+        container.style.setProperty('--cards', cards)
 
-        setCardsPerView(targetCards)
-        setCardWidth(newCardWidth)
-    }, []);
+        cardWidthRef.current = newCardWidth
 
-    useEffect(() => {
-        calculateCardWidth()
-        const ro = new ResizeObserver(calculateCardWidth)
+        setCardsPerView(prev => prev !== cards ? cards : prev)
+    }, [])
+
+
+    useLayoutEffect(() => {
+        updateLayout()
+        const ro = new ResizeObserver(updateLayout)
         if (containerRef.current) ro.observe(containerRef.current)
         return () => ro.disconnect()
-    }, [calculateCardWidth, items])
+    }, [updateLayout])
+
+
+    useEffect(() => {
+        const root = trackRef.current
+        const target = showAllRef.current
+        if (!root || !target) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsShowAllVisible(entry.isIntersecting),
+            { root, threshold: 0.1 }
+        )
+        observer.observe(target)
+        return () => observer.disconnect()
+    }, [cardsPerView, items.length])
+
 
     const updateNavigationState = useCallback(() => {
         const el = trackRef.current
-        if (!el || !cardWidth) return
+        if (!el) return
 
-        const cardWidthWithGap = cardWidth + CARD_GAP
+        const cardWidthWithGap = cardWidthRef.current + CARD_GAP
         const currentFirstCardIndex = Math.round(el.scrollLeft / cardWidthWithGap)
         const maxFirstCardIndex = Math.max(0, items.length + EXTRA_CARDS - cardsPerView)
 
@@ -88,7 +82,7 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
         setCanLeft(newCanLeft)
         setCanRight(newCanRight)
         onNavigationChange?.({ canLeft: newCanLeft, canRight: newCanRight })
-    }, [cardWidth, cardsPerView, items.length, onNavigationChange])
+    }, [cardsPerView, items.length, onNavigationChange])
 
     useEffect(() => {
         const el = trackRef.current
@@ -107,33 +101,30 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
     }, [updateNavigationState, items])
 
     const scrollToCard = useCallback((cardIndex) => {
-        const el = trackRef.current
-        if (!el || !cardWidth) return
-        el.scrollTo({ left: cardIndex * (cardWidth + CARD_GAP), behavior: 'smooth' })
-    }, [cardWidth])
+        trackRef.current?.scrollTo({
+            left: cardIndex * (cardWidthRef.current + CARD_GAP),
+            behavior: 'smooth'
+        })
+    }, [])
 
     const scrollNext = useCallback(() => {
         const el = trackRef.current
-        if (!el || !cardWidth) return
-
-        const cardWidthWithGap = cardWidth + CARD_GAP
+        if (!el) return
+        const cardWidthWithGap = cardWidthRef.current + CARD_GAP
         const currentFirstCardIndex = Math.round(el.scrollLeft / cardWidthWithGap)
         const maxFirstCardIndex = Math.max(0, items.length + EXTRA_CARDS - cardsPerView)
         const nextIndex = Math.min(currentFirstCardIndex + cardsPerView, maxFirstCardIndex)
-
         el.scrollTo({ left: nextIndex * cardWidthWithGap, behavior: 'smooth' })
-    }, [cardWidth, cardsPerView, items.length])
+    }, [cardsPerView, items.length])
 
     const scrollPrev = useCallback(() => {
         const el = trackRef.current
-        if (!el || !cardWidth) return
-
-        const cardWidthWithGap = cardWidth + CARD_GAP
+        if (!el) return
+        const cardWidthWithGap = cardWidthRef.current + CARD_GAP
         const currentFirstCardIndex = Math.round(el.scrollLeft / cardWidthWithGap)
         const prevIndex = Math.max(currentFirstCardIndex - cardsPerView, 0)
-
         el.scrollTo({ left: prevIndex * cardWidthWithGap, behavior: 'smooth' })
-    }, [cardWidth, cardsPerView])
+    }, [cardsPerView])
 
     useImperativeHandle(ref, () => ({
         scrollLeft: scrollPrev,
@@ -142,23 +133,9 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
         canScrollLeft: canLeft,
         canScrollRight: canRight,
         cardsPerView,
-        cardWidth,
-        updateNavigation: updateNavigationState
-    }), [scrollPrev, scrollNext, scrollToCard, canLeft, canRight, cardsPerView, cardWidth, updateNavigationState])
-
-    if (!cardWidth) {
-        return (
-            <div className="listing_slider" ref={containerRef}>
-                <div className="listing_slider_track" style={{ gap: `${CARD_GAP}px` }}>
-                    {items.slice(0, 7).map((item, i) => (
-                        <div key={item.id ?? i} className="listing_slider_item" style={{ width: 200, flex: '0 0 200px' }}>
-                            <ListingCard isSlider={false} item={item} />
-                        </div>
-                    ))}
-                </div>
-            </div>
-        )
-    }
+        cardWidth: cardWidthRef.current,
+        updateNavigation: updateNavigationState,
+    }), [scrollPrev, scrollNext, scrollToCard, canLeft, canRight, cardsPerView, updateNavigationState])
 
     return (
         <div className="listing_slider" ref={containerRef}>
@@ -166,25 +143,18 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
                 className="listing_slider_track"
                 ref={trackRef}
                 role="list"
-                style={{ gap: `${CARD_GAP}px` }}
             >
                 {items.map((item, i) => (
                     <div
                         key={item.id ?? i}
                         className="listing_slider_item"
                         role="listitem"
-                        style={{ flex: `0 0 ${cardWidth}px`, width: `${cardWidth}px` }}
                     >
                         <ListingCard isSlider={false} item={item} onClick={() => onCardClick?.(item)} />
                     </div>
                 ))}
 
-                <div
-                    ref={showAllRef}
-                    className="listing_slider_item"
-                    role="listitem"
-                    style={{ flex: `0 0 ${cardWidth}px`, width: `${cardWidth}px` }}
-                >
+                <div ref={showAllRef} className="listing_slider_item" role="listitem">
                     <article className='listing_card listing_card__show__all'>
                         <div className='lisiting__card__gallery__carousel'>
                             {sectionFirstItems.map(({ images }, index) => (
@@ -198,7 +168,6 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
                                 />
                             ))}
                         </div>
-
                         <button className='see__all'>See all</button>
                     </article>
                 </div>
@@ -207,4 +176,4 @@ const ListingSlider = forwardRef(function ListingSlider({ items = [], onCardClic
     )
 })
 
-export default ListingSlider
+export default ListingSlider;

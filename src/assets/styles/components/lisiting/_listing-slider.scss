@@ -3,8 +3,10 @@
     width: 100%;
 
     .listing_slider_track {
-        display: flex;
-        gap: 0;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc((100% - var(--card-gap, 12px) * (var(--cards, 7) - 1)) / var(--cards, 7));
+        gap: var(--card-gap, 12px);
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
@@ -17,10 +19,10 @@
     }
 
 
+
     .listing_slider_item {
         scroll-snap-align: start;
-        flex-shrink: 0;
-        flex-grow: 0;
+        min-width: 0;
     }
 }
 

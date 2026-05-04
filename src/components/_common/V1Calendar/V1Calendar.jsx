@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedDays } from '../../../redux/reducers/calendarChDays.js';
 
@@ -12,7 +12,7 @@ function nightsWordEnglish(n) {
     return n === 1 ? 'night' : 'nights';
 }
 
-export default function V1Calendar({ onChange, minDate, className = '' }) {
+const V1Calendar = forwardRef(function V1Calendar({ onChange, minDate, className = '' }, ref) {
     const dispatch = useDispatch();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
 
@@ -163,6 +163,10 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
         onClick: handleDayClick,
     };
 
+    useImperativeHandle(ref, () => ({
+        reset: handleReset
+    }));
+
     return (
         <div className={`v1cal ${className}`}>
             <div className="v1cal__body">
@@ -212,5 +216,7 @@ export default function V1Calendar({ onChange, minDate, className = '' }) {
                 </div>
             </div>
         </div>
-    );
-}
+    )
+});
+
+export default V1Calendar
