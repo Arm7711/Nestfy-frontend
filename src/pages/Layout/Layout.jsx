@@ -25,7 +25,7 @@ export default function Layout() {
 
     const [userData, setUserData] = useState(JSON.parse(localStorage.getItem('userData') || null));
     const status = useSelector(state => state.authReducer.status);
-    const {isTop, activeScrollHeader} = useSelector(state => state.layoutReducer.headerClasses);
+    const { isTop, activeScrollHeader } = useSelector(state => state.layoutReducer.headerClasses);
 
     const [userSelectedLang, setUserSelectedLang] = useState('');
 
@@ -46,10 +46,16 @@ export default function Layout() {
                     const { data } = await Api.getUserSettings();
 
                     console.log(data);
-                    
+
                     setUserSelectedLang(data.language);
 
-                    const updated = { ...userData, avatar: data.avatar };
+                    const updated = {
+                        ...currentData,
+                        ...Object.fromEntries(
+                            Object.entries(data).filter(([_, v]) => v != null)
+                        ),
+                        avatar: data.avatar ?? currentData.avatar,
+                    };
                     localStorage.setItem('userData', JSON.stringify(updated));
 
                     localStorage.setItem('langAndCurrency', userSelectedLang);
@@ -59,7 +65,7 @@ export default function Layout() {
             }
         })()
     }, []);
-    
+
 
     return (
         <div className='nestfy__page'>
@@ -71,7 +77,7 @@ export default function Layout() {
                 isSettingsPage={isSettingsPage}
             />
 
-            <main className={classNames('nestfy__main', { only__profile__page: onlyProfilePage, profile__page: isProfilePage, main__page: isMainPage, /* header__scroll: !isTop, header__active__scroll: activeScrollHeader  */})}>
+            <main className={classNames('nestfy__main', { only__profile__page: onlyProfilePage, profile__page: isProfilePage, main__page: isMainPage, /* header__scroll: !isTop, header__active__scroll: activeScrollHeader  */ })}>
                 {<Outlet />}
                 {isMainPage && <WelcomeToasty />}
             </main>

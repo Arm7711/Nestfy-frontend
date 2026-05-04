@@ -1,9 +1,11 @@
 import classNames from 'classnames';
 import { locations } from '../../../../data/loacationsData';
+import { optionGuestData } from '../../../../data/optionGuestsData';
 import LocationsBlock from '../../../LocationsBlock/LocationsBlock';
 import V1Calendar from '../../../_common/V1Calendar/V1Calendar';
+import Quantity from '../../../_common/Quantity/Quantity';
 
-export default function SearchOptions({ active, searchActiveTab, onLocationClick }) {
+export default function SearchOptions({ active, searchActiveTab, onLocationClick, calendarRef }) {
     return (
         <div
             className={classNames('option__container', {
@@ -32,14 +34,34 @@ export default function SearchOptions({ active, searchActiveTab, onLocationClick
                 </div>
             )}
 
-            {searchActiveTab.tabIndex === 1 && (
+            <div
+                className={classNames('option__tab__content option__tab__content__calendar', { active: true })}
+                style={{ display: searchActiveTab.tabIndex === 1 ? 'block' : 'none' }}
+            >
+                <V1Calendar ref={calendarRef} />
+            </div>
+
+            {searchActiveTab.tabIndex === 2 && (
                 <div
                     className={classNames(
-                        'option__tab__content option__tab__content__calendar',
+                        'option__tab__content option__tab__content__guest',
                         { active: true }
                     )}
                 >
-                    <V1Calendar />
+                    <div className='guest__container'>
+                        {optionGuestData.map((item, index) => (
+                            <div className='option__guest'>
+                                <div className='info__block'>
+                                    <h1 className='title__option'>{item?.title}</h1>
+                                    <p className='desc__option'>{item?.desc}</p>
+                                </div>
+
+                                <div className='quantity__block'>
+                                    <Quantity />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

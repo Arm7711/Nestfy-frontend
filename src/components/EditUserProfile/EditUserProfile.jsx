@@ -88,13 +88,13 @@ export default function EditUserProfile() {
 
         const reader = new FileReader();
         reader.onload = () => {
-            setPendingImageSrc(reader.result);  
-            setPendingFile(file);         
-            setPhotoModalOpen(true); 
+            setPendingImageSrc(reader.result);
+            setPendingFile(file);
+            setPhotoModalOpen(true);
         };
         reader.readAsDataURL(file);
 
-        e.target.value = ''; 
+        e.target.value = '';
     };
 
 
@@ -107,11 +107,13 @@ export default function EditUserProfile() {
 
         try {
             const res = await Api.updateAvatar(fileToUpload);
-            const avatarUrl = res.data?.avatar ?? res.avatar;
+            const avatarUrl = res?.avatar ?? res?.data?.avatar;
 
-            const updated = { ...userData, avatar: avatarUrl };
-            localStorage.setItem('userData', JSON.stringify(updated));
-            setUserData(updated);
+            if (avatarUrl) {
+                const updated = { ...userData, avatar: avatarUrl };
+                localStorage.setItem('userData', JSON.stringify(updated));
+                setUserData(updated);
+            }
         } catch (err) {
             console.error('Avatar upload failed:', err);
         } finally {

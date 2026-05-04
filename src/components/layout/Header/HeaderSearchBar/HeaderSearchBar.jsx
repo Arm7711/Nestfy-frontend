@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setSelectedDays } from '../../../../redux/reducers/calendarChDays.js';
 import SearchSvg from '../../../svg/SearchSvg';
 import SearchOptions from '../SearchOptions/SearchOptions';
 import { searchTabFields, searchTabFieldsInScroll } from '../../../../data/headerData';
+import CloseSvg from '../../../svg/CloseSvg';
 
 export default function HeaderSearchBar({
     searchBarRef, isTop, isProfilePage, isHelpPage, isSettingsPage,
@@ -11,8 +13,15 @@ export default function HeaderSearchBar({
     searchTabRef, searchTabWidth, searchSliceTX,
     whereOptionValue, setWhereOptionValue, onBarClick,
 }) {
+    const dispatch = useDispatch();
     const { selectedDays } = useSelector((reducers) => reducers.calendarChDays);
+    const [optionsTabValue, setOptionTabValue] = useState({
+        where: whereOptionValue || '',
+        when: selectedDays || '',
+        who: ''
+    })
     const isFirstOpen = useRef(true);
+    const calendarRef = useRef(null);
     const [noAnimation, setNoAnimation] = useState(false);
 
     useEffect(() => {
@@ -45,8 +54,24 @@ export default function HeaderSearchBar({
     }, [activeScrollHeader]);
 
     const handleLocationClick = (item) => {
+        setOptionTabValue(prev => ({ ...prev, where: item?.title }))
         setWhereOptionValue(item?.title);
         setSearchActiveTab({ tabName: 'when', tabIndex: 1 });
+    };
+
+    const clearOption = (tabName) => {
+        setOptionTabValue(prev => ({ ...prev, [tabName]: '' }));
+        switch (tabName) {
+            case 'where':
+                setWhereOptionValue('');
+                break;
+            case 'when':
+                dispatch(setSelectedDays(''));
+                calendarRef.current?.reset();
+                break;
+            case 'who':
+                break;
+        }
     };
 
     return (
@@ -96,10 +121,17 @@ export default function HeaderSearchBar({
                                 ? selectedDays || item?.content
                                 : item?.content}
                     </p>
+
+                    <span onClick={() => clearOption(item?.tabName)} className={classNames('clear__tab', { active: optionsTabValue?.[item?.tabName] && searchActiveTab?.tabName === item?.tabName })}><CloseSvg /></span>
                 </div>
             ))}
 
-                <SearchOptions active={activeSearchBar} searchActiveTab={searchActiveTab} onLocationClick={handleLocationClick} />
+            <SearchOptions
+                active={activeSearchBar}
+                searchActiveTab={searchActiveTab}
+                onLocationClick={handleLocationClick}
+                calendarRef={calendarRef}
+            />
 
             <button className={classNames('search__button', { active__button: activeSearchBar })}>
                 <SearchSvg />

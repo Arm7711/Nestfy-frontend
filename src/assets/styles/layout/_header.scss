@@ -482,13 +482,13 @@
 
                             .content {
                                 @include allCenter(flex-start);
-                                gap:12px;
+                                gap: 12px;
 
-                                .icon__menu{
+                                .icon__menu {
                                     width: 16px;
                                     height: 16px;
 
-                                    &.settings__icon{
+                                    &.settings__icon {
                                         width: 18px;
                                         height: 18px;
                                     }
@@ -811,6 +811,34 @@
             border: 1px solid rgba(255, 255, 255, 0);
             overflow: hidden;
 
+
+            .clear__tab {
+                width: 32px;
+                height: 32px;
+                position: absolute;
+                right: 10px;
+                @include flexCenterRow;
+                border-radius: 50%;
+                background-color: transparent;
+                transition: all 0.2s;
+                transform: scale(0);
+                visibility: hidden;
+
+                .icon{
+                    width: 14px;
+                    height: 14px;
+                }
+
+                &:hover{
+                    background-color: $palette-bg-primary-disabled;
+                }
+
+                &.active{
+                    transform: scale(1);
+                    visibility: visible;
+                }
+            }
+
             &:hover {
                 background-color: $header-bottom-line-color;
             }
@@ -974,6 +1002,55 @@
                     scrollbar-gutter: stable both-edges;
                     padding-top: 7px;
                     padding-right: 20px;
+                }
+
+                &.option__tab__content__guest {
+                    .guest__container {
+                        width: 100%;
+                        max-width: 400px;
+                        height: 100%;
+                        overflow-y: auto;
+                        scrollbar-gutter: stable both-edges;
+                        padding-top: 7px;
+                        padding-right: 20px;
+                        @include flexStartColumn;
+                        gap: 12px;
+
+                        .option__guest {
+                            width: 100%;
+                            height: 70px;
+                            min-height: 70px;
+                            @include allCenter(space-between, center);
+                            position: relative;
+
+                            &::after {
+                                content: "";
+                                width: 100%;
+                                height: 0.6px;
+                                position: absolute;
+                                bottom: -5px;
+                                left: 0;
+                                background-color: $header-bottom-line-color;
+                            }
+
+                            .info__block {
+                                width: fit-content;
+                                height: fit-content;
+                                @include flexStartColumn;
+                                gap: 8px;
+
+                                .title__option {
+                                    font-size: 18px;
+                                    font-weight: 700;
+                                }
+
+                                .desc__option {
+                                    font-size: 14px;
+                                    color: #6a6a6a;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
